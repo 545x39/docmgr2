@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "ru.kodeks.docmanager"
+        minSdkVersion 23
+        targetSdkVersion 27
+        multiDexEnabled true
+        versionCode 131
+        versionName "1.3.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    //To avoid "Invoke-customs are only supported starting with Android O (--min-api 26)" build error.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    //VERSIONS
+    def lifecycle_version = "2.2.0"
+    def room_version = "2.2.3"
+    //MAIN
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //MULTIDEX
+    implementation 'com.android.support:multidex:1.0.3'
+    //VIEW MODEL AND LIVEDATA(Can add them separately)
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    //RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.7.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    //Needed for OkHttp
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
+    //APACHE URL VALIDATOR
+    implementation 'commons-validator:commons-validator:1.6'
+    //ROOM
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    //RxJava support for ROOM:
+    implementation "androidx.room:room-rxjava2:$room_version"
+    //DAGGER 2
+    implementation 'com.google.dagger:dagger:2.25.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.25.2'
+    //KAPT - Kotlin Annotation Processor
+    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+    kapt 'com.google.dagger:dagger-android-processor:2.25.2'
+}
+
+kapt {
+    generateStubs = true
+    arguments {
+        arg("room.incremental", "true")
+    }
+}
