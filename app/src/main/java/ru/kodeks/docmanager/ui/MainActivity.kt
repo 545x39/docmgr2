@@ -16,6 +16,7 @@ import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.InitRequestBuilder
 import ru.kodeks.docmanager.util.DocManagerApp
 import ru.kodeks.docmanager.util.tools.stackTraceToString
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,9 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         buttonSync.setOnClickListener {
             run {
-//                getTestJson()
-//                doSync()
-                DocManagerApp.instance.executors.diskIO().execute {  Parser().parse()}
+                doSync()
+//                DocManagerApp.instance.executors.diskIO().execute {  Parser().parse()}
             }
         }
     }

@@ -55,9 +55,9 @@ class Parser(val responseFile: String = "${DocManagerApp.instance.responseDirect
 
     private fun parseClassifiers() {
         syncResponse?.classifiers?.values?.forEach { classifier ->
-            classifier.items?.forEach { item ->
-                item.parentId = classifier.classifierId
-                Database.INSTANCE.classifierDao().insert(item)
+            classifier.items?.forEach {
+                it.parentId = classifier.classifierId
+                Database.INSTANCE.classifierDao().insert(it)
             }
         }
     }

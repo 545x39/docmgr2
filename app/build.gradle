@@ -20,6 +20,7 @@ android {
             debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            multiDexEnabled = true
         }
     }
     //To avoid "Invoke-customs are only supported starting with Android O (--min-api 26)" build error.
@@ -44,7 +45,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //MULTIDEX
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     //VIEW MODEL AND LIVEDATA(Can add them separately)
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     //RETROFIT
