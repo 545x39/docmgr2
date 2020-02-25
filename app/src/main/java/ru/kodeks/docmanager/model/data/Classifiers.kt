@@ -8,81 +8,87 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 /** Объект глобального каталога.*/
+@Entity(tableName = "global_objects", primaryKeys = ["uid"])
 data class GlobalObject(
     /** Уникальный идентификатор(Guid)*/
-        @SerializedName("uid")
-        @Expose
-        var uid: String? = null,
+    @SerializedName("uid")
+    @Expose
+    var uid: String = "",
     /** Уникальный идентификатор родителя (заполняется только при обновлениях, когда родитель в передаваемой структуре данных не соответствует родителю из ГК).(Guid)*/
-        @SerializedName("parentUid")
-        @Expose
-        var parentUid: String? = null,
+    @SerializedName("parentUid")
+    @Expose
+    @ColumnInfo(name = "parent_uid")
+    var parentUid: String? = null,
     /** Тип объекта ГК. См. <see cref="GlobalObjectType"/>*/
-        @SerializedName("type")
-        @Expose
-        var type: Int? = null,
+    @SerializedName("type")
+    @Expose
+    var type: Int? = null,
     /** Наименование подразделения*/
-        @SerializedName("subdivision")
-        @Expose
-        var subdivision: String? = null,
+    @SerializedName("subdivision")
+    @Expose
+    var subdivision: String? = null,
     /** Имя субъекта*/
-        @SerializedName("firstName")
-        @Expose
-        var firstName: String? = null,
+    @SerializedName("firstName")
+    @ColumnInfo(name = "first_name")
+    @Expose
+    var firstName: String? = null,
     /** Фамилия субъекта*/
-        @SerializedName("surname")
-        @Expose
-        var surname: String? = null,
+    @SerializedName("surname")
+    @Expose
+    var surname: String? = null,
     /** Отчество субъекта.*/
-        @SerializedName("patronymic")
-        @Expose
-        var patronymic: String? = null,
+    @SerializedName("patronymic")
+    @Expose
+    var patronymic: String? = null,
     /** Текущая должность субъекта*/
-        @SerializedName("post")
-        @Expose
-        var post: String? = null,
+    @SerializedName("post")
+    @Expose
+    var post: String? = null,
     /** Признак руководителя*/
-        @SerializedName("leader")
-        @Expose
-        var leader: Boolean? = null,
+    @SerializedName("leader")
+    @Expose
+    var leader: Boolean? = null,
     /** Телефон субъекта, подразделения*/
-        @SerializedName("phone")
-        @Expose
-        var phone: String? = null,
+    @SerializedName("phone")
+    @Expose
+    var phone: String? = null,
     /** Факс*/
-        @SerializedName("fax")
-        @Expose
-        var fax: String? = null,
+    @SerializedName("fax")
+    @Expose
+    var fax: String? = null,
     /** Адрес электронной почты субъекта/подразделения*/
-        @SerializedName("email")
-        @Expose
-        var email: String? = null,
+    @SerializedName("email")
+    @Expose
+    var email: String? = null,
     /** Адрес, местонахождение объекта, субъекта*/
-        @SerializedName("address")
-        @Expose
-        var address: String? = null,
-    /** Фото (в <b>Base64</b>)*/
-        @SerializedName("photo")
-        @Expose
-        //TODO Find out
+    @SerializedName("address")
+    @Expose
+    var address: String? = null,
+    /** Фото (в Base64). Есть в базе сервера, на клиент не присылается. */
+    @SerializedName("photo")
+    @Expose
+    @Ignore
 //    var byte[] Photo
-        var photo: String? = null,
+    var photo: String? = null,
     /** Номер мобильного телефона субъекта*/
-        @SerializedName("mobPhone")
-        @Expose
-        var mobilePhone: String? = null,
+    @SerializedName("mobPhone")
+    @Expose
+    @ColumnInfo(name = "mobile_phone")
+    var mobilePhone: String? = null,
     /** Ранг*/
-        @SerializedName("rank")
-        @Expose
-        var rank: Int? = null,
+    @SerializedName("rank")
+    @Expose
+    var rank: Int? = null,
     /** Дочерние элементы каталога (если их нет, то коллекция = null)*/
-        @SerializedName("children")
-        @Expose
-        var children: List<GlobalObject>? = null,
+    @SerializedName("children")
+    @Expose
+    @Ignore
+    var children: List<GlobalObject>? = null,
     /** Относится ли узел к своему подразделению (бывший фильтр ГК).*/
-        @SerializedName("mySub")
-        @Expose
-        var mySub: Boolean? = null
+    @SerializedName("mySub")
+    @Expose
+    @ColumnInfo(name = "my_sub")
+    var mySub: Boolean? = null
 ) : ObjectBase()
 
 
@@ -179,14 +185,14 @@ class Classifiers {
 
 /** Справочник.*/
 class Classifier(
-        /** Идентификатор классификатора*/
-        @SerializedName("cid")
-        @Expose
-        var classifierId: Int? = null,
-        /** Справочники (название -> элементы)*/
-        @SerializedName("items")
-        @Expose
-        var items: List<ClassifierItem>? = null
+    /** Идентификатор классификатора*/
+    @SerializedName("cid")
+    @Expose
+    var classifierId: Int? = null,
+    /** Справочники (название -> элементы)*/
+    @SerializedName("items")
+    @Expose
+    var items: List<ClassifierItem>? = null
 ) : ObjectBase()
 
 /** Элемент справочника.*/
@@ -203,32 +209,32 @@ class Classifier(
 </code></pre>*/
 @Entity(tableName = "classifiers")
 class ClassifierItem(
-        /** Идентификатор элемента*/
-        @SerializedName("id")
-        @Expose
-        @ColumnInfo(name = "id")
-        @PrimaryKey
-        var id: Int = 0,
-        /** Идентификатор род. элемента*/
-        @SerializedName("pid")
-        @Expose
-        @ColumnInfo(name = "parent_id")
-        var parentId: Int? = null,
-        /** Наименование элемента*/
-        @SerializedName("n")
-        @Expose
-        @ColumnInfo(name = "name")
-        var name: String? = null,
-        /** Краткое наименование элемента*/
-        @SerializedName("sn")
-        @Expose
-        @ColumnInfo(name = "short_name")
-        var shortName: String? = null,
-        /** Дополнительные поля элемента справочника (словарь)*/
-        @SerializedName("e")
-        @Expose
-        @Ignore
-        var extra: Map<String, Any>? = null
+    /** Идентификатор элемента*/
+    @SerializedName("id")
+    @Expose
+    @ColumnInfo(name = "id")
+    @PrimaryKey
+    var id: Int = 0,
+    /** Идентификатор род. элемента*/
+    @SerializedName("pid")
+    @Expose
+    @ColumnInfo(name = "parent_id")
+    var parentId: Int? = null,
+    /** Наименование элемента*/
+    @SerializedName("n")
+    @Expose
+    @ColumnInfo(name = "name")
+    var name: String? = null,
+    /** Краткое наименование элемента*/
+    @SerializedName("sn")
+    @Expose
+    @ColumnInfo(name = "short_name")
+    var shortName: String? = null,
+    /** Дополнительные поля элемента справочника (словарь)*/
+    @SerializedName("e")
+    @Expose
+    @Ignore
+    var extra: Map<String, Any>? = null
 ) : ObjectBase()
 
 /** Тип корреспондента (используется в некоторых полях документа для указания того, куда "смотрит" УИД - на ГК или на организацию)*/
@@ -245,53 +251,53 @@ class CorrespondentTypes {
  * возвращаются все организации, фигурирующие в активных документах.*/
 class Organization(
     /** Уникальный идентификатор(Guid)*/
-        @SerializedName("uid")
-        @Expose
-        var uid: String? = null,
+    @SerializedName("uid")
+    @Expose
+    var uid: String? = null,
     /** Наименование*/
-        @SerializedName("name")
-        @Expose
-        var fullName: String? = null,
+    @SerializedName("name")
+    @Expose
+    var fullName: String? = null,
     /** Краткое наименование*/
-        @SerializedName("shortName")
-        @Expose
-        var shortName: String? = null,
+    @SerializedName("shortName")
+    @Expose
+    var shortName: String? = null,
     /** Вид заявителя. Справочник \link Classifiers Classifiers::ApplicantTypes\endlink.*/
-        @SerializedName("orgType")
-        @Expose
-        var orgType: Int? = null,
+    @SerializedName("orgType")
+    @Expose
+    var orgType: Int? = null,
     /** Организационно-правовая форма организации. Справочник \link Classifiers Classifiers::ORG_FORM_TYPE\endlink.*/
-        @SerializedName("formType")
-        @Expose
-        var formType: Int? = null,
+    @SerializedName("formType")
+    @Expose
+    var formType: Int? = null,
     /** Вид деятельности организации. Справочник \link Classifiers Classifiers::ORG_WORK_TYPE\endlink.*/
-        @SerializedName("workType")
-        @Expose
-        var workType: Int? = null,
+    @SerializedName("workType")
+    @Expose
+    var workType: Int? = null,
     /** Телефон*/
-        @SerializedName("phone")
-        @Expose
-        var phone: String? = null,
+    @SerializedName("phone")
+    @Expose
+    var phone: String? = null,
     /** Факс*/
-        @SerializedName("fax")
-        @Expose
-        var fax: String? = null,
+    @SerializedName("fax")
+    @Expose
+    var fax: String? = null,
     /** Адрес электронной почты*/
-        @SerializedName("email")
-        @Expose
-        var email: String? = null,
+    @SerializedName("email")
+    @Expose
+    var email: String? = null,
     /** Список адресов*/
-        @SerializedName("addresses")
-        @Expose
-        var addresses: List<OrgAddress>? = null,
+    @SerializedName("addresses")
+    @Expose
+    var addresses: List<OrgAddress>? = null,
     /** Категория заявителя. Справочник \link Classifiers Classifiers::APP_CATEGORY\endlink.*/
-        @SerializedName("appCategory")
-        @Expose
-        var appCategory: Int? = null,
+    @SerializedName("appCategory")
+    @Expose
+    var appCategory: Int? = null,
     /** Социальная группа населения. Справочник \link Classifiers Classifiers::SOCIAL\endlink.*/
-        @SerializedName("social")
-        @Expose
-        var socialGroup: Int? = null
+    @SerializedName("social")
+    @Expose
+    var socialGroup: Int? = null
 ) : ObjectBase()
 
 /** Типы адресов*/

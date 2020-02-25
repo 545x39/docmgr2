@@ -39,12 +39,13 @@ class Parser(val responseFile: String = "${DocManagerApp.instance.responseDirect
         parseInitData()
         parseSettings()
         parseClassifiers()
+        parseGlobalObjects()
         val documents = syncResponse?.documents
         documents?.apply {
             for (document: Document in this) {
                 document.notes?.let {
                     for (note: DocNote in it) {
-                        Log.d(TAG, "Inserting note UID ${note.uid}, document UID ${document.uid}")
+//                        Log.d(TAG, "Inserting note UID ${note.uid}, document UID ${document.uid}")
                         Database.INSTANCE.docNoteDao().insert(note)
                     }
                 }
@@ -53,15 +54,37 @@ class Parser(val responseFile: String = "${DocManagerApp.instance.responseDirect
         Log.d(TAG, "Response ITEM: ${syncResponse?.classifiers}")
     }
 
-    private fun parseClassifiers() {
-        syncResponse?.classifiers?.values?.forEach { classifier ->
-            classifier.items?.forEach {
-                it.parentId = classifier.classifierId
-                Database.INSTANCE.classifierDao().insert(it)
-            }
+    private fun parseGlobalObjects() {
+        syncResponse?.globalObjects?.let { persistGlobalObjects(it) }
+    }
+
+    private fun persistGlobalObjects(globalObjects: List<GlobalObject>) {
+        globalObjects.forEach {
+            it.children?.apply { persistGlobalObjects(this) }
+            Log.d(TAG, "Persisting ${it.surname} ${it.firstName} ${it.patronymic}")
+            Database.INSTANCE.golbalObjectDao().insert(it)
         }
     }
 
+    private fun parseClassifiers() {
+        syncResponse?.classifiers?.let { persistClassifiers(it) }
+    }
+
+    /**
+     * Сюда передаётся коллекция классификаторов для сохранения их элементов в "плоском" виде.
+     */
+    fun persistClassifiers(classifiers: Map<String, Classifier>?) {
+        val list = ArrayList<ClassifierItem>()
+        classifiers?.values?.forEach { classifier ->
+            classifier.items?.forEach {
+                it.parentId = classifier.classifierId
+                list.add(it)
+            }
+        }
+        Database.INSTANCE.classifiersDao().insertAll(list)
+    }
+
+    /////////////////////////////////////////////////////////////////
     private fun parseInitData() {
         syncResponse?.apply {
             Database.INSTANCE.initDao().insert(

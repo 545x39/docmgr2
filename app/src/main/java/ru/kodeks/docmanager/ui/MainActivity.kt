@@ -2,11 +2,10 @@ package ru.kodeks.docmanager.ui
 
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import ru.kodeks.docmanager.R
@@ -14,9 +13,9 @@ import ru.kodeks.docmanager.constants.LogTag.TAG
 import ru.kodeks.docmanager.network.Parser
 import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.InitRequestBuilder
+import ru.kodeks.docmanager.persistence.Database
 import ru.kodeks.docmanager.util.DocManagerApp
 import ru.kodeks.docmanager.util.tools.stackTraceToString
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,8 +31,11 @@ class MainActivity : AppCompatActivity() {
 
         buttonSync.setOnClickListener {
             run {
-                doSync()
-//                DocManagerApp.instance.executors.diskIO().execute {  Parser().parse()}
+                //                doSync()
+                DocManagerApp.instance.executors.diskIO().execute {
+                    Parser().parse()
+                    Log.d(TAG, "Classifiers read: ${Database.INSTANCE.classifiersDao().count()}")
+                }
             }
         }
     }
