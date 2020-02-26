@@ -1,9 +1,6 @@
 package ru.kodeks.docmanager.model.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -249,11 +246,14 @@ class CorrespondentTypes {
 
 /** Организация. Справочник организаций не грузится на клиента целиком. Вместо этого на клиента
  * возвращаются все организации, фигурирующие в активных документах.*/
+@Entity(
+    tableName = "organizations", primaryKeys = ["uid"]
+)
 class Organization(
     /** Уникальный идентификатор(Guid)*/
     @SerializedName("uid")
     @Expose
-    var uid: String? = null,
+    var uid: String = "",
     /** Наименование*/
     @SerializedName("name")
     @Expose
@@ -261,18 +261,22 @@ class Organization(
     /** Краткое наименование*/
     @SerializedName("shortName")
     @Expose
+    @ColumnInfo(name = "short_name")
     var shortName: String? = null,
     /** Вид заявителя. Справочник \link Classifiers Classifiers::ApplicantTypes\endlink.*/
     @SerializedName("orgType")
     @Expose
+    @ColumnInfo(name = "org_type")
     var orgType: Int? = null,
     /** Организационно-правовая форма организации. Справочник \link Classifiers Classifiers::ORG_FORM_TYPE\endlink.*/
     @SerializedName("formType")
     @Expose
+    @ColumnInfo(name = "form_type")
     var formType: Int? = null,
     /** Вид деятельности организации. Справочник \link Classifiers Classifiers::ORG_WORK_TYPE\endlink.*/
     @SerializedName("workType")
     @Expose
+    @ColumnInfo(name = "work_type")
     var workType: Int? = null,
     /** Телефон*/
     @SerializedName("phone")
@@ -289,10 +293,12 @@ class Organization(
     /** Список адресов*/
     @SerializedName("addresses")
     @Expose
+    @Ignore
     var addresses: List<OrgAddress>? = null,
     /** Категория заявителя. Справочник \link Classifiers Classifiers::APP_CATEGORY\endlink.*/
     @SerializedName("appCategory")
     @Expose
+    @ColumnInfo(name = "applicant_category")
     var appCategory: Int? = null,
     /** Социальная группа населения. Справочник \link Classifiers Classifiers::SOCIAL\endlink.*/
     @SerializedName("social")
@@ -317,14 +323,29 @@ class AddressType {
 }
 
 /** Адрес организации, см. <see cref="Organization"/>.*/
-class OrgAddress {
+@Entity(
+    tableName = "organization_addresses",
+    foreignKeys = [ForeignKey(
+        entity = Organization::class,
+        parentColumns = ["uid"],
+        childColumns = ["org_uid"],
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
+    )]
+)
+class OrgAddress(
+    @ColumnInfo(name = "org_uid")
+    var orgUid: String = "",
     /** Тип адреса, см. <see cref="AddressType"/>.*/
     @SerializedName("t")
     @Expose
-    var type: Int? = null
-
+    @ColumnInfo(name = "type")
+    var type: Int? = null,
     /** Адрес*/
     @SerializedName("a")
     @Expose
-    var address: String? = null
-}
+    @ColumnInfo(name = "address")
+    var address: String? = null,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null
+)

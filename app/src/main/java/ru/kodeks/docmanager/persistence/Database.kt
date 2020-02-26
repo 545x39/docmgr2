@@ -13,7 +13,9 @@ import java.io.File
         DocNote::class,
         Setting::class,
         ClassifierItem::class,
-        GlobalObject::class], version = 1,
+        GlobalObject::class,
+        Organization::class,
+        OrgAddress::class], version = 1,
     //Чтоб не орал что не знает куда экспортировать
     exportSchema = false
 )
@@ -24,7 +26,9 @@ abstract class Database : RoomDatabase() {
     abstract fun settingsDao(): SettingsDAO
     abstract fun initDao(): InitDao
     abstract fun classifiersDao(): ClassifiersDAO
-    abstract fun golbalObjectDao(): GlobalObjectsDAO
+    abstract fun globalObjectDao(): GlobalObjectsDAO
+    abstract fun organizationsDao(): OrganizationsDAO
+    abstract fun organizationAddressDao(): OrganizationAddressesDAO
 
     companion object {
         private val dbName =

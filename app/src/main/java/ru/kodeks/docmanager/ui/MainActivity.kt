@@ -13,7 +13,6 @@ import ru.kodeks.docmanager.constants.LogTag.TAG
 import ru.kodeks.docmanager.network.Parser
 import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.InitRequestBuilder
-import ru.kodeks.docmanager.persistence.Database
 import ru.kodeks.docmanager.util.DocManagerApp
 import ru.kodeks.docmanager.util.tools.stackTraceToString
 
@@ -31,10 +30,9 @@ class MainActivity : AppCompatActivity() {
 
         buttonSync.setOnClickListener {
             run {
-                //                doSync()
+                //                                doSync()
                 DocManagerApp.instance.executors.diskIO().execute {
                     Parser().parse()
-                    Log.d(TAG, "Classifiers read: ${Database.INSTANCE.classifiersDao().count()}")
                 }
             }
         }

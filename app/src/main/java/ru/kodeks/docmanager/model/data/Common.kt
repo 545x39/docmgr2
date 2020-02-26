@@ -9,8 +9,7 @@ open class ObjectBase(
     /** Признак логического удаления. */
     @SerializedName("deleted")
     @Expose
-    @Ignore
-    var deleted: Boolean? = null,
+    var deleted: Boolean = false,
     /** Коллекция ошибок. Если все прошло успешно, то коллекция = null.
     В простых случаях ошибка возвращается только в корневой коллекции \ref IoModel.ResponseBase<T>.errors. */
     @SerializedName("errors")
