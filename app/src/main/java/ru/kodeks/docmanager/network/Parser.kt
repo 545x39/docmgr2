@@ -33,6 +33,14 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         }
     }
 
+    private fun SyncResponse.persistWorkbench() {
+        workbench?.apply {
+            persistWidgetCategories()
+            persistWidgetTypes()
+            persistDesktops()
+        }
+    }
+
     /** Базовый метод для обработыки ошибок как верхнего уровня, так и в дочерних объектах.*/
     private fun ObjectBase.checkForErrors() {
         errors?.apply {
@@ -57,14 +65,20 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         //TODO
     }
 
-    private fun SyncResponse.persistWorkbench() {
-        workbench?.apply {
-            persistDesktops()
+    private fun Workbench.persistDesktops() {
+        desktops?.let {
+            //TODO
         }
     }
 
-    private fun Workbench.persistDesktops() {
-        desktops?.let {
+    private fun Workbench.persistWidgetTypes() {
+        widgetTypes?.let {
+            //TODO
+        }
+    }
+
+    private fun Workbench.persistWidgetCategories() {
+        widgetCategories?.let {
             //TODO
         }
     }
