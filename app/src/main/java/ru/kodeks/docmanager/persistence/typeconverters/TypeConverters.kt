@@ -15,7 +15,7 @@ class UserRightsTypeConverter {
                 //
             }
         }
-        return listOf()
+        return out.toList()
     }
 
     @TypeConverter
