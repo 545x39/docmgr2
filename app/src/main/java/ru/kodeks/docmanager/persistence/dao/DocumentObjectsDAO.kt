@@ -13,6 +13,9 @@ interface DocNoteDAO{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(note: DocNote)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(notes: List<DocNote>)
+
     @Query("SELECT * FROM document_notes")
     fun selectAll(): LiveData<List<DocNote>>
 //    fun selectAll(): List<DocNote>

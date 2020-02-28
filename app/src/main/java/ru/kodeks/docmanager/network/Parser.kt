@@ -18,6 +18,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
 
 
     fun parse() {
+        val time = System.currentTimeMillis()
         Log.d(TAG, "Started parsing response")
         syncResponse = gson.fromJson(FileReader(responseFile), SyncResponse::class.java)
         Log.d(TAG, "Response read. Persisting it to the DB...")
@@ -25,12 +26,13 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             persistInitData()
             persistSettings()
             persistClassifiers()
-//            persistGlobalObjects(globalObjects)
+            persistGlobalObjects()
             persistWorkbench()
             persistOrganizations()
-//            persistDocuments()
+            persistDocuments()
             persistUnboundDocuments()
         }
+        Log.d(TAG, "PERSISTING RESPONSE TOOK: ${System.currentTimeMillis() - time}")
     }
 
     private fun SyncResponse.persistWorkbench() {
@@ -44,14 +46,13 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
     /** Базовый метод для обработыки ошибок как верхнего уровня, так и в дочерних объектах.*/
     private fun ObjectBase.checkForErrors() {
         errors?.apply {
-            //TODO S.N.A.F.U., deal with it.
+            //TODO S.N.A.F.U. Deal with it.
         }
     }
 
     private fun SyncResponse.persistOrganizations() {
         organizationsList?.forEach { organization ->
             Database.INSTANCE.organizationsDao().insert(organization)
-            Log.d(TAG, "Inserted organization: ${organization.fullName}")
             organization.addresses?.forEach { address ->
                 address.apply {
                     orgUid = organization.uid
@@ -59,38 +60,75 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                 }
             }
         }
+        Log.d(TAG, "Persisted organizations.")
     }
 
     private fun SyncResponse.parseErrors() {
         //TODO
     }
 
-    private fun Workbench.persistDesktops() {
-        desktops?.let {
-            //TODO
+    private fun Workbench.persistWidgetCategories() {
+        widgetCategories?.let {
+            Database.INSTANCE.widgetCategoryDao().insertAll(it)
+            Log.d(TAG, "Persisted widget categories.")
         }
     }
 
     private fun Workbench.persistWidgetTypes() {
+        val time = System.currentTimeMillis()
         widgetTypes?.let {
-            //TODO
+            Database.INSTANCE.widgetTypeDao().insertAll(it)
+            Log.d(TAG, "Persisted widget types in ${System.currentTimeMillis() - time} ms.")
         }
     }
 
-    private fun Workbench.persistWidgetCategories() {
-        widgetCategories?.let {
-            //TODO
+    private fun Workbench.persistDesktops() {
+        desktops?.let { it ->
+            it.forEach {
+                Database.INSTANCE.desktopDao().insert(it)
+                it.persistWidgets(it.id)
+                it.persistShortcuts()
+            }
         }
+    }
+
+    private fun Desktop.persistWidgets(desktopId: Int) {
+        widgets?.map {
+            it.desktopId = desktopId
+            it
+        }?.also { Database.INSTANCE.widgetDao().insertAll(it) }
+    }
+
+    private fun Desktop.persistShortcuts() {
+        shortcuts?.let { Database.INSTANCE.shortcutDao().insertAll(it) }
     }
 
     private fun SyncResponse.persistDocuments() {
-        this.documents?.forEach {
-            it.persistNotes()
+        val time = System.currentTimeMillis()
+        documents?.let {
+            Database.INSTANCE.documentDao().insertAll(it)
+            it
+        }?.map {
+            it.apply {
+                persistConsiderationStations()
+                persistNotes()
+            }
+        }
+        Log.d(TAG, "Persisted documents in ${System.currentTimeMillis() - time} ms.")
+    }
+
+    private fun Document.persistConsiderationStations() {
+        considerationStations?.let {
+            Database.INSTANCE.considerationStationDao().insertAll(it)
+            it
+        }?.map {
+            //TODO Save doc links
+            //TODO Save attachments
         }
     }
 
     private fun Document.persistNotes() {
-        notes?.forEach { Database.INSTANCE.docNoteDao().insert(it) }
+        notes?.let { Database.INSTANCE.docNoteDao().insertAll(it) }
     }
 
     /** Это уиды тех документов, все привязки которых к виджетам следует удалить. Сами документы остаются в базе.*/
@@ -98,12 +136,15 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         ///TODO
     }
 
-    private fun SyncResponse.persistGlobalObjects(globalObjects: List<GlobalObject>?) {
-        globalObjects?.forEach {
-            Log.d(TAG, "persisting gl_obj: ${it.surname} ${it.firstName} ${it.patronymic}")
-            Database.INSTANCE.globalObjectDao().insert(it)
-            it.children?.apply { persistGlobalObjects(this) }
+    private fun SyncResponse.persistGlobalObjects() {
+        val time = System.currentTimeMillis()
+        val list = mutableListOf<GlobalObject>()
+        globalObjects?.map {
+            list.add(it)
+            it.children?.map { child -> list.add(child) }
         }
+        Database.INSTANCE.globalObjectDao().insertAll(list)
+        Log.d(TAG, "Persisted global objects in ${System.currentTimeMillis() - time} ms.")
     }
 
     /**
@@ -111,22 +152,23 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
      */
     private fun SyncResponse.persistClassifiers() {
         val list = ArrayList<ClassifierItem>()
-        classifiers?.values?.forEach { classifier ->
-            classifier.items?.forEach {
+        classifiers?.values?.map { classifier ->
+            classifier.items?.map {
                 it.parentId = classifier.classifierId
                 list.add(it)
             }
         }
         Database.INSTANCE.classifiersDao().insertAll(list)
+        Log.e(TAG, "Persisted classifiers.")
     }
 
     private fun SyncResponse.persistInitData() {
         Database.INSTANCE.initDao().insert(
             InitData(
-                login = DocManagerApp.instance.user.login!!,
-                password = DocManagerApp.instance.user.password!!,
-                userUid = user?.uid ?: "",
-                serverVersion = serverVersion ?: "",
+                login = DocManagerApp.instance.user.login.orEmpty(),
+                password = DocManagerApp.instance.user.password.orEmpty(),
+                userUid = user?.uid.orEmpty(),
+                serverVersion = serverVersion.orEmpty(),
                 sequence = version?.main ?: 0,
                 globalSequence = version?.global ?: 0,
                 settingsSequence = version?.settings ?: 0,
@@ -136,10 +178,6 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
     }
 
     private fun SyncResponse.persistSettings() {
-        settings?.let {
-            for (setting: Setting in it) {
-                Database.INSTANCE.settingsDao().insert(setting)
-            }
-        }
+        settings?.let { Database.INSTANCE.settingsDao().insertAll(it) }
     }
 }

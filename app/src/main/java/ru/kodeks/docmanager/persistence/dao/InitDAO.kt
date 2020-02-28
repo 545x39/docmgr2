@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import ru.kodeks.docmanager.model.data.InitData
 
 @Dao
-interface InitDao {
+interface InitDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(initTable: InitData)
 }

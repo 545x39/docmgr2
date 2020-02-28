@@ -12,7 +12,7 @@ interface GlobalObjectsDAO {
     fun insert(globalObject: GlobalObject)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(globalObject: ArrayList<GlobalObject>)
+    fun insertAll(globalObject: List<GlobalObject>)
 
     @Query("SELECT COUNT(1) FROM global_objects")
     fun count(): Int

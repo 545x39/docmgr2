@@ -10,12 +10,19 @@ import java.io.File
 
 @androidx.room.Database(
     entities = [InitData::class,
-        DocNote::class,
         Setting::class,
         ClassifierItem::class,
         GlobalObject::class,
         Organization::class,
-        OrgAddress::class], version = 1,
+        OrgAddress::class,
+        WidgetCategory::class,
+        WidgetType::class,
+        Desktop::class,
+        Widget::class,
+        Shortcut::class,
+        Document::class,
+        ConsiderationStation::class,
+        DocNote::class], version = 1,
     //Чтоб не орал что не знает куда экспортировать
     exportSchema = false
 )
@@ -24,11 +31,18 @@ abstract class Database : RoomDatabase() {
 
     abstract fun docNoteDao(): DocNoteDAO
     abstract fun settingsDao(): SettingsDAO
-    abstract fun initDao(): InitDao
+    abstract fun initDao(): InitDAO
     abstract fun classifiersDao(): ClassifiersDAO
     abstract fun globalObjectDao(): GlobalObjectsDAO
     abstract fun organizationsDao(): OrganizationsDAO
     abstract fun organizationAddressDao(): OrganizationAddressesDAO
+    abstract fun widgetCategoryDao(): WidgetCategoryDAO
+    abstract fun widgetTypeDao(): WidgetTypeDAO
+    abstract fun desktopDao(): DesktopsDAO
+    abstract fun widgetDao(): WidgetsDAO
+    abstract fun shortcutDao(): ShortcutsDAO
+    abstract fun documentDao(): DocumentsDAO
+    abstract fun considerationStationDao(): ConsiderationStationsDAO
 
     companion object {
         private val dbName =

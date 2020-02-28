@@ -10,4 +10,7 @@ interface SettingsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(setting: Setting)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(settings: List<Setting>)
 }

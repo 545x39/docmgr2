@@ -1,5 +1,7 @@
 package ru.kodeks.docmanager.model.data
 
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -121,147 +123,188 @@ sealed class ConsiderationOptions {
 }
 
 /**  Инстанция рассмотрения документа (элементарная единица движения в маршруте рассмотрения).*/
+@Entity(
+    tableName = "consideration_stations",
+    primaryKeys = ["id"],
+    foreignKeys = [ForeignKey(
+        entity = Document::class,
+        parentColumns = ["uid"],
+        childColumns = ["doc_uid"],
+        onUpdate = CASCADE,
+        onDelete = CASCADE
+    )],
+    indices = [Index(value = ["doc_uid"])]
+)
 data class ConsiderationStation(
-        /** Fields*/
     /** Идентификатор инстанции*/
-        @SerializedName("id")
-        @Expose
-        var id: Int? = null,
+    @SerializedName("id")
+    @Expose
+    var id: Int? = null,
     /** Идентификатор родительской инстанции*/
-        @SerializedName("parentId")
-        @Expose
-        var parentStationId: Int? = null,
+    @SerializedName("parentId")
+    @Expose
+    @ColumnInfo(name = "parent_id")
+    var parentStationId: Int? = null,
+    /** UID документа */
+    @ColumnInfo(name = "doc_uid")
+    var docUid: String? = null,
     /** Порядок следования (Short)*/
-        @SerializedName("order")
-        @Expose
-        var stationOrder: Int? = null,
+    @SerializedName("order")
+    @Expose
+    var stationOrder: Int? = null,
     /** Группа резолюции (нумерация начинается с 1 и номера уникальны в пределах родительской входящей резолюции) (Byte)*/
-        @SerializedName("group")
-        @Expose
-        var stationGroup: Int? = null,
+    @SerializedName("group")
+    @Expose
+    var stationGroup: Int? = null,
     /** Название инстанции*/
-        @SerializedName("name")
-        @Expose
-        var name: String? = null,
+    @SerializedName("name")
+    @Expose
+    var name: String? = null,
     /** Описание инстанции*/
-        @SerializedName("description")
-        @Expose
-        var description: String? = null,
+    @SerializedName("description")
+    @Expose
+    var description: String? = null,
     /** Идентификатор исполнителя (Guid)*/
-        @SerializedName("receiverUid")
-        @Expose
-        var receiverUid: String? = null,
+    @SerializedName("receiverUid")
+    @Expose
+    @ColumnInfo(name = "receiver_uid")
+    var receiverUid: String? = null,
     /** Текст резолюции*/
-        @SerializedName("resolution")
-        @Expose
-        var resolution: String? = null,
+    @SerializedName("resolution")
+    @Expose
+    var resolution: String? = null,
     /** Тип резолюции, см. <see cref="ResolutionTypes"/>(Byte)*/
-        @SerializedName("resolutionType")
-        @Expose
-        var resolutionType: Int? = null,
+    @SerializedName("resolutionType")
+    @Expose
+    @ColumnInfo(name = "resolution_type")
+    var resolutionType: Int? = null,
     /** Идентификатор автора резолюции/ (Guid)*/
-        @SerializedName("resolutionAuthorUid")
-        @Expose
-        var resolutionAuthorUid: String? = null,
+    @SerializedName("resolutionAuthorUid")
+    @Expose
+    @ColumnInfo(name = "resolution_author_uid")
+    var resolutionAuthorUid: String? = null,
     /** Контрольный срок (в минутах)*/
-        @SerializedName("controlDuration")
-        @Expose
-        var controlDuration: Int? = null,
+    @SerializedName("controlDuration")
+    @Expose
+    @ColumnInfo(name = "control_duration")
+    var controlDuration: Int? = null,
     /** Контрольная дата исполнения.(DateTime)*/
-        @SerializedName("controlDate")
-        @Expose
-        var controlDate: String? = null,
+    @SerializedName("controlDate")
+    @ColumnInfo(name = "control_date")
+    @Expose
+    var controlDate: String? = null,
     /** Дата передачи. (DateTime)*/
-        @SerializedName("sendingDate")
-        @Expose
-        var sendingDate: String? = null,
+    @SerializedName("sendingDate")
+    @Expose
+    @ColumnInfo(name = "sending_date")
+    var sendingDate: String? = null,
     /** Дата просмотра.(DateTime)*/
-        @SerializedName("viewDate")
-        @Expose
-        var viewDate: String? = null,
+    @SerializedName("viewDate")
+    @Expose
+    @ColumnInfo(name = "view_date")
+    var viewDate: String? = null,
     /** Дата исполнения (дата отработки документа).(DateTime)*/
-        @SerializedName("workOffDate")
-        @Expose
-        var workOffDate: String? = null,
+    @SerializedName("workOffDate")
+    @Expose
+    @ColumnInfo(name = "work_off_date")
+    var workOffDate: String? = null,
     /** Дата закрытия резолюции.(DateTime)*/
-        @SerializedName("completeDate")
-        @Expose
-        var completeDate: String? = null,
+    @SerializedName("completeDate")
+    @Expose
+    @ColumnInfo(name = "complete_date")
+    var completeDate: String? = null,
     /** Статусы инстанции, см. <see cref="StationStates"/>(Byte)*/
-        @SerializedName("state")
-        @Expose
-        var state: Int? = null,
+    @SerializedName("state")
+    @Expose
+    var state: Int? = null,
     /** Признак Контролирующая инстанция*/
-        @SerializedName("isController")
-        @Expose
-        var isController: Boolean? = null,
+    @SerializedName("isController")
+    @Expose
+    @ColumnInfo(name = "is_controller")
+    var isController: Boolean? = null,
     /** Признак Инстанция – подразделение*/
-        @SerializedName("isSubdivision")
-        @Expose
-        var isSubdivision: Boolean? = null,
+    @SerializedName("isSubdivision")
+    @Expose
+    @ColumnInfo(name = "is_subdivision")
+    var isSubdivision: Boolean? = null,
     /** Определяет, запрещено ли удалять инстанцию*/
-        @SerializedName("isFixed")
-        @Expose
-        var isFixed: Boolean? = null,
+    @SerializedName("isFixed")
+    @Expose
+    @ColumnInfo(name = "is_fixed")
+    var isFixed: Boolean = false,
     /** Признак Главный ответственный исполнитель*/
-        @SerializedName("isMain")
-        @Expose
-        var isMain: Boolean? = null,
+    @SerializedName("isMain")
+    @Expose
+    @ColumnInfo(name = "is_main")
+    var isMain: Boolean = false,
     /** Признак "Для информирования*/
-        @SerializedName("isInformational")
-        @Expose
-        var isInformational: Boolean? = null,
+    @SerializedName("isInformational")
+    @Expose
+    @ColumnInfo(name = "is_informational")
+    var isInformational: Boolean = false,
     /** Идентификатор результата согласования*/
-        @SerializedName("approvalResultId")
-        @Expose
-        var approvalResultId: Int? = null,
+    @SerializedName("approvalResultId")
+    @Expose
+    @ColumnInfo(name = "approval_result_id")
+    var approvalResultId: Int? = null,
     /** Конечная инстанция*/
-        @SerializedName("isFinal")
-        @Expose
-        var isFinal: Boolean? = null,
+    @SerializedName("isFinal")
+    @Expose
+    @ColumnInfo(name = "is_final")
+    var isFinal: Boolean = false,
     /** Идентификатор автора. (Guid)*/
-        @SerializedName("authorUid")
-        @Expose
-        var authorUid: String? = null,
+    @SerializedName("authorUid")
+    @Expose
+    @ColumnInfo(name = "author_uid")
+    var authorUid: String? = null,
     /** Идентификатор оператора, производившего модификацию.(Guid)*/
-        @SerializedName("userUid")
-        @Expose
-        var userUid: String? = null,
+    @SerializedName("userUid")
+    @Expose
+    @ColumnInfo(name = "user_uid")
+    var userUid: String? = null,
     /** Дата создания инстанции.(DateTime)*/
-        @SerializedName("created")
-        @Expose
-        var created: String? = null,
+    @SerializedName("created")
+    @Expose
+    var created: String? = null,
     /** Дата последней модификации инстанции.(DateTime)*/
-        @SerializedName("modified")
-        @Expose
-        var modified: String? = null,
+    @SerializedName("modified")
+    @Expose
+    var modified: String? = null,
     /** Идентификатор видеоролика резолюции*/
-        @SerializedName("clipId")
-        @Expose
-        var clipId: Int? = null,
+    @SerializedName("clipId")
+    @Expose
+    @ColumnInfo(name = "clip_id")
+    @Ignore
+    var clipId: Int? = null,
     /** Признак - Требует ответа*/
-        @SerializedName("isAnswerRequired")
-        @Expose
-        var isAnswerRequired: Boolean? = null,
+    @SerializedName("isAnswerRequired")
+    @Expose
+    @ColumnInfo(name = "is_answer_required")
+    var isAnswerRequired: Boolean = false,
     /** Доступные операции и опции рассмотрения для текущего пользователя с учетом замещений. Битовая маска, см. <see cref="ConsiderationOptions"/>.
-        Возвращается только для входящих инстанций, относящихся к текущему пользователю.*/
-        @SerializedName("resolutionInfo")
-        @Expose
-        var resolutionInfo: Int? = null,
+    Возвращается только для входящих инстанций, относящихся к текущему пользователю.*/
+    @SerializedName("resolutionInfo")
+    @Expose
+    @ColumnInfo(name = "resolution_info")
+    var resolutionInfo: Int = 0,
     /** Расшифрованная отладочная версия <see cref="resolutionInfo"/>.*/
-        @SerializedName("resolutionInfoDebug")
-        @Expose
-        var resolutionInfoDebug: List<Int>? = null,
+    @SerializedName("resolutionInfoDebug")
+    @Expose
+    @Ignore
+    var resolutionInfoDebug: List<Int>? = null,
     /** Тип ЭП (0 - нет, 1 - простая, 2 - квалицифированная)*/
-        @SerializedName("signatureType")
-        @Expose
-        var signatureType: Int? = null,
+    @SerializedName("signatureType")
+    @Expose
+    @ColumnInfo(name = "signature_type")
+    var signatureType: Int? = null,
     /** Документы, относящиеся к инстанции. Эти документы могут не содержать никаких ссылок на виджеты и могут быть пропущены в обновлении.*/
-        @SerializedName("docLinks")
-        @Expose
-        var docLinks: List<DocumentLink>? = null,
+    @SerializedName("docLinks")
+    @Expose
+    @Ignore
+    var docLinks: List<DocumentLink>? = null,
     /** Файлы, привязанные к инстанции (пока там будет не более 1 файла).*/
-        @SerializedName("files")
-        @Expose
-        var files: List<FileAttachment>? = null
+    @SerializedName("files")
+    @Expose
+    @Ignore
+    var files: List<FileAttachment>? = null
 ) : ObjectBase()

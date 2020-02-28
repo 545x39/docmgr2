@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import ru.kodeks.docmanager.persistence.typeconverters.UserRightsTypeConverter
+import ru.kodeks.docmanager.persistence.typeconverters.IntListToStringTypeConverter
 
 @Entity(tableName = "init_table")
-@TypeConverters(UserRightsTypeConverter::class)
+@TypeConverters(IntListToStringTypeConverter::class)
 data class InitData(
     @ColumnInfo(name = "login")
     var login: String = "",

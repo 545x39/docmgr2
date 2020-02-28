@@ -331,7 +331,8 @@ class AddressType {
         childColumns = ["org_uid"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [Index(value = ["org_uid"])]
 )
 class OrgAddress(
     @ColumnInfo(name = "org_uid")

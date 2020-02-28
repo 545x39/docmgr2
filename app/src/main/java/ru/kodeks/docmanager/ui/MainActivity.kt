@@ -28,17 +28,21 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
+
         buttonSync.setOnClickListener {
-            run {
-                //                                doSync()
-                DocManagerApp.instance.executors.diskIO().execute {
-                    Parser().parse()
-                }
-            }
+            DocManagerApp.instance.executors.diskIO().execute { Parser().parse() }
+//            GlobalScope.launch {
+//                withContext(IO) {
+//                    runCatching {
+//                        Parser().parse()
+//                    }
+//                        .onFailure { withContext(Main) { sync() } }
+//                }
+//            }
         }
     }
 
-    private fun doSync() {
+    private fun sync() {
         DocManagerApp.instance.executors.networkIO().execute {
             try {
                 SyncOperation(InitRequestBuilder().build()).execute()
