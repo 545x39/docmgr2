@@ -110,21 +110,57 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             it
         }?.map {
             it.apply {
+                persistWidgetLinks()
+                persistAttachments()
                 persistConsiderationStations()
+                persistApprovalRoutes()
                 persistNotes()
             }
         }
         Log.d(TAG, "Persisted documents in ${System.currentTimeMillis() - time} ms.")
     }
 
+    private fun Document.persistApprovalRoutes() {
+        //TODO
+        approvalRoutes?.map { }
+    }
+
+    private fun Document.persistAttachments() {
+        attachments?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+    }
+
+    private fun Document.persistWidgetLinks() {
+        widgetLinks?.map {
+            it.docUid = this.uid
+            if (it.docType == null) {
+                it.docType = this.docType
+            }
+            it
+        }?.let { Database.INSTANCE.documentWidgetLinkDao().insertAll(it) }
+    }
+
     private fun Document.persistConsiderationStations() {
-        considerationStations?.let {
+        considerationStations?.map {
+            it.docUid = this.uid
+            it
+        }?.let {
             Database.INSTANCE.considerationStationDao().insertAll(it)
             it
         }?.map {
-            //TODO Save doc links
-            //TODO Save attachments
+            it.persistDocLinks(this.uid)
+            it.persistAttachments()
         }
+    }
+
+    private fun ConsiderationStation.persistDocLinks(docUid: String) {
+        docLinks?.map {
+            it.doc_uid = docUid
+            it
+        }?.let { Database.INSTANCE.documentLinksDao().insertAll(it) }
+    }
+
+    private fun ConsiderationStation.persistAttachments() {
+        files?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
     }
 
     private fun Document.persistNotes() {

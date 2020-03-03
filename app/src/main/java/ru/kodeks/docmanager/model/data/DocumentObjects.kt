@@ -1,27 +1,35 @@
 package ru.kodeks.docmanager.model.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import ru.kodeks.docmanager.persistence.typeconverters.IntListToStringTypeConverter
 
 /** Связь документа с виджетом. Передается на клиент в составе документа, см. <see cref="Document"/>.*/
+@Entity(tableName = "document_widget_links", primaryKeys = ["widget_id", "doc_uid"])
+@TypeConverters(IntListToStringTypeConverter::class)
 class DocumentWidgetLink(
     /** ИД виджета. Привязка выполняется по коду из-за потенциальной необходимости внедрять замещения.*/
     @SerializedName("wid")
     @Expose
-    var wid: Int? = null,
+    @ColumnInfo(name = "widget_id")
+    var wid: Int = 0,
+    /**  UID документа*/
+    @SerializedName("doc_uid")
+    @Expose
+    @ColumnInfo(name = "doc_uid")
+    var docUid: String = "",
     /**  Инстанции документа, относящиеся к текущему виджету.
     Первой в списке идет инстанция, к которой применимы действия по умолчанию в списке документов.
     \b Внимание: У виджета не обязательно есть инстанции (например, их нет в оперативном архиве).*/
     @SerializedName("psid")
     @Expose
-    var psid: Array<Int>? = null,
-    /**  UID документа*/
-    var docUid: String? = null,
+    @ColumnInfo(name = "station_ids")
+    var psid: List<Int>? = null,
     /**  Тип документа*/
+    @SerializedName("doc_type")
+    @Expose
+    @ColumnInfo(name = "doc_type")
     var docType: Int? = null
 ) : ObjectBase()
 
@@ -30,15 +38,19 @@ class DocumentWidgetLink(
 - документ <see cref="Document"/>
 - маршрут согласования <see cref="ApprovalRoute"/>
 - инстанция рассмотрения <see cref="ConsiderationStation"/>*/
-
+@Entity(tableName = "document_links", primaryKeys = ["linked_doc_uid", "doc_uid"])
 class DocumentLink(
+    @ColumnInfo(name = "doc_uid")
+    var doc_uid: String = "",
     /**  УИД cвязанного документа*/
     @SerializedName("uid")
     @Expose
-    var uid: String? = null,
+    @ColumnInfo(name = "linked_doc_uid")
+    var uid: String = "",
     /**  Тип связанного документа*/
     @SerializedName("docType")
     @Expose
+    @ColumnInfo(name = "linked_doc_type")
     var docType: Int? = null,
     /**  Тип связи. Значение из справочника \link Classifiers Classifiers::LINK_TYPES\endlink. Заполняется только для связей Документ-Документ.*/
     @SerializedName("type")
@@ -47,10 +59,12 @@ class DocumentLink(
     /**  Регистрационный номер документа*/
     @SerializedName("regNum")
     @Expose
+    @ColumnInfo(name = "linked_doc_reg_num")
     var regNum: String? = null,
     /**  Дата регистрации документа*/
     @SerializedName("regDate")
     @Expose
+    @ColumnInfo(name = "linked_doc_reg_name")
     var regDate: String? = null,
     /**  Наименование, краткое содержание документа*/
     @SerializedName("name")
@@ -59,6 +73,7 @@ class DocumentLink(
     /**  Метаинформация по вложениям, без содержимого. Главное вложение всегда первое в списке.*/
     @SerializedName("attachments")
     @Expose
+    @Ignore
     var attachments: List<FileAttachment>? = null
 ) : ObjectBase()
 

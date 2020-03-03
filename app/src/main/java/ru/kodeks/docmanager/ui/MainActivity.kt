@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.constants.LogTag.TAG
 import ru.kodeks.docmanager.network.Parser
@@ -18,27 +21,26 @@ import ru.kodeks.docmanager.util.tools.stackTraceToString
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var smth: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()
         }
 
 
         buttonSync.setOnClickListener {
-            DocManagerApp.instance.executors.diskIO().execute { Parser().parse() }
-//            GlobalScope.launch {
-//                withContext(IO) {
-//                    runCatching {
-//                        Parser().parse()
-//                    }
-//                        .onFailure { withContext(Main) { sync() } }
-//                }
-//            }
+            //            DocManagerApp.instance.executors.diskIO().execute { Parser().parse() }
+            CoroutineScope(IO).launch {
+                runCatching {
+                    Parser().parse()
+                }.onFailure { sync() }
+            }
         }
     }
 

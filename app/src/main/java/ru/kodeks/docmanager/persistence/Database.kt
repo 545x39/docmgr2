@@ -22,6 +22,9 @@ import java.io.File
         Shortcut::class,
         Document::class,
         ConsiderationStation::class,
+        FileAttachment::class,
+        DocumentLink::class,
+        DocumentWidgetLink::class,
         DocNote::class], version = 1,
     //Чтоб не орал что не знает куда экспортировать
     exportSchema = false
@@ -43,6 +46,9 @@ abstract class Database : RoomDatabase() {
     abstract fun shortcutDao(): ShortcutsDAO
     abstract fun documentDao(): DocumentsDAO
     abstract fun considerationStationDao(): ConsiderationStationsDAO
+    abstract fun documentLinksDao(): DocumentLinksDAO
+    abstract fun attachmentsDao(): AttachmentsDAO
+    abstract fun documentWidgetLinkDao(): DocumentWidgetLinksDAO
 
     companion object {
         private val dbName =
