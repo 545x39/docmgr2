@@ -172,7 +172,7 @@ class FileUploadInfo : File() {
     /** УИД файлового вложения, загруженного с помощью хандлера <b>UploadFile.ashx</b>.*/
     @SerializedName("blobUid")
     @Expose
-    var blobUid: String? = null//Guid
+    var blobUid: String? = null
 }
 
 
@@ -192,6 +192,8 @@ open class FileDownloadInfo(
 /** Файловое вложение. Возвращается вместе с документом, маршрутом согласования или другим контейнером.*/
 @Entity(tableName = "attachments", primaryKeys = ["uid"])
 class FileAttachment(
+    @ColumnInfo(name = "doc_uid")
+    var docUid: String = "",
     /** Определяет, является ли файл основным вложением документа.*/
     @SerializedName("isPrimary")
     @Expose

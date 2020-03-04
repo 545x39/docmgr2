@@ -18,7 +18,6 @@ interface DocNoteDAO{
 
     @Query("SELECT * FROM document_notes")
     fun selectAll(): LiveData<List<DocNote>>
-//    fun selectAll(): List<DocNote>
 
     @Query("SELECT COUNT(1) FROM document_notes")
     fun getCount(): Int

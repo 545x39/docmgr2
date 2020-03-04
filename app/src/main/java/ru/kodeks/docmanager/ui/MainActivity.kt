@@ -21,8 +21,6 @@ import ru.kodeks.docmanager.util.tools.stackTraceToString
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var smth: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

@@ -10,12 +10,20 @@ import ru.kodeks.docmanager.persistence.Database
 import ru.kodeks.docmanager.util.DocManagerApp
 import java.io.File
 import java.io.FileReader
+import kotlin.system.measureTimeMillis
 
 class Parser(private val responseFile: String = "${DocManagerApp.instance.responseDirectory}${File.separator}${ResponseFileNames.SYNC_RESPONSE_FILENAME}") {
     private var syncResponse: SyncResponse? = null
+
     @Suppress("SpellCheckingInspection")
     private val gson = Gson()
 
+    /** Базовый метод для обработыки ошибок как верхнего уровня, так и в дочерних объектах.*/
+    private fun ObjectBase.checkForErrors() {
+        errors?.apply {
+            //TODO S.N.A.F.U. Deal with it.
+        }
+    }
 
     fun parse() {
         val time = System.currentTimeMillis()
@@ -43,28 +51,33 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         }
     }
 
-    /** Базовый метод для обработыки ошибок как верхнего уровня, так и в дочерних объектах.*/
-    private fun ObjectBase.checkForErrors() {
-        errors?.apply {
-            //TODO S.N.A.F.U. Deal with it.
+    private fun SyncResponse.persistDocuments() {
+        val time = measureTimeMillis {
+            documents?.let {
+                Database.INSTANCE.documentDao().insertAll(it)
+                it
+            }?.map {//TODO Try doing it asychronously
+                it.apply {
+                    persistWidgetLinks()
+                    persistAttachments()
+                    persistConsiderationStations()
+                    persistApprovalRoutes()
+                    persistNotes()
+                }
+            }
         }
+        Log.d(TAG, "Persisted documents in $time ms.")
     }
 
     private fun SyncResponse.persistOrganizations() {
         organizationsList?.forEach { organization ->
             Database.INSTANCE.organizationsDao().insert(organization)
-            organization.addresses?.forEach { address ->
-                address.apply {
-                    orgUid = organization.uid
-                    Database.INSTANCE.organizationAddressDao().insert(this)
-                }
-            }
+            organization.addresses?.map {
+                it.orgUid = organization.uid
+                it
+            }?.let { Database.INSTANCE.organizationAddressDao().insertAll(it) }
         }
         Log.d(TAG, "Persisted organizations.")
-    }
-
-    private fun SyncResponse.parseErrors() {
-        //TODO
     }
 
     private fun Workbench.persistWidgetCategories() {
@@ -75,26 +88,27 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
     }
 
     private fun Workbench.persistWidgetTypes() {
-        val time = System.currentTimeMillis()
-        widgetTypes?.let {
-            Database.INSTANCE.widgetTypeDao().insertAll(it)
-            Log.d(TAG, "Persisted widget types in ${System.currentTimeMillis() - time} ms.")
+        val time = measureTimeMillis {
+            widgetTypes?.let {
+                Database.INSTANCE.widgetTypeDao().insertAll(it)
+            }
         }
+        Log.d(TAG, "Persisted widget types in $time ms.")
     }
 
     private fun Workbench.persistDesktops() {
         desktops?.let { it ->
             it.forEach {
                 Database.INSTANCE.desktopDao().insert(it)
-                it.persistWidgets(it.id)
+                it.persistWidgets()
                 it.persistShortcuts()
             }
         }
     }
 
-    private fun Desktop.persistWidgets(desktopId: Int) {
+    private fun Desktop.persistWidgets() {
         widgets?.map {
-            it.desktopId = desktopId
+            it.desktopId = this.id
             it
         }?.also { Database.INSTANCE.widgetDao().insertAll(it) }
     }
@@ -103,30 +117,68 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         shortcuts?.let { Database.INSTANCE.shortcutDao().insertAll(it) }
     }
 
-    private fun SyncResponse.persistDocuments() {
-        val time = System.currentTimeMillis()
-        documents?.let {
-            Database.INSTANCE.documentDao().insertAll(it)
+    private fun Document.persistApprovalRoutes() {
+        approvalRoutes?.map {
+            it.docUid = this.uid
+            it
+        }?.let {
+            Database.INSTANCE.approvalRouteDao().insertAll(it)
             it
         }?.map {
-            it.apply {
-                persistWidgetLinks()
-                persistAttachments()
-                persistConsiderationStations()
-                persistApprovalRoutes()
-                persistNotes()
-            }
+            it.persistDocLinks()
+            it.persistAttachments()
+            it.persistApprovalStages()
         }
-        Log.d(TAG, "Persisted documents in ${System.currentTimeMillis() - time} ms.")
     }
 
-    private fun Document.persistApprovalRoutes() {
-        //TODO
-        approvalRoutes?.map { }
+    private fun ApprovalRoute.persistApprovalStages() {
+        stages?.map {
+            it.routeId = this.id
+            it.docUid = this.docUid
+            it
+        }?.let {
+            Database.INSTANCE.approvalStageDao().insertAll(it)
+            it
+        }?.map { it.persistApprovalStations() }
+    }
+
+    private fun ApprovalStage.persistApprovalStations() {
+        stations?.map {
+            it.docUid = this.docUid
+            it.stageId = this.id
+            it
+        }?.let {
+            Database.INSTANCE.approvalStationDao().insertAll(it)
+            it
+        }?.map { it.persistAttachments() }
+    }
+
+    private fun ApprovalStation.persistAttachments() {
+        files?.map {
+            it.docUid = this.docUid
+            it
+        }?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+    }
+
+    private fun ApprovalRoute.persistAttachments() {
+        files?.map {
+            it.docUid = this.docUid
+            it
+        }?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+    }
+
+    private fun ApprovalRoute.persistDocLinks() {
+        docLinks?.map {
+            it.doc_uid = this.docUid
+            it
+        }?.let { Database.INSTANCE.documentLinksDao().insertAll(it) }
     }
 
     private fun Document.persistAttachments() {
-        attachments?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+        attachments?.map {
+            it.docUid = this.uid
+            it
+        }?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
     }
 
     private fun Document.persistWidgetLinks() {
@@ -147,20 +199,24 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             Database.INSTANCE.considerationStationDao().insertAll(it)
             it
         }?.map {
-            it.persistDocLinks(this.uid)
+            it.persistDocLinks()
             it.persistAttachments()
         }
     }
 
-    private fun ConsiderationStation.persistDocLinks(docUid: String) {
+    private fun ConsiderationStation.persistDocLinks() {
         docLinks?.map {
-            it.doc_uid = docUid
+            it.doc_uid = this.docUid.orEmpty()
             it
         }?.let { Database.INSTANCE.documentLinksDao().insertAll(it) }
     }
 
     private fun ConsiderationStation.persistAttachments() {
-        files?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+        files?.map {
+                it.docUid = this.docUid.orEmpty()
+                it
+            }
+            ?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
     }
 
     private fun Document.persistNotes() {
@@ -173,14 +229,15 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
     }
 
     private fun SyncResponse.persistGlobalObjects() {
-        val time = System.currentTimeMillis()
-        val list = mutableListOf<GlobalObject>()
-        globalObjects?.map {
-            list.add(it)
-            it.children?.map { child -> list.add(child) }
+        val time = measureTimeMillis {
+            val list = mutableListOf<GlobalObject>()
+            globalObjects?.map {
+                list.add(it)
+                it.children?.map { child -> list.add(child) }
+            }
+            Database.INSTANCE.globalObjectDao().insertAll(list)
         }
-        Database.INSTANCE.globalObjectDao().insertAll(list)
-        Log.d(TAG, "Persisted global objects in ${System.currentTimeMillis() - time} ms.")
+        Log.d(TAG, "Persisted global objects in $time ms.")
     }
 
     /**

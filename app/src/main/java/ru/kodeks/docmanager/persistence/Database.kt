@@ -25,7 +25,10 @@ import java.io.File
         FileAttachment::class,
         DocumentLink::class,
         DocumentWidgetLink::class,
-        DocNote::class], version = 1,
+        DocNote::class,
+        ApprovalRoute::class,
+        ApprovalStage::class,
+        ApprovalStation::class], version = 1,
     //Чтоб не орал что не знает куда экспортировать
     exportSchema = false
 )
@@ -49,6 +52,9 @@ abstract class Database : RoomDatabase() {
     abstract fun documentLinksDao(): DocumentLinksDAO
     abstract fun attachmentsDao(): AttachmentsDAO
     abstract fun documentWidgetLinkDao(): DocumentWidgetLinksDAO
+    abstract fun approvalRouteDao(): ApprovalRoutesDAO
+    abstract fun approvalStageDao(): ApprovalStagesDAO
+    abstract fun approvalStationDao(): ApprovalStationsDAO
 
     companion object {
         private val dbName =
