@@ -8,8 +8,8 @@ import ru.kodeks.docmanager.model.data.ApprovalStation
 @Dao
 interface ApprovalStationsDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(approvalStation: ApprovalStation)
+    suspend fun insert(approvalStation: ApprovalStation)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(approvalStations: List<ApprovalStation>)
+    suspend fun insertAll(approvalStations: List<ApprovalStation>)
 }

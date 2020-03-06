@@ -12,8 +12,8 @@ interface ClassifiersDAO {
     fun insert(classifier: ClassifierItem)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(classifiers: ArrayList<ClassifierItem>)
+    suspend fun insertAll(classifiers: ArrayList<ClassifierItem>)
 
     @Query("SELECT COUNT(1) FROM classifiers")
-    fun count(): Int
+    suspend fun count(): Int
 }

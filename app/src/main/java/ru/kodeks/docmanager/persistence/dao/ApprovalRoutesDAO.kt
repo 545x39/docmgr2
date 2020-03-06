@@ -9,8 +9,8 @@ import ru.kodeks.docmanager.model.data.ApprovalRoute
 interface ApprovalRoutesDAO {
 
     @Insert(onConflict = REPLACE)
-    fun insert(approvalRoute: ApprovalRoute)
+    suspend fun insert(approvalRoute: ApprovalRoute)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(approvalRoutes: List<ApprovalRoute>)
+    suspend fun insertAll(approvalRoutes: List<ApprovalRoute>)
 }

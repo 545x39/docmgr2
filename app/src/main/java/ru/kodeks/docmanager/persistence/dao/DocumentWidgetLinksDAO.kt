@@ -9,11 +9,15 @@ import ru.kodeks.docmanager.model.data.DocumentWidgetLink
 @Dao
 interface DocumentWidgetLinksDAO {
     @Insert(onConflict = REPLACE)
-    fun insert(link: DocumentWidgetLink)
+    suspend fun insert(link: DocumentWidgetLink)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(links: List<DocumentWidgetLink>)
+    suspend fun insertAll(links: List<DocumentWidgetLink>)
 
     @Query("SELECT COUNT(1) FROM document_widget_links")
-    fun count(): Int
+    suspend fun count(): Int
+
+    /** Удалить связи документов с виджетами. UID'ы приходят в ответе синка в коллекции unboundDocUids.*/
+    @Query("DELETE FROM document_widget_links WHERE doc_uid IN (:links)")
+    suspend fun deleteAll(links: List<String>)
 }

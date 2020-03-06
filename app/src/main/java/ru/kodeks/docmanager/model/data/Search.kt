@@ -55,5 +55,5 @@ class SearchParameter(
     /** Требуется ли искать точное соответствие (актуально только для строковых типов).*/
         @SerializedName("isExactMatch")
         @Expose
-        var isExactMatch: Boolean? = null
+    var isExactMatch: Boolean = false
 )

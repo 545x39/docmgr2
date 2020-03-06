@@ -9,8 +9,8 @@ import ru.kodeks.docmanager.model.data.FileAttachment
 interface AttachmentsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(attachment: FileAttachment)
+    suspend fun insert(attachment: FileAttachment)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(attachments: List<FileAttachment>)
+    suspend fun insertAll(attachments: List<FileAttachment>)
 }

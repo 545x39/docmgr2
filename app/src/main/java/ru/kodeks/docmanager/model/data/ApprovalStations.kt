@@ -205,7 +205,8 @@ open class ApprovalObjectBase(
         entity = Document::class,
         parentColumns = ["uid"],
         childColumns = ["document_uid"],
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
     )],
     indices = [Index(value = ["document_uid"])]
 )
@@ -332,7 +333,9 @@ open class ApprovalChildObject(
     foreignKeys = [ForeignKey(
         entity = ApprovalRoute::class,
         parentColumns = ["id"],
-        childColumns = ["route_id"]
+        childColumns = ["route_id"],
+        onUpdate = ForeignKey.CASCADE,
+        onDelete = ForeignKey.CASCADE
     )],
     indices = [Index(value = ["route_id"])]
 )
@@ -393,7 +396,9 @@ data class ApprovalStage(
     foreignKeys = [ForeignKey(
         entity = ApprovalStage::class,
         parentColumns = ["id"],
-        childColumns = ["stage_id"]
+        childColumns = ["stage_id"],
+        onUpdate = ForeignKey.CASCADE,
+        onDelete = ForeignKey.CASCADE
     )],
     indices = [Index(value = ["stage_id"])]
 )

@@ -9,8 +9,8 @@ import ru.kodeks.docmanager.model.data.ApprovalStage
 interface ApprovalStagesDAO {
 
     @Insert(onConflict = REPLACE)
-    fun insert(approvalStage: ApprovalStage)
+    suspend fun insert(approvalStage: ApprovalStage)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(approvalStages: List<ApprovalStage>)
+    suspend fun insertAll(approvalStages: List<ApprovalStage>)
 }

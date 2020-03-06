@@ -9,8 +9,8 @@ import ru.kodeks.docmanager.model.data.Setting
 interface SettingsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(setting: Setting)
+    suspend fun insert(setting: Setting)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(settings: List<Setting>)
+    suspend fun insertAll(settings: List<Setting>)
 }

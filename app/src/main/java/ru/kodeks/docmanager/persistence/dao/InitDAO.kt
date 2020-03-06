@@ -8,5 +8,5 @@ import ru.kodeks.docmanager.model.data.InitData
 @Dao
 interface InitDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(initTable: InitData)
+    suspend fun insert(initTable: InitData)
 }

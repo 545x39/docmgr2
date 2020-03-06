@@ -9,10 +9,10 @@ import ru.kodeks.docmanager.model.data.Document
 interface DocumentsDAO {
 
     @Insert(onConflict = REPLACE)
-    fun insert(document: Document)
+    suspend fun insert(document: Document)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(documents: List<Document>)
+    suspend fun insertAll(documents: List<Document>)
 
 
 }

@@ -8,9 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.constants.LogTag.TAG
 import ru.kodeks.docmanager.network.Parser
@@ -33,12 +30,14 @@ class MainActivity : AppCompatActivity() {
 
 
         buttonSync.setOnClickListener {
-            //            DocManagerApp.instance.executors.diskIO().execute { Parser().parse() }
-            CoroutineScope(IO).launch {
-                runCatching {
-                    Parser().parse()
-                }.onFailure { sync() }
-            }
+            DocManagerApp.instance.executors.diskIO().execute { Parser().parse() }
+//            CoroutineScope(IO).launch {
+//                runCatching {
+//                    Parser().parse()
+//                }.onFailure {
+//                    stackTraceToString(it)
+//                    sync() }
+//            }
         }
     }
 

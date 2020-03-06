@@ -17,33 +17,36 @@ interface WidgetCategoryDAO {
 @Dao
 interface WidgetTypeDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(widgetType: WidgetType)
+    suspend fun insert(widgetType: WidgetType)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(widgetTypeList: List<WidgetType>)
+    suspend fun insertAll(widgetTypeList: List<WidgetType>)
 }
 
 @Dao
 interface DesktopsDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(widgetType: Desktop)
+    suspend fun insert(desktop: Desktop)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(desktopa: List<Desktop>)
 }
 
 @Dao
 interface WidgetsDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(widget: Widget)
+    suspend fun insert(widget: Widget)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(widgetList: List<Widget>)
+    suspend fun insertAll(widgets: List<Widget>)
 }
 
 @Dao
 interface ShortcutsDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(shortcut: Shortcut)
+    suspend fun insert(shortcut: Shortcut)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(shortcuts: List<Shortcut>)
+    suspend fun insertAll(shortcuts: List<Shortcut>)
 }
 

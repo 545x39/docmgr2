@@ -294,7 +294,7 @@ class Document(
     @SerializedName("approachFlags")
     @Expose
     @ColumnInfo(name = "approach_flags")
-    var approachFlags: Int? = null,
+    var approachFlags: Int = 0,
     /** Идентификатор окончательного ответа*/
     @SerializedName("finalAnswerUid")
     @Expose

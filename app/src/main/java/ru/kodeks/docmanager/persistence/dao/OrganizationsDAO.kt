@@ -10,19 +10,19 @@ import ru.kodeks.docmanager.model.data.Organization
 interface OrganizationsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(organization: Organization)
+    suspend fun insert(organization: Organization)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(organizations: List<Organization>)
+    suspend fun insertAll(organizations: List<Organization>)
 }
 
 @Dao
 interface OrganizationAddressesDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(address: OrgAddress)
+    suspend fun insert(address: OrgAddress)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(addresses: List<OrgAddress>)
+    suspend fun insertAll(addresses: List<OrgAddress>)
 
 }

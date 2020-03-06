@@ -9,11 +9,11 @@ import ru.kodeks.docmanager.model.data.GlobalObject
 @Dao
 interface GlobalObjectsDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(globalObject: GlobalObject)
+    suspend fun insert(globalObject: GlobalObject)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(globalObject: List<GlobalObject>)
+    suspend fun insertAll(globalObject: List<GlobalObject>)
 
     @Query("SELECT COUNT(1) FROM global_objects")
-    fun count(): Int
+    suspend fun count(): Int
 }

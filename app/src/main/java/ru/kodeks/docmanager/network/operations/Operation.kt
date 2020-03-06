@@ -1,15 +1,15 @@
 package ru.kodeks.docmanager.network.operations
 
 import android.util.Log
-import ru.kodeks.docmanager.network.Network
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.kodeks.docmanager.constants.JsonNames.REQUEST_KEY
 import ru.kodeks.docmanager.constants.LogTag
 import ru.kodeks.docmanager.constants.ServiceMethod.GET_DEFERRED_RESPONSE_URL_PATH
 import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
-import ru.kodeks.docmanager.model.io.RequestBase
 import ru.kodeks.docmanager.constants.Settings.ENCRYPT_PASSWORD
+import ru.kodeks.docmanager.model.io.RequestBase
+import ru.kodeks.docmanager.network.Network
 import ru.kodeks.docmanager.util.DocManagerApp
 import ru.kodeks.docmanager.util.NoInternetException
 import java.net.HttpURLConnection
@@ -92,15 +92,11 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
 
     @Throws(java.lang.Exception::class)
     private fun run(attempt: Int = 0, operation: () -> Unit) {
-        try {
-            operation()
-        } catch (e: Exception) {
-            retry(attempt + 1, e) { operation() }
-        }
+        kotlin.runCatching { operation() }.onFailure { retry(attempt + 1, it) { operation() } }
     }
 
     @Throws(Exception::class)
-    fun retry(attempt: Int, exception: java.lang.Exception, function: () -> Unit) {
+    fun retry(attempt: Int, exception: Throwable, function: () -> Unit) {
         if (attempt < MAX_ATTEMPTS) {
             Thread.sleep(timeout)
             run(attempt) { function() }

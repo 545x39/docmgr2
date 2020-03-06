@@ -9,8 +9,8 @@ import ru.kodeks.docmanager.model.data.ConsiderationStation
 interface ConsiderationStationsDAO {
 
     @Insert(onConflict = REPLACE)
-    fun insert(station: ConsiderationStation)
+    suspend fun insert(station: ConsiderationStation)
 
     @Insert(onConflict = REPLACE)
-    fun insertAll(stations: List<ConsiderationStation>)
+    suspend fun insertAll(stations: List<ConsiderationStation>)
 }
