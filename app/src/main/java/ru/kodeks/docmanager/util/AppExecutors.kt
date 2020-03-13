@@ -5,6 +5,8 @@ import android.os.Looper
 
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Global executor pools for the whole application.
@@ -13,6 +15,7 @@ import java.util.concurrent.Executors
  * Grouping tasks like this avoids the effects of task starvation (e.g. disk reads don't wait behind
  * webservice requests).
  */
+@Singleton
 class AppExecutors private constructor(
     private val diskIO: Executor,
     private val networkIO: Executor,
@@ -20,6 +23,7 @@ class AppExecutors private constructor(
     private val mainThreadIO: Executor
 ) {
 
+    @Inject
     constructor() : this(
         Executors.newSingleThreadExecutor(),
         Executors.newFixedThreadPool(3),

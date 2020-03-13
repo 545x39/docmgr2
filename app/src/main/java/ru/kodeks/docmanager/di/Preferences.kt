@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package ru.kodeks.docmanager.util.di
+package ru.kodeks.docmanager.di
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -13,15 +13,11 @@ import ru.kodeks.docmanager.constants.Paths.DEVICE_TYPE
 import ru.kodeks.docmanager.constants.Settings.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
 import ru.kodeks.docmanager.constants.Settings.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
 import ru.kodeks.docmanager.constants.Settings.PREVIEW_MODE_PREFERENCE_KEY
-import ru.kodeks.docmanager.constants.Settings.SEQUENCE_OFFSET_PREFERENCE_KEY
 
 import ru.kodeks.docmanager.model.data.User
-import ru.kodeks.docmanager.model.data.Version
-import ru.kodeks.docmanager.model.data.Widget
 import ru.kodeks.docmanager.model.io.RequestBase
 import ru.kodeks.docmanager.model.io.SyncRequest
 import ru.kodeks.docmanager.util.DocManagerApp
-import ru.kodeks.docmanager.util.di.CurrentUser
 import ru.kodeks.docmanager.util.tools.DeviceUuidFactory
 import java.lang.Boolean.parseBoolean
 

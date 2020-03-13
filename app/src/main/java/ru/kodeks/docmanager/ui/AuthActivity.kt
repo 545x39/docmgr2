@@ -1,36 +1,43 @@
 package ru.kodeks.docmanager.ui
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_main.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.constants.LogTag.TAG
+import ru.kodeks.docmanager.di.StubUser
 import ru.kodeks.docmanager.network.Parser
 import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.InitRequestBuilder
-import ru.kodeks.docmanager.util.DocManagerApp
-import ru.kodeks.docmanager.util.tools.stackTraceToString
+import ru.kodeks.docmanager.util.AppExecutors
+import timber.log.Timber
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class AuthActivity : BaseActivity() {
+
+    @Inject
+    lateinit var user: StubUser
+
+    @Inject
+    lateinit var executors: AppExecutors
+
+    @Inject
+    lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
+        Timber.e("APPLICATION INSTANCE: $user")
+        Timber.e("PREF: $preferences")
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()
         }
 
-
         buttonSync.setOnClickListener {
-            DocManagerApp.instance.executors.diskIO().execute { Parser().parse() }
+            executors.diskIO().execute { Parser().parse() }
 //            CoroutineScope(IO).launch {
 //                runCatching {
 //                    Parser().parse()
@@ -42,11 +49,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sync() {
-        DocManagerApp.instance.executors.networkIO().execute {
+        executors.networkIO().execute {
             try {
                 SyncOperation(InitRequestBuilder().build()).execute()
             } catch (e: Exception) {
-                Log.e(TAG, stackTraceToString(e))
+                Timber.e(e)
                 //TODO Здесь должны быть обработчики соответствующих исключений:
                 // как реагировать на те или иные проблемы с сетью или инитом.
             }

@@ -3,14 +3,14 @@ package ru.kodeks.docmanager.network
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
+import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
 import ru.kodeks.docmanager.model.io.ChkStateResponse
 import ru.kodeks.docmanager.model.io.DefaultResponse
-import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
 
 interface API {
 
     /** http://www.jsonschema2pojo.org/ */
-    /**            "Accept-Encoding: gzip", //Passing gzip explicitly tells OkHTTP that we want to implement our own decompression, otherwise it will decompress response for us.*/
+    /** Passing "Accept-Encoding: gzip" explicitly tells OkHTTP that we want to implement our own decompression, otherwise it will decompress response for us.*/
     @POST("$SYNC_SVC/ChkState")
     @Headers("Content-Type: Application/Raw", "Accept-Encoding: gzip,deflate", "Accept: application/json;charset=utf-8", "Cache-Control: max-age=640000")
     fun checkAESState(): Call<ChkStateResponse>
