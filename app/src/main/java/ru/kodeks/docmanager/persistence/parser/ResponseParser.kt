@@ -1,20 +1,34 @@
-package ru.kodeks.docmanager.network
+package ru.kodeks.docmanager.persistence.parser
 
-import android.util.Log
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import ru.kodeks.docmanager.constants.LogTag.TAG
-import ru.kodeks.docmanager.constants.ResponseFileNames
+import ru.kodeks.docmanager.DocManagerApp
+import ru.kodeks.docmanager.User
+import ru.kodeks.docmanager.constants.PathsAndFileNames.RESPONSE_DIRECTORY
+import ru.kodeks.docmanager.constants.PathsAndFileNames.SYNC_RESPONSE_FILENAME
 import ru.kodeks.docmanager.model.data.*
 import ru.kodeks.docmanager.model.io.SyncResponse
 import ru.kodeks.docmanager.persistence.Database
-import ru.kodeks.docmanager.util.DocManagerApp
+import timber.log.Timber
 import java.io.File
 import java.io.FileReader
+import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
-class Parser(private val responseFile: String = "${DocManagerApp.instance.responseDirectory}${File.separator}${ResponseFileNames.SYNC_RESPONSE_FILENAME}") {
+class Parser() {
+    @Inject
+    lateinit var app: DocManagerApp
+
+    @Inject
+    lateinit var preferences: SharedPreferences
+
+    @Inject
+    lateinit var appUser: User
+
+    @Inject
+    lateinit var database: Database
     private var syncResponse: SyncResponse? = null
     private lateinit var job: Job
 
@@ -36,9 +50,11 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
 
     fun parse() {
         job = CoroutineScope(IO).launch {
-            Log.d(TAG, "Started parsing response")
+            Timber.d("Started parsing response")
+            val responseFile =
+                "${app.getExternalFilesDir(RESPONSE_DIRECTORY)}${File.separator}${SYNC_RESPONSE_FILENAME}"
             syncResponse = gson.fromJson(FileReader(responseFile), SyncResponse::class.java)
-            Log.d(TAG, "Response read. Persisting it to the DB...")
+            Timber.d("Response read. Persisting it to the DB...")
             syncResponse?.apply {
                 val time = measureTimeMillis {
                     listOf(
@@ -57,7 +73,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                         it
                     }.awaitAll()
                 }
-                Log.d(TAG, "PERSISTING RESPONSE TOOK: $time")
+                Timber.d("PERSISTING RESPONSE TOOK: $time")
             }
         }
     }
@@ -73,7 +89,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
     private suspend fun SyncResponse.persistDocuments() {
         val time = measureTimeMillis {
             documents?.let {
-                Database.INSTANCE.documentDao().insertAll(it)
+                database.documentDao().insertAll(it)
                 it
             }?.parallelMap {
                 it.apply {
@@ -92,45 +108,45 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                 }
             }
         }
-        Log.d(TAG, "Persisted documents in $time ms.")
+        Timber.d("Persisted documents in $time ms.")
     }
 
     private suspend fun SyncResponse.persistOrganizations() {
         val time = measureTimeMillis {
             organizationsList?.let {
-                Database.INSTANCE.organizationsDao().insertAll(it)
+                database.organizationsDao().insertAll(it)
                 it
             }?.parallelMap {
                 it.addresses?.parallelMap { address ->
                     address.orgUid = it.uid
                     address
                 }?.let { addresses ->
-                    Database.INSTANCE.organizationAddressDao().insertAll(addresses)
+                    database.organizationAddressDao().insertAll(addresses)
                 }
             }
         }
-        Log.d(TAG, "Persisted organizations int $time ms.")
+        Timber.d("Persisted organizations int $time ms.")
     }
 
     private fun Workbench.persistWidgetCategories() {
         widgetCategories?.let {
-            Database.INSTANCE.widgetCategoryDao().insertAll(it)
-            Log.d(TAG, "Persisted widget categories.")
+            database.widgetCategoryDao().insertAll(it)
+            Timber.d("Persisted widget categories.")
         }
     }
 
     private suspend fun Workbench.persistWidgetTypes() {
         val time = measureTimeMillis {
             widgetTypes?.let {
-                Database.INSTANCE.widgetTypeDao().insertAll(it)
+                database.widgetTypeDao().insertAll(it)
             }
         }
-        Log.d(TAG, "Persisted widget types in $time ms.")
+        Timber.d("Persisted widget types in $time ms.")
     }
 
     private suspend fun Workbench.persistDesktops() {
         desktops?.let {
-            Database.INSTANCE.desktopDao().insertAll(it)
+            database.desktopDao().insertAll(it)
             it
         }?.parallelMap {
             it.persistWidgets()
@@ -142,11 +158,11 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         widgets?.map {
             it.desktopId = this.id
             it
-        }?.also { Database.INSTANCE.widgetDao().insertAll(it) }
+        }?.also { database.widgetDao().insertAll(it) }
     }
 
     private suspend fun Desktop.persistShortcuts() {
-        shortcuts?.let { Database.INSTANCE.shortcutDao().insertAll(it) }
+        shortcuts?.let { database.shortcutDao().insertAll(it) }
     }
 
     private suspend fun Document.persistApprovalRoutes() {
@@ -154,7 +170,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             it.docUid = this.uid
             it
         }?.let {
-            Database.INSTANCE.approvalRouteDao().insertAll(it)
+            database.approvalRouteDao().insertAll(it)
             it
         }?.parallelMap {
             withContext(IO) {
@@ -176,7 +192,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             it.docUid = this.docUid
             it
         }?.let {
-            Database.INSTANCE.approvalStageDao().insertAll(it)
+            database.approvalStageDao().insertAll(it)
             it
         }?.parallelMap { it.persistApprovalStations() }
     }
@@ -187,7 +203,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             it.stageId = this.id
             it
         }?.let {
-            Database.INSTANCE.approvalStationDao().insertAll(it)
+            database.approvalStationDao().insertAll(it)
             it
         }?.parallelMap { it.persistAttachments() }
     }
@@ -196,28 +212,28 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         files?.parallelMap {
             it.docUid = this.docUid
             it
-        }?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+        }?.let { database.attachmentsDao().insertAll(it) }
     }
 
     private suspend fun ApprovalRoute.persistAttachments() {
         files?.parallelMap {
             it.docUid = this.docUid
             it
-        }?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+        }?.let { database.attachmentsDao().insertAll(it) }
     }
 
     private suspend fun ApprovalRoute.persistDocLinks() {
         docLinks?.parallelMap {
             it.doc_uid = this.docUid
             it
-        }?.let { Database.INSTANCE.documentLinksDao().insertAll(it) }
+        }?.let { database.documentLinksDao().insertAll(it) }
     }
 
     private suspend fun Document.persistAttachments() {
         attachments?.parallelMap {
             it.docUid = this.uid
             it
-        }?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+        }?.let { database.attachmentsDao().insertAll(it) }
     }
 
     private suspend fun Document.persistWidgetLinks() {
@@ -227,7 +243,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                 it.docType = this.docType
             }
             it
-        }?.let { Database.INSTANCE.documentWidgetLinkDao().insertAll(it) }
+        }?.let { database.documentWidgetLinkDao().insertAll(it) }
     }
 
     private suspend fun Document.persistConsiderationStations() {
@@ -235,7 +251,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
             it.docUid = this.uid
             it
         }?.let {
-            Database.INSTANCE.considerationStationDao().insertAll(it)
+            database.considerationStationDao().insertAll(it)
             it
         }?.parallelMap {
             withContext(IO) {
@@ -254,7 +270,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
         docLinks?.parallelMap {
             it.doc_uid = this.docUid.orEmpty()
             it
-        }?.let { Database.INSTANCE.documentLinksDao().insertAll(it) }
+        }?.let { database.documentLinksDao().insertAll(it) }
     }
 
     private suspend fun ConsiderationStation.persistAttachments() {
@@ -262,16 +278,16 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                 it.docUid = this.docUid.orEmpty()
                 it
             }
-            ?.let { Database.INSTANCE.attachmentsDao().insertAll(it) }
+            ?.let { database.attachmentsDao().insertAll(it) }
     }
 
     private suspend fun Document.persistNotes() {
-        notes?.let { Database.INSTANCE.docNoteDao().insertAll(it) }
+        notes?.let { database.docNoteDao().insertAll(it) }
     }
 
     /** Это уиды тех документов, все привязки которых к виджетам следует удалить. Сами документы остаются в базе.*/
     private suspend fun SyncResponse.unboundDocuments() {
-        newUnboundDocUids?.let { Database.INSTANCE.documentWidgetLinkDao().deleteAll(it) }
+        newUnboundDocUids?.let { database.documentWidgetLinkDao().deleteAll(it) }
     }
 
     private suspend fun SyncResponse.persistGlobalObjects() {
@@ -281,9 +297,9 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                 list.add(it)
                 it.children?.map { child -> list.add(child) }
             }
-            Database.INSTANCE.globalObjectDao().insertAll(list)
+            database.globalObjectDao().insertAll(list)
         }
-        Log.d(TAG, "Persisted global objects in $time ms.")
+        Timber.d("Persisted global objects in $time ms.")
     }
 
     /**
@@ -297,15 +313,15 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
                 list.add(it)
             }
         }
-        Database.INSTANCE.classifiersDao().insertAll(list)
-        Log.d(TAG, "Persisted classifiers.")
+        database.classifiersDao().insertAll(list)
+        Timber.d("Persisted classifiers.")
     }
 
     private suspend fun SyncResponse.persistInitData() {
-        Database.INSTANCE.initDao().insert(
+        database.initDao().insert(
             InitData(
-                login = DocManagerApp.instance.user.login.orEmpty(),
-                password = DocManagerApp.instance.user.password.orEmpty(),
+                login = appUser.login,
+                password = appUser.password,
                 userUid = user?.uid.orEmpty(),
                 serverVersion = serverVersion.orEmpty(),
                 sequence = version?.main ?: 0,
@@ -317,7 +333,7 @@ class Parser(private val responseFile: String = "${DocManagerApp.instance.respon
     }
 
     private suspend fun SyncResponse.persistSettings() {
-        settings?.let { Database.INSTANCE.settingsDao().insertAll(it) }
+        settings?.let { database.settingsDao().insertAll(it) }
     }
 }
 

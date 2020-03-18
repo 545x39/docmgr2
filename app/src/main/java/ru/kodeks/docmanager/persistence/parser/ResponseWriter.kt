@@ -1,14 +1,18 @@
-package ru.kodeks.docmanager.network.util
+package ru.kodeks.docmanager.persistence.parser
 
-import android.util.Log
 import okhttp3.ResponseBody
-import ru.kodeks.docmanager.constants.LogTag.TAG
+import timber.log.Timber
 import java.io.*
 import java.nio.charset.Charset
 import kotlin.math.min
 
 
-fun write(body: ResponseBody, file: File, inputEncoding: String = "Cp1251", outputEncoding: Charset? = null): Boolean {
+fun write(
+    body: ResponseBody,
+    file: File,
+    inputEncoding: String = "Cp1251",
+    outputEncoding: Charset? = null
+): Boolean {
 
     fun toFile(inputStream: InputStream, outputStream: FileOutputStream) {
         val fileReader = ByteArray(4096)
@@ -24,7 +28,12 @@ fun write(body: ResponseBody, file: File, inputEncoding: String = "Cp1251", outp
         }
     }
 
-    fun toFileWithEncoding(inputStream: InputStream, outputStream: FileOutputStream, inputEncoding: String, outputEncoding: Charset) {
+    fun toFileWithEncoding(
+        inputStream: InputStream,
+        outputStream: FileOutputStream,
+        inputEncoding: String,
+        outputEncoding: Charset
+    ) {
         val reader = InputStreamReader(inputStream, inputEncoding)
         val writer = OutputStreamWriter(outputStream, outputEncoding)
         val bufferSize = 4 * 1024
@@ -38,7 +47,7 @@ fun write(body: ResponseBody, file: File, inputEncoding: String = "Cp1251", outp
             }
             writer.write(buffer, 0, bytesRead)
             downloaded += bytesRead
-            Log.d(TAG, "Downloaded $downloaded bytes of ${body.contentLength()}")
+            Timber.d("Downloaded $downloaded bytes of ${body.contentLength()}")
         }
         writer.flush()
     }
@@ -46,7 +55,7 @@ fun write(body: ResponseBody, file: File, inputEncoding: String = "Cp1251", outp
     var inputStream: InputStream? = null
     var outputStream: OutputStream? = null
     return try {
-        Log.d(TAG, "WRITING RESPONSE.")
+        Timber.d("WRITING RESPONSE.")
         inputStream = body.byteStream()
         outputStream = FileOutputStream(file)
         ////

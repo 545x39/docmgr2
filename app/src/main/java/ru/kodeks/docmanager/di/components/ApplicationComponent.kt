@@ -1,17 +1,22 @@
-package ru.kodeks.docmanager.di
+package ru.kodeks.docmanager.di.components
 
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
-import ru.kodeks.docmanager.util.DocManagerApp
+import ru.kodeks.docmanager.DocManagerApp
+import ru.kodeks.docmanager.di.modules.ActivitiesModule
+import ru.kodeks.docmanager.di.modules.ApplicationModule
+import ru.kodeks.docmanager.di.modules.StubUserModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [AndroidSupportInjectionModule::class,
-        AuthActivityModule::class,
-        ApplicationModule::class]
+        ActivitiesModule::class,
+        ApplicationModule::class,
+        StubUserModule::class
+    ]
 )
 interface ApplicationComponent : AndroidInjector<DocManagerApp> {
 

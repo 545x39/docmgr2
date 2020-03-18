@@ -1,9 +1,6 @@
-package ru.kodeks.docmanager.util
+package ru.kodeks.docmanager
 
-import android.util.Log
-import ru.kodeks.docmanager.constants.LogTag.TAG
-import ru.kodeks.docmanager.util.tools.stackTraceToString
-import java.lang.Exception
+import timber.log.Timber
 
 open class LoggingException(message: String? = null, cause: Throwable? = null) :
     Exception(message, cause) {
@@ -12,7 +9,7 @@ open class LoggingException(message: String? = null, cause: Throwable? = null) :
     }
 
     private fun log() {
-        Log.e(TAG, stackTraceToString(this))
+        Timber.e(this)
     }
 }
 

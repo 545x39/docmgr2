@@ -1,8 +1,8 @@
 package ru.kodeks.docmanager.crypto.passwordencrypter
 
-import ru.kodeks.docmanager.util.PasswordEncryptionException
+import android.provider.ContactsContract.CommonDataKinds.StructuredName.PREFIX
+import ru.kodeks.docmanager.PasswordEncryptionException
 
-private const val SALT = "#4aDf8EJ7"
 private val aes: AES = AES()
 
 class Encrypter {
@@ -18,7 +18,7 @@ class Encrypter {
         }
 
         return when(addSalt){
-            true -> SALT + getEncrypted(password)
+            true -> PREFIX + getEncrypted(password)
             false -> getEncrypted(password)
         }
     }

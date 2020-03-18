@@ -2,10 +2,12 @@
 
 package ru.kodeks.docmanager.network.ssl
 
-import android.util.Log
-import ru.kodeks.docmanager.util.tools.stackTraceToString
-import ru.kodeks.docmanager.util.DocManagerApp
-import ru.kodeks.docmanager.constants.LogTag.TAG
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import ru.kodeks.docmanager.DocManagerApp
+import ru.kodeks.docmanager.constants.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
+import ru.kodeks.docmanager.constants.Settings.SslSettings.USE_SSL_CERT_SETTING
+import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -16,16 +18,13 @@ import java.security.*
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.*
+import javax.inject.Inject
 import javax.net.ssl.*
 
 
-const val SSL_CERTIFICATE_PASSWORD = "SSLCertificatePassword"
-const val USE_SSL_CERT_SETTING = "useSSLCertificate"
 const val CERT_FILENAME = "downloaded_ssl_cert.p12"
 const val TYPE = "PKCS12"
 const val PROVIDER = "BC"
-var SSL_CERTIFICATE_FILE =
-    DocManagerApp.instance.applicationInfo.dataDir + File.separator + CERT_FILENAME
 
 fun loadKeyStore(keyStorePath: String, keyStorePassword: String?): KeyStore? {
     var keyStore: KeyStore? = null
@@ -53,19 +52,22 @@ class ApacheClientStoreSocketFactory @Throws(
 )
 constructor(trustedKeyStore: KeyStore) :
     org.apache.http.conn.ssl.SSLSocketFactory(trustedKeyStore) {
+    @Inject
+    lateinit var app: DocManagerApp
 
+    @Inject
+    lateinit var preferences: SharedPreferences
     private var sslContext: SSLContext = SSLContext.getInstance("TLS")
 
     init {
-        val preferences = DocManagerApp.instance.preferences
         try {
             var password: String? = null
-            val keyStorePath =
-                DocManagerApp.instance.applicationInfo.dataDir + File.separator + CERT_FILENAME
+            val keyStorePath = app.applicationInfo.dataDir + File.separator + CERT_FILENAME
             if (preferences.getBoolean(USE_SSL_CERT_SETTING, false)) {
                 password = preferences.getString(SSL_CERTIFICATE_PASSWORD, "")
             }
             val keyStore = loadKeyStore(keyStorePath, password)
+
             /** Create a TrustManager that trusts the CAs in our KeyStore  */
             //            String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
             val tmf = TrustManagerFactory.getInstance("PKIX"/*tmfAlgorithm//, "BC"*/)
@@ -129,8 +131,9 @@ class TrustStoreFactory {
             keyStorePath: String,
             keyStorePassword: String?
         ): SSLSocketFactory? {
-            try {
+            runCatching {
                 val keyStore = loadKeyStore(keyStorePath, keyStorePassword) ?: return null
+
                 /** Create a TrustManager that trusts the CAs in our KeyStore  */
 //                val tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm()
                 val tmf = TrustManagerFactory.getInstance("PKIX" /*tmfAlgorithm*/)
@@ -147,14 +150,14 @@ class TrustStoreFactory {
                     SecureRandom()
                 )
                 return sslContext.socketFactory
-            } catch (e: Exception) {
-                Log.d(TAG, stackTraceToString(e))
-                return null
+            }.onFailure {
+                Timber.d(it)
             }
+            return null
         }
 
         fun getUnsafeSocketFactory(): SSLSocketFactory? {
-            try {
+            runCatching {
                 // Create a trust manager that does not validate certificate chains
                 val trustAllCerts = arrayOf<TrustManager>(TrustAllCertsTrustManager())
                 // Install the all-trusting trust manager
@@ -162,8 +165,8 @@ class TrustStoreFactory {
                 sslContext.init(null, trustAllCerts, SecureRandom())
                 // Create an ssl socket factory with our all-trusting manager
                 return sslContext.socketFactory
-            } catch (e: Exception) {
-                //Log.e("TAG", "getUnsafeOkHttpClient: " + StringTools.stackTraceToString(e))
+            }.onFailure {
+                Timber.d(it)
             }
             return null
         }
@@ -172,10 +175,12 @@ class TrustStoreFactory {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 class TrustAllCertsTrustManager constructor() : X509TrustManager {
+    @SuppressLint("TrustAllX509TrustManager")
     @Throws(CertificateException::class)
     override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
     }
 
+    @SuppressLint("TrustAllX509TrustManager")
     @Throws(CertificateException::class)
     override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
     }
@@ -239,10 +244,9 @@ class ClientKeyStoreTrustManager constructor(vararg additionalKeyStores: KeyStor
      */
     @Throws(CertificateException::class)
     override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
-        //TODO COMMENT THIS LOGGING
-        for (certificate in chain) {
-//            Log.d(TAG, "CERT:: $certificate")
-        }
+//        for (certificate in chain) {
+//            Timber.d("CERT:: $certificate")
+//        }
         for (tm in x509TrustManagers) {
             try {
                 tm.checkServerTrusted(chain, authType)

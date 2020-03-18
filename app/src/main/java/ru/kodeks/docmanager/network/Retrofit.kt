@@ -7,7 +7,7 @@ import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
 import ru.kodeks.docmanager.model.io.ChkStateResponse
 import ru.kodeks.docmanager.model.io.DefaultResponse
 
-interface API {
+interface Retrofit {
 
     /** http://www.jsonschema2pojo.org/ */
     /** Passing "Accept-Encoding: gzip" explicitly tells OkHTTP that we want to implement our own decompression, otherwise it will decompress response for us.*/

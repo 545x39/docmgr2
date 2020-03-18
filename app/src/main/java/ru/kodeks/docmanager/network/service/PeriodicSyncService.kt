@@ -2,15 +2,20 @@ package ru.kodeks.docmanager.network.service
 
 import android.app.job.JobParameters
 import android.app.job.JobService
+import ru.kodeks.docmanager.AppExecutors
 import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.builder.SyncRequestBuilder
-import ru.kodeks.docmanager.util.DocManagerApp
+import javax.inject.Inject
 
 
 class PeriodicSyncService : JobService() {
 
+    @Inject
+    lateinit var executors: AppExecutors
+
     override fun onStartJob(params: JobParameters): Boolean {
-        DocManagerApp.instance.executors.networkIO().execute {
+//        DocManagerApp.instance.
+        executors.networkIO().execute {
             var reschedule = false
             try {
                 SyncOperation(

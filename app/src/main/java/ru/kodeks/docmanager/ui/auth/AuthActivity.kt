@@ -1,4 +1,4 @@
-package ru.kodeks.docmanager.ui
+package ru.kodeks.docmanager.ui.auth
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -7,19 +7,21 @@ import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_main.*
+import ru.kodeks.docmanager.AppExecutors
+import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.di.StubUser
-import ru.kodeks.docmanager.network.Parser
+import ru.kodeks.docmanager.User
 import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.InitRequestBuilder
-import ru.kodeks.docmanager.util.AppExecutors
+import ru.kodeks.docmanager.persistence.parser.Parser
+import ru.kodeks.docmanager.ui.BaseActivity
 import timber.log.Timber
 import javax.inject.Inject
 
 class AuthActivity : BaseActivity() {
 
     @Inject
-    lateinit var user: StubUser
+    lateinit var user: User
 
     @Inject
     lateinit var executors: AppExecutors
@@ -27,9 +29,12 @@ class AuthActivity : BaseActivity() {
     @Inject
     lateinit var preferences: SharedPreferences
 
+    @Inject
+    lateinit var app: DocManagerApp
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.e("APPLICATION INSTANCE: $user")
+        Timber.e("APPLICATION  INSTANCE: ${app}")
         Timber.e("PREF: $preferences")
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
@@ -37,7 +42,10 @@ class AuthActivity : BaseActivity() {
         }
 
         buttonSync.setOnClickListener {
-            executors.diskIO().execute { Parser().parse() }
+            executors.diskIO().execute {
+                Parser()
+                    .parse()
+            }
 //            CoroutineScope(IO).launch {
 //                runCatching {
 //                    Parser().parse()

@@ -1,9 +1,8 @@
 package ru.kodeks.docmanager.network.request
 
 import ru.kodeks.docmanager.constants.DataFilter
-import ru.kodeks.docmanager.constants.Settings
-import ru.kodeks.docmanager.constants.Settings.SEQUENCE_OFFSET_PREFERENCE_KEY
-import ru.kodeks.docmanager.model.data.Version
+import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
+import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
 import ru.kodeks.docmanager.model.data.Widget
 import ru.kodeks.docmanager.model.io.SyncRequest
 import ru.kodeks.docmanager.network.request.builder.DataFilterRequestBuilder
@@ -47,12 +46,12 @@ open class SyncRequestBuilder : DataFilterRequestBuilder<SyncRequest>() {
     override fun dataFilter(): Int {
         fun timeToUpdateGlobalCatalog(): Boolean {
             return System.currentTimeMillis() - preferences.getLong(
-                Settings.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME,
+                PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME,
                 0
             ) >
                     Integer.parseInt(
                         preferences.getString(
-                            Settings.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD,
+                            PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD,
                             "12"
                         )!!
                     ) * 60 * 60 * 1000

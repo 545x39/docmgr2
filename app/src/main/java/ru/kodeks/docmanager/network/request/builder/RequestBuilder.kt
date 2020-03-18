@@ -1,38 +1,51 @@
 package ru.kodeks.docmanager.network.request.builder
 
 
+import android.content.SharedPreferences
 import android.os.Build
 import ru.kodeks.docmanager.BuildConfig
+import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.constants.DataFilter.CLASSIFIERS
 import ru.kodeks.docmanager.constants.DataFilter.DOCUMENTS
 import ru.kodeks.docmanager.constants.DataFilter.GLOBAL_OBJECTS
 import ru.kodeks.docmanager.constants.DataFilter.SETTINGS
 import ru.kodeks.docmanager.constants.DataFilter.WORKBENCH
 import ru.kodeks.docmanager.constants.DataFilter.WORKBENCH_META
-import ru.kodeks.docmanager.constants.Paths.DEVICE_TYPE
-import ru.kodeks.docmanager.constants.Settings.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
-import ru.kodeks.docmanager.constants.Settings.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
 import ru.kodeks.docmanager.constants.Settings.PREVIEW_MODE_PREFERENCE_KEY
-
+import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
+import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.model.io.RequestBase
 import ru.kodeks.docmanager.model.io.SyncRequest
-import ru.kodeks.docmanager.util.DocManagerApp
-import ru.kodeks.docmanager.util.tools.DeviceUuidFactory
+import ru.kodeks.docmanager.util.DeviceUuidFactory
 import java.lang.Boolean.parseBoolean
+import javax.inject.Inject
 
 
 abstract class RequestBuilder<T : RequestBase> {
 
+    @Inject
+    lateinit var appUser: ru.kodeks.docmanager.User
     private var request: T
-    protected val context = DocManagerApp.instance
-    protected val preferences = context.preferences
-//    protected var database = DatabaseIO(context)
+
+    @Inject
+    lateinit var app: DocManagerApp
+
+    @Inject
+    lateinit var preferences: SharedPreferences
 
     init {
         @Suppress("LeakingThis")
         request = initRequest().apply {
-            user = user()
+            user = User(
+                login = appUser.login,
+                password = appUser.encryptedPassword,
+                device = "Android",
+                deviceModel = "${Build.BRAND} ${Build.DEVICE}",
+                androidVersion = Build.VERSION.RELEASE,
+                version = BuildConfig.VERSION_NAME,
+                deviceUid = DeviceUuidFactory(app).deviceUuid.toString()
+            )
             preview = parseBoolean(preferences.getString(PREVIEW_MODE_PREFERENCE_KEY, "false"))
         }
     }
@@ -42,16 +55,6 @@ abstract class RequestBuilder<T : RequestBase> {
     fun build(): T {
         return request
     }
-
-    private fun user() = User(
-        login = DocManagerApp.instance.user.login ?: "",
-        password = DocManagerApp.instance.user.password ?: "",
-        device = DEVICE_TYPE,
-        deviceModel = "${Build.BRAND} ${Build.DEVICE}",
-        androidVersion = Build.VERSION.RELEASE,
-        version = BuildConfig.VERSION_NAME,
-        deviceUid = DeviceUuidFactory(context).deviceUuid.toString()
-    )
 }
 
 abstract class DataFilterRequestBuilder<T : RequestBase> : RequestBuilder<T>() {

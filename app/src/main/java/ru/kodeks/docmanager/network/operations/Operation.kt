@@ -1,25 +1,45 @@
 package ru.kodeks.docmanager.network.operations
 
-import android.util.Log
+import android.content.SharedPreferences
 import okhttp3.ResponseBody
 import retrofit2.Response
+import ru.kodeks.docmanager.NoInternetException
 import ru.kodeks.docmanager.constants.JsonNames.REQUEST_KEY
-import ru.kodeks.docmanager.constants.LogTag
+import ru.kodeks.docmanager.constants.Network.DEFAULT_DEFERRED_REQUEST_PERIOD
+import ru.kodeks.docmanager.constants.Network.DEFAULT_URL
+import ru.kodeks.docmanager.constants.Network.MAX_REQUEST_ATTEMPTS
 import ru.kodeks.docmanager.constants.ServiceMethod.GET_DEFERRED_RESPONSE_URL_PATH
 import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
+import ru.kodeks.docmanager.constants.Settings.DEFERRED_REQUEST_TIMEOUT
 import ru.kodeks.docmanager.constants.Settings.ENCRYPT_PASSWORD
+import ru.kodeks.docmanager.constants.Settings.SERVER_ADDRESS
 import ru.kodeks.docmanager.model.io.RequestBase
-import ru.kodeks.docmanager.network.Network
-import ru.kodeks.docmanager.util.DocManagerApp
-import ru.kodeks.docmanager.util.NoInternetException
+import ru.kodeks.docmanager.network.Retrofit
+import timber.log.Timber
 import java.net.HttpURLConnection
+import javax.inject.Inject
 
-const val MAX_ATTEMPTS = 3
-
+//TODO refactor with coroutines
 abstract class Operation<T>(var request: T) where T : RequestBase {
 
-    //TODO потом перевести на возврат значения из настройки
-    private val timeout get() = 2000L
+    @Inject
+    lateinit var preferences: SharedPreferences
+
+    @Inject
+    lateinit var retrofit: Retrofit
+
+    private val timeout
+        get() = preferences.getLong(
+            DEFERRED_REQUEST_TIMEOUT,
+            DEFAULT_DEFERRED_REQUEST_PERIOD
+        )
+
+    //TODO Delete stub
+    val serverUrl: String
+        get() {
+//            UrlValidator().isValid(DocManagerApp.instance.preferences.getString(SERVER_ADDRESS, "http://172.16.1.61/tek_sm/"))
+            return preferences.getString(SERVER_ADDRESS, DEFAULT_URL) ?: DEFAULT_URL
+        }
 
     var requestKey: String? = null
 
@@ -35,8 +55,7 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
 
     private fun request() {
         fun getResponseKey() {
-            val response =
-                Network.INSTANCE.api.postDeferred(url = getUrl(), body = request).execute()
+            val response = retrofit.postDeferred(url = getUrl(), body = request).execute()
             if (response.isSuccessful) {
                 requestKey = response.body()?.requestKey
             } else {
@@ -45,7 +64,7 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
         }
 
         fun getResponse() {
-            val response = Network.INSTANCE.api.post(url = getUrl(), body = request).execute()
+            val response = retrofit.post(url = getUrl(), body = request).execute()
             if (response.isSuccessful) {
                 parseResponse(response)
             } else {
@@ -62,11 +81,11 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
     private fun getDeferred() {
         if (!request.runDeferred) return
         checkNotNull(requestKey) { "No request key has been obtained from server" }
-        val url = "${Network.INSTANCE.url}$GET_DEFERRED_RESPONSE_URL_PATH?$REQUEST_KEY=$requestKey"
+        val url = "$serverUrl$GET_DEFERRED_RESPONSE_URL_PATH?$REQUEST_KEY=$requestKey"
         var response: Response<ResponseBody>
         loop@ while (true) {
-            Log.d(LogTag.TAG, "Deferred request by key $requestKey")
-            response = Network.INSTANCE.api.get(url).execute()
+            Timber.d("Deferred request by key $requestKey")
+            response = retrofit.get(url).execute()
             if (response.isSuccessful) {
                 when (response.code()) {
                     HttpURLConnection.HTTP_OK, HttpURLConnection.HTTP_PARTIAL -> {
@@ -97,7 +116,7 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
 
     @Throws(Exception::class)
     fun retry(attempt: Int, exception: Throwable, function: () -> Unit) {
-        if (attempt < MAX_ATTEMPTS) {
+        if (attempt < MAX_REQUEST_ATTEMPTS) {
             Thread.sleep(timeout)
             run(attempt) { function() }
         } else {
@@ -107,14 +126,12 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
 
     @Throws(IllegalStateException::class)
     private fun check() {
-        val response =
-            Network.INSTANCE.api.checkState("${Network.INSTANCE.url}${SYNC_SVC}/ChkState").execute()
+        val response = retrofit.checkState("$serverUrl${SYNC_SVC}/ChkState").execute()
         if (response.isSuccessful) {
             when (response.code()) {
                 HttpURLConnection.HTTP_OK -> {
                     val encrypt = response.body()?.aes ?: false
-                    DocManagerApp.instance.preferences.edit().putBoolean(ENCRYPT_PASSWORD, encrypt)
-                        .apply()
+                    preferences.edit().putBoolean(ENCRYPT_PASSWORD, encrypt).apply()
                 }
                 else -> {
                     throw IllegalStateException("Got error ${response.code()}")
@@ -123,8 +140,7 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
         } else {
             /** Заглушка для старых версий сервиса, у которых нет ChkState. */
             if (response.code() == HttpURLConnection.HTTP_NOT_FOUND) {
-                DocManagerApp.instance.preferences.edit()
-                    .putBoolean(ENCRYPT_PASSWORD, false).apply()
+                preferences.edit().putBoolean(ENCRYPT_PASSWORD, false).apply()
             } else {
                 throw IllegalStateException("Request was a failure")
             }

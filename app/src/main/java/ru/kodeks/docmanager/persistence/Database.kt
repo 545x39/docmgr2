@@ -1,11 +1,8 @@
 package ru.kodeks.docmanager.persistence
 
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import ru.kodeks.docmanager.model.data.*
 import ru.kodeks.docmanager.persistence.dao.*
-import ru.kodeks.docmanager.util.DocManagerApp
-import java.io.File
 
 
 @androidx.room.Database(
@@ -55,11 +52,4 @@ abstract class Database : RoomDatabase() {
     abstract fun approvalRouteDao(): ApprovalRoutesDAO
     abstract fun approvalStageDao(): ApprovalStagesDAO
     abstract fun approvalStationDao(): ApprovalStationsDAO
-
-    companion object {
-        private val dbName =
-            "${DocManagerApp.instance.dbDirectory}${File.separator}${DocManagerApp.instance.user.login}"
-        var INSTANCE = Room.databaseBuilder(DocManagerApp.instance, Database::class.java, dbName)
-            .fallbackToDestructiveMigration().build()
-    }
 }
