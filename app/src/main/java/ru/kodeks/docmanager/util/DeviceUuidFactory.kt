@@ -9,7 +9,7 @@ import android.telephony.TelephonyManager
 import java.io.UnsupportedEncodingException
 import java.util.*
 
-class DeviceUuidFactory @SuppressLint("HardwareIds") constructor(val context: Context) {
+class DeviceUuidFactory @SuppressLint("HardwareIds") constructor(private val context: Context) {
 
 
     private val prefsFile = "device_id.xml"

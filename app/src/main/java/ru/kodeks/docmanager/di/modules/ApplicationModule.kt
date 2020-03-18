@@ -54,6 +54,7 @@ class ApplicationModule {
                 connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                 retryOnConnectionFailure(true)
+                @Suppress("ConstantConditionIf")
                 if (false) {
                     /** Turn off to avoid OutOfMemoryError with a huge response.*/
                     addInterceptor(

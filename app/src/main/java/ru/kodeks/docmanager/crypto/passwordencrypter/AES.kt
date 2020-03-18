@@ -12,6 +12,7 @@ private const val DELIMITER = ";"
 /** private static final String ALGORITHM = "AES";
  * "AES/CBC/NoPadding";"AES/CFB/NoPadding"; "AES/CBC/PKCS5Padding"; (DOESN'T WORK)
  */
+@Suppress("SpellCheckingInspection")
 private const val ALGORITHM = "AES/CBC/PKCS7Padding"
 
 private val KEY = byteArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10, 0x11, 0x1, 0x16, 0x14, 0x15, 0x16)

@@ -2,8 +2,8 @@ package ru.kodeks.docmanager.model.data.actions
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import ru.kodeks.docmanager.model.data.ObjectBase
 import ru.kodeks.docmanager.model.data.FileUploadInfo
+import ru.kodeks.docmanager.model.data.ObjectBase
 
 
 /** Базовое действие (BaseAction)*/
@@ -39,19 +39,19 @@ abstract class BaseAction<TAction> : ObjectBase() where TAction : BaseAction<TAc
 /** Типы действий с объектами*/
 
 /** Действие общего характера над объектом.*/
-class Verb {
+object Verb {
 
     /** Пустое значение (ошибка)*/
-    val UNKNOWN = 0
+    const val UNKNOWN = 0
 
     /** Обновление*/
-    val UPDATE = 1
+    const val UPDATE = 1
 
     /** Добавление*/
-    val ADD = 2
+    const val ADD = 2
 
     /** Удаление*/
-    val DELETE = 3
+    const val DELETE = 3
 }
 
 /** Базовое действие с документом*/
@@ -59,9 +59,9 @@ class Verb {
 /** Базовое действие с документом.*/
 
 /** <h3>Ошибки</h3>*
-Помимо кодов ошибок, отнаследованных от \ref BaseAction<TAction>, при выполнении данного действия может возникать ряд логических ошибок:
-- \b 522 \link API.ErrorType API.ErrorType::NoDocument \endlink - Не задан УИД документа.
-- \b 523 \link API.ErrorType API.ErrorType::NoDocType \endlink - Не задан тип документа.*/
+Помимо кодов ошибок, отнаследованных от BaseAction<TAction>, при выполнении данного действия может возникать ряд логических ошибок:
+- 522: API.ErrorType::NoDocument - Не задан УИД документа.
+- 523: API.ErrorType::NoDocType - Не задан тип документа.*/
 abstract class BaseDocumentAction<TAction> : BaseAction<TAction>() where TAction : BaseAction<TAction> {
 
     /** Идентификатор родительского документа.*/
@@ -96,10 +96,10 @@ abstract class BaseDocumentAction<TAction> : BaseAction<TAction>() where TAction
 /** Интерфейс, который реализуют действия, допускающие передачу одиночного вложения с клиента.
 Для передачи множественных вложений используется <see cref="IFilesUpload"/>.*/
 
-/** <h3>Ошибки</h3>
+/** Ошибки
 При выполнении действия, реализующего этот интерфейс, могут возникать следующие ошибки:
-- \b 7 \link API.ErrorType API.ErrorType::ContentNotFound\endlink - В запросе присутствует
-ссылка на отсутствующие бинарные данные, которые должны идти следом за JSON телом запроса.*/
+- 7: API.ErrorType::ContentNotFound - В запросе присутствует ссылка на отсутствующие бинарные
+данные, которые должны идти следом за JSON телом запроса.*/
 interface IFileUpload {
 
     /** Файл, передаваемый с клиента на сервер.*/
@@ -107,12 +107,12 @@ interface IFileUpload {
 }
 
 /** Интерфейс, который реализуют действия, допускающие передачу сразу нескольких вложений с клиента.
-Для передачи множественных вложений используется <see cref="IFileUpload"/>.*/
+Для передачи множественных вложений используется "IFileUpload".*/
 
-/** <h3>Ошибки</h3>
+/** Ошибки
 При выполнении действия, реализующего этот интерфейс, могут возникать следующие ошибки:
-- \b 7 \link API.ErrorType API.ErrorType::ContentNotFound\endlink - В запросе присутствует
-ссылка на отсутствующие бинарные данные, которые должны идти следом за JSON телом запроса.*/
+- 7: API.ErrorType::ContentNotFound - В запросе присутствует ссылка на отсутствующие бинарные
+данные, которые должны идти следом за JSON телом запроса.*/
 
 interface IFilesUpload {
 

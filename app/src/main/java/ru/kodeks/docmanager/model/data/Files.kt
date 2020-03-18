@@ -7,38 +7,38 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 /** Разрешения на папку.*/
-sealed class FolderPermissions {
+object FolderPermissions {
 
     /**  Нет доступа*/
-    val NONE = 0
+    const val NONE = 0
 
     /**  Чтение содержимого папки*/
-    val READ = 1
+    const val READ = 1
 
     /**  Изменение метаданных папки*/
-    val MODIFY = 2
+    const val MODIFY = 2
 
     /** Удаление папки*/
-    val DELETE = 4
+    const val DELETE = 4
 
     /** Добавление документов в папку*/
-    val ADD_DOCUMENTS = 8
+    const val ADD_DOCUMENTS = 8
 }
 
 /** Типы папок.*/
-sealed class FolderTypes {
+object FolderTypes {
 
     /**  Личная папка*/
-    val PRIVATE_FOLDER = 0
+    const val PRIVATE_FOLDER = 0
 
     /** Общая папка*/
-    val SHARED_FOLDER = 1
+    const val SHARED_FOLDER = 1
 
     /**  Категория подборок*/
-    val COMPILATION_CATEGORY = 2
+    const val COMPILATION_CATEGORY = 2
 
     /**  Подборка*/
-    val COMPILATION = 3
+    const val COMPILATION = 3
 }
 
 /**  Папка с документами. Бывает общая, личная, категория и подборка (см. тип \b type).*/
@@ -98,28 +98,28 @@ open class Folder(
 /** Категория/подборка*/
 
 /**  Состояние подборки*/
-sealed class CompilationStates {
+object CompilationStates {
 
     /**  Не определено*/
-    val UNDEFINED = 0
+    const val UNDEFINED = 0
 
     /** Подготовка*/
-    val PREPEARING = 1
+    const val PREPEARING = 1
 
     /** Отправлена*/
-    val SENT = 2
+    const val SENT = 2
 
     /** Получена*/
-    val RECEIVED = 3
+    const val RECEIVED = 3
 
     /** Подписана*/
-    val SIGNED = 4
+    const val SIGNED = 4
 
     /** На доработку*/
-    val REJECTED = 5
+    const val REJECTED = 5
 
     /** Архив*/
-    val ARCHVED = 6
+    const val ARCHVED = 6
 }
 
 /** Категория/подборка документов - особая разновидность папки с документами.*/
@@ -160,29 +160,29 @@ abstract class File(
     var remark: String? = null
 ) : ObjectBase()
 
-/**  Загружаемый \b на сервер файл.
-Если указан \ref blobNo, то содержимое файла передается на сервер как массив байт после тела запроса, см. \ref ServiceMobile.API.HttpHeaders.In.BinaryContentOffset.
-Если указан \ref blobUid, то содержимое файла должно быть предварительно загружено на сервер с помощью хандлера <b>UploadFile.ashx</b>.*/
+/**  Загружаемый на сервер файл.
+Если указан blobNo, то содержимое файла передается на сервер как массив байт после тела запроса, см. ServiceMobile.API.HttpHeaders.In.BinaryContentOffset.
+Если указан blobUid, то содержимое файла должно быть предварительно загружено на сервер с помощью хандлера UploadFile.ashx.*/
 class FileUploadInfo : File() {
     /** Номер (начинается с 1) содержимого файла в запросе, в котором бинарное содержимое передается как массив байт после тела запроса.*/
     @SerializedName("blobNo")
     @Expose
     var blobNo: Int? = null
 
-    /** УИД файлового вложения, загруженного с помощью хандлера <b>UploadFile.ashx</b>.*/
+    /** УИД файлового вложения, загруженного с помощью хандлера UploadFile.ashx.*/
     @SerializedName("blobUid")
     @Expose
     var blobUid: String? = null
 }
 
 
-/** Загружаемый \b с сервера файл.*/
+/** Загружаемый с сервера файл.*/
 open class FileDownloadInfo(
     /** Длина файла без учета длины OCR текста. На ее основе можно определить, нужна ли загрузка этого файла с поддержкой докачки или нет.*/
     @SerializedName("size")
     @Expose
     var size: Int? = null,
-    /** Дата модификации.()DateTime_*/
+    /** Дата модификации.()*/
     @SerializedName("lastAccess")
     @Expose
     @ColumnInfo(name = "last_access")
@@ -226,7 +226,7 @@ class FileDocument(
     @SerializedName("docType")
     @Expose
     var docType: Int? = null,
-    /** Автор документа.(Guid)*/
+    /** Автор документа.*/
     @SerializedName("author")
     @Expose
     var authorUid: String? = null,
@@ -234,7 +234,7 @@ class FileDocument(
     @SerializedName("regNum")
     @Expose
     var regNumber: String? = null,
-    /** Дата регистрации документа. (DateTime)*/
+    /** Дата регистрации документа.*/
     @SerializedName("regDate")
     @Expose
     var regDate: String? = null,
@@ -243,8 +243,7 @@ class FileDocument(
     @Expose
     var order: Int? = null,
     /** Важность документа в подборке (заполняется только у документов из подборки).
-    По умолчанию 0 (обычная важность). 1 означает, что документ важный. byte является резервом на будущее,
-    т.к. и в серверной БД он хранится как \e tinyint. (Byte)*/
+    По умолчанию 0 (обычная важность). 1 означает, что документ важный.*/
     @SerializedName("importance")
     @Expose
     var importance: Int? = null

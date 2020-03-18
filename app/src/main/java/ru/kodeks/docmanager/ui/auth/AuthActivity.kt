@@ -34,8 +34,6 @@ class AuthActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.e("APPLICATION  INSTANCE: ${app}")
-        Timber.e("PREF: $preferences")
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()

@@ -17,7 +17,7 @@ import java.io.FileReader
 import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
-class Parser() {
+class Parser {
     @Inject
     lateinit var app: DocManagerApp
 

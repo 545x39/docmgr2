@@ -6,70 +6,77 @@ import ru.kodeks.docmanager.constants.JsonNames.CLASSIFIERS
 import ru.kodeks.docmanager.constants.JsonNames.DATA_FILTER
 import ru.kodeks.docmanager.constants.JsonNames.SETTINGS
 import ru.kodeks.docmanager.constants.JsonNames.VERSION
-import ru.kodeks.docmanager.model.data.Version
 import ru.kodeks.docmanager.model.data.*
 
 /** Категория данных для фильтрации ответа, битовая маска. Используется для кастомизации начального слепка данных системы.
-/// Например, передав в сервис значение \b 16, последний вернет только базовую информацию о пользователе, версию системы (сиквенсы)
-/// и документы.*/
-sealed class DataFilter {
+Например, передав в сервис значение 16, последний вернет только базовую информацию о пользователе, версию системы (сиквенсы)
+и документы.*/
+object DataFilter {
     /**
      * Все данные. Значение по умолчанию (можно не передавать или передать 0).
      */
-    val ALL = 0
+    const val ALL = 0
 
     /**
      * Настройки пользователя.
      */
-    val SETTINGS = 1
+    const val SETTINGS = 1
+
     /**
      * Справочники (не включая ГК): связи и записи из \b CL_ELEMENTS.
      */
-    val CLASSIFIERS = 2
+    const val CLASSIFIERS = 2
+
     /**
      * Глобальный каталог.
      */
-    val GLOBAL_OBJECTS = 4
+    const val GLOBAL_OBJECTS = 4
+
     /**
      * Метаинформация по виджетам (типы и категории, а также метаинформация по рабочим столам и виджетам).
      */
-    val WORKBENCH_META = 8
+    const val WORKBENCH_META = 8
+
     /**
      * Рабочие столы и виджеты (наполнение объектов метаинформацией зависит от флага <see cref="WorkbenchMeta"></see>).
      */
-    val WORKBENCH = 16
+    const val WORKBENCH = 16
+
     /**
      * Документы вместе со всеми дочерними объектами: пометки, инстанции, вложения, связанные документы и привязки к виджетам.
      */
-    val DOCUMENTS = 32
+    const val DOCUMENTS = 32
+
     /**
      * Список УИДов документов в каждом виджете (\link DataModel.Widget Widget::oldDocUids\endlink), которые не изменились с переданного сиквенса.
      * Для инициальных виджетов этот список всегда пуст.
      */
-    val OLD_DOC_UIDS = 64
+    const val OLD_DOC_UIDS = 64
+
     /**
      * Личные папки и метаданные по дочерним файлам и документам.
      */
-    val PRIVATE_FOLDERS = 128
+    const val PRIVATE_FOLDERS = 128
+
     /**
      * Категории и подборки документов для губернатора.
      */
-    val COMPILATIONS = 256
+    const val COMPILATIONS = 256
+
     /**
      * Общие папки и метаданные по дочерним файлам и документам.
      */
-    val SHARED_FOLDERS = 512
+    const val SHARED_FOLDERS = 512
+
     /**
      * Счетчики документов по виджетам (без 16 не работает)
      */
-    val WIDGET_DOC_COUNTERS = 1024
+    const val WIDGET_DOC_COUNTERS = 1024
 }
 
-/** <see cref="API.ISync"/>. Запрос на синхронизацию данных (как начальную, так и инкрементальную). Другими словами, запрос на инит и апдейт.
-
-\b Ответ: <see cref="SyncResponse"/>.
-
-<h3>Пример 1: начальная синхронизация</h3>
+/** Запрос на синхронизацию данных (как начальную, так и инкрементальную). Другими словами, запрос на инит и апдейт.
+Ответ: (SyncResponse").
+Пример 1: начальная синхронизация
 <pre><code>
  *    {
  *      "user": {
@@ -117,7 +124,7 @@ sealed class DataFilter {
  *      }]
  *    }
 </code></pre>*/
-class SyncRequest (
+class SyncRequest(
 
     /** Фильтр данных <see cref="IoModel.DataFilter"/>, битовая маска (сервис вернет только запрошенные данные).
     По умолчанию возвращаются все данные (значение 0 или отсутствующее значение).*/
@@ -132,12 +139,12 @@ class SyncRequest (
     var version: Version? = null,
 
     /** Список виджетов для точной синхронизации на основе индивидуальных сиквенсов каждого виджета.
-    В виджетах сервер анализирует только поля \b type и \b sequence. Если поле \b sequence не заполнено,
-    то его значение принимается равным <see cref="version"/>.\b main.
-    Если клиент передал данную коллекцию, то <see cref="initialWidgetTypes"/> и <see cref="incrementalWidgetTypes"/> не анализируются.
-    Если списки <see cref="initialWidgetTypes"/>, <see cref="incrementalWidgetTypes"/> и <see cref="widgets"/> \e не передаются
-    (они \e null, а не \e []), но запрошено получение документов,
-    то сервис считает, что нужно грузить \e все документы по \e всем доступным (неудаленным) для пользователя виджетам.*/
+    В виджетах сервер анализирует только поля type и sequence. Если поле sequence не заполнено,
+    то его значение принимается равным "version" main.
+    Если клиент передал данную коллекцию, то "initialWidgetTypes" и "incrementalWidgetTypes" не анализируются.
+    Если списки initialWidgetTypes, incrementalWidgetTypes и "widgets" не передаются
+    (они null, а не []), но запрошено получение документов, то сервис считает, что нужно грузить все документы
+    по всем доступным (неудаленным) для пользователя виджетам.*/
     @SerializedName("widgets")
     @Expose
     var widgets: List<Widget>? = null,
@@ -159,7 +166,7 @@ class SyncRequest (
     @SerializedName("incrementalWidgetTypes")
     @Expose
     var incrementalWidgetTypes: List<Int>? = null//List<short>
-    ): RequestBase()
+) : RequestBase()
 
 /**   RESPONSE */
 
@@ -187,7 +194,7 @@ class SyncResponse : DocsListResponseBase<SyncResponse>() {
     @Expose
     var settings: List<Setting>? = null
 
-    /** Справочники (название -> {код, [элементы]})*/
+    /** Справочники (название -> {код, \[элементы\]})*/
     @SerializedName(CLASSIFIERS)
     @Expose
     var classifiers: Map<String, Classifier>? = null

@@ -7,119 +7,128 @@ import com.google.gson.annotations.SerializedName
 
 
 /** Статус (состояние) маршрута рассмотрения */
-sealed class ConsiderationRouteStates() {
+object ConsiderationRouteStates {
     /** Маршут инвалидный. Статус устанавливается в случае сбоя.*/
-    val INVALID = 0
+    const val INVALID = 0
+
     /** Маршрут активный. Нормальное состояние маршрута без просрочек.*/
-    val ACTIVE = 1
+    const val ACTIVE = 1
+
     /** Маршрут активный, просроченный. Устанавливается в случае просрочки какой либо инстанцией выполнения результата.*/
-    val ACTIVE_EXPIRED = 2
+    const val ACTIVE_EXPIRED = 2
+
     /** Маршрут неактивный (приостановленный, неактивный подмаршрут).*/
-    val INACTIVE = 3
+    const val INACTIVE = 3
+
     /** Маршрут неактивный (приостановленный), просроченный.*/
-    val INACTIVEE_XPIRED = 4
+    const val INACTIVEE_XPIRED = 4
+
     /** Маршрут завершен.*/
-    val COMPLETED = 5
+    const val COMPLETED = 5
+
     /** Маршрут завершен с просроченными инстанциями.*/
-    val COMPLETED_EXPIRED = 6
+    const val COMPLETED_EXPIRED = 6
+
     /** Маршрут инициализирован, но не загружен. Статус устанавливается в конструкторе до загрузки.*/
-    val INITIALIZED = 100
+    const val INITIALIZED = 100
 }
 
 /** Типы срочности рассмотрения документа*/
-sealed class UrgencyTypes {
+object UrgencyTypes {
     /** Неопределено / несрочно*/
-    val UNDEFINED = 0
+    const val UNDEFINED = 0
+
     /** Весьма срочно*/
-    val VERY_URGENT = 1
+    const val VERY_URGENT = 1
+
     /** Срочно*/
-    val URGENT = 2
+    const val URGENT = 2
 }
 
 /** Тип резолюции.*/
-sealed class ResolutionTypes {
+object ResolutionTypes {
     /** Резолюция*/
-    val RESOLUTION = 1
+    const val RESOLUTION = 1
+
     /** Отчет по резолюции*/
-    val REPORT = 2
+    const val REPORT = 2
 }
 
 /** Операции рассмотрения, предназначены для использования в битовой маске. Используется при серверном вычислении доступных операций рассмотрения в инстанциях рассмотрения, см. <see cref="ConsiderationStation"/>.
 <b>Qx</b> - номер нибла/тетрады - последовательности из 4х байт, т.е. int32 состоит из 8 ниблов.*/
 /** Flags]*/
-sealed class ConsiderationOptions {
+object ConsiderationOptions {
     /** Действия с резолюцией*/
 
-    /**  <b>[Q1] РЕЗОЛЮЦИЯ</b>: Можно создать*/
-    val CAN_CREATE_RESOLUTION = 1
+    /**  РЕЗОЛЮЦИЯ: Можно создать*/
+    const val CAN_CREATE_RESOLUTION = 1
 
-    /**  <b>[Q1] РЕЗОЛЮЦИЯ</b>: Можно отредактировать*/
-    val CAN_EDIT_RESOLUTION = 2
+    /**  <b>РЕЗОЛЮЦИЯ: Можно отредактировать*/
+    const val CAN_EDIT_RESOLUTION = 2
 
-    /**  <b>[Q1] РЕЗОЛЮЦИЯ</b>: Можно просмотреть*/
-    val CAN_VIEW_RESOLUTION = 4
+    /**  РЕЗОЛЮЦИЯ: Можно просмотреть*/
+    const val CAN_VIEW_RESOLUTION = 4
 
-    /** <b>[Q1] РЕЗОЛЮЦИЯ</b>: Действие заблокировано до выполнения определенных условий*/
-    val RESOLUTION_WAITING = 8
+    /** РЕЗОЛЮЦИЯ: Действие заблокировано до выполнения определенных условий*/
+    const val RESOLUTION_WAITING = 8
 
     /** Действия со своим отчетом*/
-    /**  <b>[Q2] ОТЧЕТ</b>: Можно создать*/
-    val CAN_CREATE_REPORT = 16
+    /**  ОТЧЕТ: Можно создать*/
+    const val CAN_CREATE_REPORT = 16
 
-    /** <b>[Q2] ОТЧЕТ</b>: Можно отредактировать*/
-    val CAN_EDIT_REPORT = 32
+    /** ОТЧЕТ: Можно отредактировать*/
+    const val CAN_EDIT_REPORT = 32
 
-    /** <b>[Q2] ОТЧЕТ</b>: Можно просмотреть*/
-    val CAN_VIEW_REPORT = 64
+    /** ОТЧЕТ: Можно просмотреть*/
+    const val CAN_VIEW_REPORT = 64
 
-    /** <b>[Q2] ОТЧЕТ</b>: Действие заблокировано до выполнения определенных условий*/
-    val REPORT_WAITING = 128
+    /** ОТЧЕТ: Действие заблокировано до выполнения определенных условий*/
+    const val REPORT_WAITING = 128
 
     /** Действия с входящим отчетом*/
-    /** <b>[Q6] 0x100000 ВХОДЯЩИЙ ОТЧЕТ</b>: Можно отклонить входящий отчет*/
-    val CAN_REJECT_REPORT = 1048576
+    /** 0x100000 ВХОДЯЩИЙ ОТЧЕТ: Можно отклонить входящий отчет*/
+    const val CAN_REJECT_REPORT = 1048576
 
-    /** <b>[Q6] 0x200000 ВХОДЯЩИЙ ОТЧЕТ</b>: Можно принять входящий отчет и отменить резолюцию (она пропадет из списка движений)*/
-    val CAN_ACCEPT_AND_CANCEL_REPORT = 2097152
+    /** 0x200000 ВХОДЯЩИЙ ОТЧЕТ: Можно принять входящий отчет и отменить резолюцию (она пропадет из списка движений)*/
+    const val CAN_ACCEPT_AND_CANCEL_REPORT = 2097152
 
-    /** <b>[Q6] 0x400000 ВХОДЯЩИЙ ОТЧЕТ</b>: Можно принять входящий отчет и закрыть резолюцию (она будет отображаться в движениях как отработанная)*/
-    val CAN_ACCEPT_AND_CLOSE_REPORT = 4194304
+    /** 0x400000 ВХОДЯЩИЙ ОТЧЕТ: Можно принять входящий отчет и закрыть резолюцию (она будет отображаться в движениях как отработанная)*/
+    const val CAN_ACCEPT_AND_CLOSE_REPORT = 4194304
 
     /**  Флаги из класса ResolutionIn*/
-    /**  <b>[Q3]</b> Можно ли закрыть маршрут*/
-    val CAN_BE_CLOSED = 256
+    /** Можно ли закрыть маршрут*/
+    const val CAN_BE_CLOSED = 256
 
-    /**  <b>[Q3]</b> Определяет, получена ли резолюция/отчет по замещению*/
-    val IS_SUBSTITUTION = 512
+    /**  Определяет, получена ли резолюция/отчет по замещению*/
+    const val IS_SUBSTITUTION = 512
 
-    /** <b>[Q3]</b> Определяет, есть ли проект резолюции на след. инстанцию*/
-    val HAS_PROJECT = 1024
+    /** Определяет, есть ли проект резолюции на след. инстанцию*/
+    const val HAS_PROJECT = 1024
 
-    /** <b>[Q3]</b> Определяет, имеется ли фотография подписавшего резолюцию*/
-    val HAS_PHOTO = 2048
+    /** Определяет, имеется ли фотография подписавшего резолюцию*/
+    const val HAS_PHOTO = 2048
 
-    /** <b>[Q4]</b> Можно ли переносить (изменять) срок по документу*/
-    val CAN_CHANGE_CONTROL_DATE = 4096
+    /** Можно ли переносить (изменять) срок по документу*/
+    const val CAN_CHANGE_CONTROL_DATE = 4096
 
-    /** <b>[Q4]</b> Признак «Личный контроль»*/
-    val IS_PERSONAL_CONTROL = 8192
+    /** Признак «Личный контроль»*/
+    const val IS_PERSONAL_CONTROL = 8192
 
-    /** <b>[Q4]</b> Признак «Важно»: <i>ImportanceType == ImportanceTypesEnum.Important</i>*/
-    val IS_IMPORTANT = 16384
+    /** Признак «Важно»*/
+    const val IS_IMPORTANT = 16384
 
-    /** <b>[Q4]</b> Признак «Очень важно»: <i>ImportanceType == ImportanceTypesEnum.VeryImportant</i>*/
-    val IS_VERY_IMPORTANT = 32768
-
+    /** Признак «Очень важно»*/
+    const val IS_VERY_IMPORTANT = 32768
 
     /** Проекты резолюций, попадающие к пользователю по полю SignerUID*/
-    /**  <b>[Q5] 0x10000 ПРОЕКТ РЕЗОЛЮЦИИ</b>: Подписать/утвердить (передать на исполнение - статус 1)*/
-    val APPROVE_RESOLUTION_PROJECT = 65536
+    /**  0x10000 ПРОЕКТ РЕЗОЛЮЦИИ: Подписать/утвердить (передать на исполнение - статус 1)*/
+    const val APPROVE_RESOLUTION_PROJECT = 65536
 
-    /** <b>[Q5] 0x20000 ПРОЕКТ РЕЗОЛЮЦИИ</b>: Отклонить (проставить ApprovalResultID = 4)*/
-    val REJECT_RESOLUTION_PROJECT = 131072
+    /** 0x20000 ПРОЕКТ РЕЗОЛЮЦИИ: Отклонить (проставить ApprovalResultID = 4)*/
+    const val REJECT_RESOLUTION_PROJECT = 131072
 
-    /** <b>[Q5] 0x40000 ПРОЕКТ РЕЗОЛЮЦИИ</b>: Согласовать (перевести на утверждение шефу, т.е. поменять ResolutionAuthorUid)*/
-    val PROMOTE_RESOLUTION_PROJECT = 262144
+    /** 0x40000 ПРОЕКТ РЕЗОЛЮЦИИ: Согласовать (перевести на утверждение шефу, т.е. поменять ResolutionAuthorUid)*/
+    const val PROMOTE_RESOLUTION_PROJECT = 262144
 }
 
 /**  Инстанция рассмотрения документа (элементарная единица движения в маршруте рассмотрения).*/
@@ -173,12 +182,12 @@ data class ConsiderationStation(
     @SerializedName("resolution")
     @Expose
     var resolution: String? = null,
-    /** Тип резолюции, см. <see cref="ResolutionTypes"/>(Byte)*/
+    /** Тип резолюции, см. "ResolutionTypes"*/
     @SerializedName("resolutionType")
     @Expose
     @ColumnInfo(name = "resolution_type")
     var resolutionType: Int? = null,
-    /** Идентификатор автора резолюции/ (Guid)*/
+    /** Идентификатор автора резолюции*/
     @SerializedName("resolutionAuthorUid")
     @Expose
     @ColumnInfo(name = "resolution_author_uid")
@@ -188,7 +197,7 @@ data class ConsiderationStation(
     @Expose
     @ColumnInfo(name = "control_duration")
     var controlDuration: Int? = null,
-    /** Контрольная дата исполнения.(DateTime)*/
+    /** Контрольная дата исполнения.*/
     @SerializedName("controlDate")
     @ColumnInfo(name = "control_date")
     @Expose
@@ -198,22 +207,22 @@ data class ConsiderationStation(
     @Expose
     @ColumnInfo(name = "sending_date")
     var sendingDate: String? = null,
-    /** Дата просмотра.(DateTime)*/
+    /** Дата просмотра.*/
     @SerializedName("viewDate")
     @Expose
     @ColumnInfo(name = "view_date")
     var viewDate: String? = null,
-    /** Дата исполнения (дата отработки документа).(DateTime)*/
+    /** Дата исполнения (дата отработки документа).*/
     @SerializedName("workOffDate")
     @Expose
     @ColumnInfo(name = "work_off_date")
     var workOffDate: String? = null,
-    /** Дата закрытия резолюции.(DateTime)*/
+    /** Дата закрытия резолюции.*/
     @SerializedName("completeDate")
     @Expose
     @ColumnInfo(name = "complete_date")
     var completeDate: String? = null,
-    /** Статусы инстанции, см. <see cref="StationStates"/>(Byte)*/
+    /** Статусы инстанции, см. "StationStates"*/
     @SerializedName("state")
     @Expose
     var state: Int? = null,
@@ -252,21 +261,21 @@ data class ConsiderationStation(
     @Expose
     @ColumnInfo(name = "is_final")
     var isFinal: Boolean = false,
-    /** Идентификатор автора. (Guid)*/
+    /** Идентификатор автора.*/
     @SerializedName("authorUid")
     @Expose
     @ColumnInfo(name = "author_uid")
     var authorUid: String? = null,
-    /** Идентификатор оператора, производившего модификацию.(Guid)*/
+    /** Идентификатор оператора, производившего модификацию.*/
     @SerializedName("userUid")
     @Expose
     @ColumnInfo(name = "user_uid")
     var userUid: String? = null,
-    /** Дата создания инстанции.(DateTime)*/
+    /** Дата создания инстанции.*/
     @SerializedName("created")
     @Expose
     var created: String? = null,
-    /** Дата последней модификации инстанции.(DateTime)*/
+    /** Дата последней модификации инстанции.*/
     @SerializedName("modified")
     @Expose
     var modified: String? = null,
@@ -281,7 +290,7 @@ data class ConsiderationStation(
     @Expose
     @ColumnInfo(name = "is_answer_required")
     var isAnswerRequired: Boolean = false,
-    /** Доступные операции и опции рассмотрения для текущего пользователя с учетом замещений. Битовая маска, см. <see cref="ConsiderationOptions"/>.
+    /** Доступные операции и опции рассмотрения для текущего пользователя с учетом замещений. Битовая маска, см. "ConsiderationOptions".
     Возвращается только для входящих инстанций, относящихся к текущему пользователю.*/
     @SerializedName("resolutionInfo")
     @Expose

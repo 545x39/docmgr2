@@ -17,6 +17,7 @@ open class ObjectBase(
     @Ignore
     var errors: List<Error>? = null
 ) {
+    @Suppress("PropertyName")
     @Transient
     var _id: Int? = null
 }

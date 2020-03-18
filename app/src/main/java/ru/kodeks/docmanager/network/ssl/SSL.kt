@@ -174,7 +174,7 @@ class TrustStoreFactory {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-class TrustAllCertsTrustManager constructor() : X509TrustManager {
+class TrustAllCertsTrustManager : X509TrustManager {
     @SuppressLint("TrustAllX509TrustManager")
     @Throws(CertificateException::class)
     override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
@@ -262,7 +262,7 @@ class ClientKeyStoreTrustManager constructor(vararg additionalKeyStores: KeyStor
     override fun getAcceptedIssuers(): Array<X509Certificate> {
         val list = ArrayList<X509Certificate>()
         for (tm in x509TrustManagers)
-            list.addAll(Arrays.asList(*tm.acceptedIssuers))
+            list.addAll(listOf(*tm.acceptedIssuers))
         return list.toTypedArray()
     }
 }

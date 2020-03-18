@@ -20,7 +20,7 @@ import java.net.HttpURLConnection
 import javax.inject.Inject
 
 //TODO refactor with coroutines
-abstract class Operation<T>(var request: T) where T : RequestBase {
+abstract class Operation<T>(private var request: T) where T : RequestBase {
 
     @Inject
     lateinit var preferences: SharedPreferences
@@ -34,14 +34,13 @@ abstract class Operation<T>(var request: T) where T : RequestBase {
             DEFAULT_DEFERRED_REQUEST_PERIOD
         )
 
-    //TODO Delete stub
     val serverUrl: String
         get() {
 //            UrlValidator().isValid(DocManagerApp.instance.preferences.getString(SERVER_ADDRESS, "http://172.16.1.61/tek_sm/"))
             return preferences.getString(SERVER_ADDRESS, DEFAULT_URL) ?: DEFAULT_URL
         }
 
-    var requestKey: String? = null
+    private var requestKey: String? = null
 
     protected abstract fun getUrl(): String
 

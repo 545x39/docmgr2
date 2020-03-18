@@ -13,7 +13,7 @@ const val JOB_INFO_ID = 1234
 class SyncJobScheduler private constructor() {
     @Inject
     lateinit var app: DocManagerApp
-    lateinit var scheduler: JobScheduler
+    private lateinit var scheduler: JobScheduler
 
     init {
         reset()

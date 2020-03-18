@@ -90,94 +90,90 @@ data class GlobalObject(
 
 
 /** Типы классификаторов (подмножество таблицы \b CL_NAMES). Элемент словаря описан классом <see cref="ClassifierItem"/>.*/
-class Classifiers {
+object Classifiers {
 
     /** Глобальные типы документов.*/
-    val DOCTYPE = 3
+    const val DOCTYPE = 3
 
     /** region Виды документов*/
 
     /** Виды входящих документов.*/
-    val INCOMING_DOC_TYPES = 40
+    const val INCOMING_DOC_TYPES = 40
 
     /** Виды исходящих документов.*/
-    val OUTGOING_DOC_TYPES = 46
+    const val OUTGOING_DOC_TYPES = 46
 
     /** Виды ОРД документов.*/
-    val DECREE_TYPE = 30
+    const val DECREE_TYPE = 30
 
     /** Виды внутренних документов.*/
-    val DIRECTIVETYPE = 34
+    const val DIRECTIVETYPE = 34
 
     /** Виды обращений граждан.*/
-    val VIDOBR = 28
+    const val VIDOBR = 28
 
     /** Виды договоров.*/
-    val CONTRACT_KIND = 127
-//        #endregion
+    const val CONTRACT_KIND = 127
 
-//        #region Обращение граждан
+    //Обращение граждан
 
     /** Формы обращений граждан.*/
-    val FORMOBR = 27
+    const val FORMOBR = 27
 
     /** Тематики обращений граждан.*/
-    val APPROACH_THEMS = 117
+    const val APPROACH_THEMS = 117
 
     /** Специализированные тематики обращений граждан.*/
-    val APPEAL_THEMES = 97
+    const val APPEAL_THEMES = 97
 
     /** Типы решений ответов на обращения.*/
-    val RTA_RESOLUTION = 111
+    const val RTA_RESOLUTION = 111
 
     /** Объект/Место решения ответов на обращения.*/
-    val RTA_LOCATION = 112
+    const val RTA_LOCATION = 112
 
     /** Причины решений ответов на обращения.*/
-    val RTA_REASON = 113
+    const val RTA_REASON = 113
 
     // Организация
 
     /** Виды заявителей.*/
-    val APPLICANT_TYPES = 42
+    const val APPLICANT_TYPES = 42
 
     /** Организационно-правовые формы организаций.*/
-    val ORG_FORM_TYPE = 17
+    const val ORG_FORM_TYPE = 17
 
     /** Виды деятельности организаций.*/
-    val ORG_WORK_TYPE = 18
+    const val ORG_WORK_TYPE = 18
 
     /** Категории заявителей.*/
-    val APP_CATEGORY = 25
+    const val APP_CATEGORY = 25
 
     /** Социальные группы населения.*/
-    val SOCIAL = 26
-
-//        #region Договор
-
+    const val SOCIAL = 26
+    //Договор
     /**  Статьи бюджета договоров.*/
-    val CONTRACT_BUDGET_ITEMS = 129
+    const val CONTRACT_BUDGET_ITEMS = 129
 
     /** Тематики договоров.*/
-    val CONTRACT_THEMES = 128
+    const val CONTRACT_THEMES = 128
 
     /** Условия расчёта по договору.*/
-    val PAYMENT_TERMS = 133
+    const val PAYMENT_TERMS = 133
 
     /** Программы договора.*/
-    val CONTRACT_PROGRAM = 136
+    const val CONTRACT_PROGRAM = 136
 
     /** Валюта платежа.*/
-    val CURRENCY = 135
-//        #endregion
+    const val CURRENCY = 135
 
     /** Типы связей. Его элементы имеют расширенное поле \b revName, содержащее имя обратной связи.*/
-    val LINK_TYPES = 14
+    const val LINK_TYPES = 14
 
     /** Результаты согласования. Его элементы имеют расширенное поле \b resultCode, содержащее числовой код <see cref="ApprovalResults"/>.
     Для операции "Согласовать" элементы словаря нужно фильтровать по значениям \b resultCode = \link ApprovalResults
     ApprovalResults::Approved\endlink (2) или \link ApprovalResults ApprovalResults::ApprovedWithRemarks\endlink (3).*/
-    val CRESULT = 38
+    const val CRESULT = 38
 }
 
 /** Справочник.*/
@@ -235,13 +231,13 @@ class ClassifierItem(
 ) : ObjectBase()
 
 /** Тип корреспондента (используется в некоторых полях документа для указания того, куда "смотрит" УИД - на ГК или на организацию)*/
-class CorrespondentTypes {
+object CorrespondentTypes {
 
     /** Исполнитель из глобального классификатора*/
-    val GLOBAL_OBJECT = 0
+    const val GLOBAL_OBJECT = 0
 
     /** Организация из справочника организаций*/
-    val ORGANIZATION = 1
+    const val ORGANIZATION = 1
 }
 
 /** Организация. Справочник организаций не грузится на клиента целиком. Вместо этого на клиента
@@ -307,19 +303,19 @@ class Organization(
 ) : ObjectBase()
 
 /** Типы адресов*/
-class AddressType {
+object AddressType {
 
     /** Почтовый адрес*/
-    val MAIN = 0
+    const val MAIN = 0
 
     /** Юридический адрес*/
-    val JURIDICAL = 1
+    const val JURIDICAL = 1
 
     /** Рабочий адрес*/
-    val WORK = 2
+    const val WORK = 2
 
     /** Иной адрес*/
-    val OTHER = 3
+    const val OTHER = 3
 }
 
 /** Адрес организации, см. <see cref="Organization"/>.*/

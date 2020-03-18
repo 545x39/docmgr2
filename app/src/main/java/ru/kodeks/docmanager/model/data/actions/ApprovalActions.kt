@@ -4,13 +4,14 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import ru.kodeks.docmanager.model.data.FileUploadInfo
 
-/** Подписание документа, см. <see cref="IoModel.SignDocumentsRequest"/>.*/
+/** Подписание документа.*/
 
 /** <h3>Ошибки</h3>
-Помимо кодов ошибок, унаследованных от <see cref="SignedStationAction"/> и <see cref="IFileUpload"/>, при выполнении данного действия может возникать ряд логических ошибок:
-- \b 72 \link API.ErrorType API.ErrorType::FileNotFound\endlink - Подписываемый файл не найден на сервере.
-- \b 73 \link API.ErrorType API.ErrorType::FileRequired\endlink - Отсутствует файл, подписанный квалифицированной ЭП.
-- \b 710 \link API.ErrorType API.ErrorType::OutdatedApprovalStationAction\endlink - Действие по согласованию/подписанию утратило актуальность.*/
+Помимо кодов ошибок, унаследованных от "SignedStationAction" и "IFileUpload", при выполнении данного действия
+может возникать ряд логических ошибок:
+- 72: API.ErrorType::FileNotFound - Подписываемый файл не найден на сервере.
+- 73: API.ErrorType::FileRequired - Отсутствует файл, подписанный квалифицированной ЭП.
+- 710: API.ErrorType API.ErrorType::OutdatedApprovalStationAction - Действие по согласованию/подписанию утратило актуальность.*/
 class SignDocumentAction : SignedStationAction<SignDocumentAction>(), IFileUpload {
     /// Подписанный документ.
     @SerializedName("file")
@@ -19,21 +20,21 @@ class SignDocumentAction : SignedStationAction<SignDocumentAction>(), IFileUploa
 }
 
 /** Тип действия по согласованию документа, используется в <see cref="ApprovalStationAction"/>.*/
-class ApprovalActionTypes {
+object ApprovalActionTypes {
     /** Неизвестно. Для RejectDocuments данное значение приравнено к Reject.*/
-    val UNKNOWN = 0
+    const val UNKNOWN = 0
 
     /** Согласовать.*/
-    val APPROVE = 1
+    const val APPROVE = 1
 
     /** Вернуть на доработку.*/
-    val REJECT = 2
+    const val REJECT = 2
 
     /** Перенаправить.*/
-    val FORWARD = 3
+    const val FORWARD = 3
 
     /** Удалить подмаршрут*/
-    val DELETE_FORWARDING = 4
+    const val DELETE_FORWARDING = 4
 }
 
 /** Действие с документом в рамках согласования, см. <see cref="IoModel.ApproveDocumentsRequest"/>:
@@ -42,19 +43,19 @@ class ApprovalActionTypes {
 - Перенаправление документа на подмаршрут.
 - Удаление документа с подмаршрута.*/
 
-/** <h3>Ошибки</h3>
-Ошибки унаследованы от \ref SignedStationAction<TAction> и <see cref="IFileUpload"/>, а также:
-- \b 701 \link API.ErrorType API.ErrorType::ResultCodeMissing\endlink - Операция требует указание кода причины.
-- \b 702 \link API.ErrorType API.ErrorType::ResultTextMissing\endlink - Операция требует указание текста причины.
-- \b 710 \link API.ErrorType API.ErrorType::OutdatedApprovalStationAction\endlink - Действие по согласованию утратило актуальность.*/
+/** Ошибки
+Ошибки унаследованы от SignedStationAction<TAction> и "IFileUpload", а также:
+- 701: API.ErrorType::ResultCodeMissing - Операция требует указание кода причины.
+- 702: link API.ErrorType API.ErrorType::ResultTextMissing - Операция требует указание текста причины.
+- 710: API.ErrorType::OutdatedApprovalStationAction - Действие по согласованию утратило актуальность.*/
 class ApprovalStationAction : SignedStationAction<ApprovalStationAction>(), IFilesUpload {
 
-    /** Тип операции согласования. См. <see cref="ApprovalActionTypes"/>.*/
+    /** Тип операции согласования. См. ApprovalActionTypes.*/
     @SerializedName("actionType")
     @Expose
     var actionType: Int? = null
 
-    /** Тип операции согласования. См. <see cref="ApprovalActionTypes"/>.*/
+    /** Тип операции согласования. См. ApprovalActionTypes.*/
     @SerializedName("attachmentVersion")
     @Expose
     var attachmentVersion: Int = 0
@@ -64,9 +65,9 @@ class ApprovalStationAction : SignedStationAction<ApprovalStationAction>(), IFil
     @Expose
     var resultText: String? = null
 
-    /** Код результата согласования (используется только при согласовании) - ИД элемента из словаря \link Classifiers Classifiers::CRESULT\endlink.
-    Для операции "Согласовать" элементы словаря нужно фильтровать по значениям \b resultCode = \link ApprovalResults
-    ApprovalResults::Approved\endlink (2) или \link ApprovalResults ApprovalResults::ApprovedWithRemarks\endlink (3).*/
+    /** Код результата согласования (используется только при согласовании) - ИД элемента из словаря Classifiers::CRESULT.
+    Для операции "Согласовать" элементы словаря нужно фильтровать по значениям resultCode = ApprovalResults::Approved (2)
+    или ApprovalResults::ApprovedWithRemarks (3).*/
     @SerializedName("resultCode")
     @Expose
     var resultCode: Int? = null
@@ -74,17 +75,17 @@ class ApprovalStationAction : SignedStationAction<ApprovalStationAction>(), IFil
     /** Кто подписал (можно не передавать - по умолчанию проставляется текущий пользователь).*/
     @SerializedName("signerUid")
     @Expose
-    var SignerUid: String? = null//Guid
+    var signerUid: String? = null
 
     /** Контрольный срок для подмаршрута (используется только при перенаправлении документа).
-    В остальных случаях нужно не передавать или передавать \e null.*/
+    В остальных случаях нужно не передавать или передавать null.*/
     @SerializedName("controlDate")
     @Expose
     var controlDate: String? = null
 
     /** Исполнители для перенаправления (используется только при перенаправлении документа).*/
     @SerializedName("executiveUids")
-    var executiveUids: List<String>? = null//Guid[]
+    var executiveUids: List<String>? = null
 
     /** Сопутствующие вложения, которые будут прикреплены к инстанции согласования.*/
     @SerializedName("files")
@@ -94,17 +95,17 @@ class ApprovalStationAction : SignedStationAction<ApprovalStationAction>(), IFil
 
 /** Подписание второстепенного вложения.*/
 
-/** <h3>Ошибки</h3>
-Ошибки унаследованы от <see cref="SignedStationAction"/>.*/
+/** Ошибки
+Ошибки унаследованы от SignedStationAction".*/
 //class TempSignAttachmentAction : SignedStationAction {
-class TempSignAttachmentAction<TAction> : SignedStationAction<TAction>() where TAction : BaseAction<TAction> {
-//        #region Fields
+class TempSignAttachmentAction<TAction> :
+    SignedStationAction<TAction>() where TAction : BaseAction<TAction> {
 
     /** УИД документа вложения, который соответствует полю DS_TextStore.Doc_UID. При подписании основного
-    вложения данное поле должно быть не указано или его значение должно совпасть с \ref docUid.*/
+    вложения данное поле должно быть не указано или его значение должно совпасть с docUid.*/
     @SerializedName("textStoreDocUid")
     @Expose
-    var textStoreDocUid: String? = null//Guid
+    var textStoreDocUid: String? = null
 
     // Данные для поля DS_TextStore.DigitalSignature
 
@@ -116,12 +117,12 @@ class TempSignAttachmentAction<TAction> : SignedStationAction<TAction>() where T
     /** Рег. дата, генерируемая при создании штампа регистрации (не используется при подписании документа).*/
     @SerializedName("regDate")
     @Expose
-    var regDate:String? = null//DateTime
+    var regDate: String? = null//DateTime
 
     /** Дата и время подписания с точностью до минуты (секунды можно не передавать).*/
     @SerializedName("signDate")
     @Expose
-    var signDate: String? = null//DateTime
+    var signDate: String? = null
 
     /** Полное ФИО подписавшего.*/
     @SerializedName("signerName")
@@ -136,7 +137,7 @@ class TempSignAttachmentAction<TAction> : SignedStationAction<TAction>() where T
     /** Тип подписи: 0 - квалифицированная, 1 - простая.*/
     @SerializedName("signatureType")
     @Expose
-    var signatureType: Int? = null//Byte
+    var signatureType: Int? = null
 
     /** Номер сертификата для квалифицированной подписи (для простой можно не передавать).*/
     @SerializedName("certificateNumber")
