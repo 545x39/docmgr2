@@ -14,7 +14,7 @@ import ru.kodeks.docmanager.constants.Settings.DEFERRED_REQUEST_TIMEOUT
 import ru.kodeks.docmanager.constants.Settings.ENCRYPT_PASSWORD
 import ru.kodeks.docmanager.constants.Settings.SERVER_ADDRESS
 import ru.kodeks.docmanager.model.io.RequestBase
-import ru.kodeks.docmanager.network.Retrofit
+import ru.kodeks.docmanager.network.Api
 import timber.log.Timber
 import java.net.HttpURLConnection
 import javax.inject.Inject
@@ -26,7 +26,7 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
     lateinit var preferences: SharedPreferences
 
     @Inject
-    lateinit var retrofit: Retrofit
+    lateinit var api: Api
 
     private val timeout
         get() = preferences.getLong(
@@ -54,7 +54,7 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
 
     private fun request() {
         fun getResponseKey() {
-            val response = retrofit.postDeferred(url = getUrl(), body = request).execute()
+            val response = api.postDeferred(url = getUrl(), body = request).execute()
             if (response.isSuccessful) {
                 requestKey = response.body()?.requestKey
             } else {
@@ -63,7 +63,7 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
         }
 
         fun getResponse() {
-            val response = retrofit.post(url = getUrl(), body = request).execute()
+            val response = api.post(url = getUrl(), body = request).execute()
             if (response.isSuccessful) {
                 parseResponse(response)
             } else {
@@ -84,7 +84,7 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
         var response: Response<ResponseBody>
         loop@ while (true) {
             Timber.d("Deferred request by key $requestKey")
-            response = retrofit.get(url).execute()
+            response = api.get(url).execute()
             if (response.isSuccessful) {
                 when (response.code()) {
                     HttpURLConnection.HTTP_OK, HttpURLConnection.HTTP_PARTIAL -> {
@@ -125,7 +125,7 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
 
     @Throws(IllegalStateException::class)
     private fun check() {
-        val response = retrofit.checkState("$serverUrl${SYNC_SVC}/ChkState").execute()
+        val response = api.checkState("$serverUrl${SYNC_SVC}/ChkState").execute()
         if (response.isSuccessful) {
             when (response.code()) {
                 HttpURLConnection.HTTP_OK -> {
