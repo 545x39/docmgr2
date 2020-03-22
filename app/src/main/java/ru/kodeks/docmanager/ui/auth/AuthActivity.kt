@@ -1,16 +1,16 @@
 package ru.kodeks.docmanager.ui.auth
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_main.*
 import ru.kodeks.docmanager.AppExecutors
 import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.User
 import ru.kodeks.docmanager.network.operations.SyncOperation
 import ru.kodeks.docmanager.network.request.InitRequestBuilder
 import ru.kodeks.docmanager.persistence.parser.Parser
@@ -21,19 +21,17 @@ import javax.inject.Inject
 class AuthActivity : BaseActivity() {
 
     @Inject
-    lateinit var user: User
-
-    @Inject
     lateinit var executors: AppExecutors
-
-    @Inject
-    lateinit var preferences: SharedPreferences
 
     @Inject
     lateinit var app: DocManagerApp
 
+    lateinit var viewModel: ViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this, providerFactory).get(AuthActivityViewModel::class.java)
+        ////
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show()

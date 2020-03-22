@@ -20,6 +20,7 @@ import ru.kodeks.docmanager.constants.PathsAndFileNames.RESPONSE_DIRECTORY
 import ru.kodeks.docmanager.constants.Settings
 import ru.kodeks.docmanager.constants.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
 import ru.kodeks.docmanager.constants.Settings.SslSettings.USE_SSL_CERT_SETTING
+import ru.kodeks.docmanager.di.RESPONSE_DIR
 import ru.kodeks.docmanager.network.ssl.CERT_FILENAME
 import ru.kodeks.docmanager.network.ssl.ClientKeyStoreTrustManager
 import ru.kodeks.docmanager.network.ssl.TrustAllCertsTrustManager
@@ -27,17 +28,11 @@ import ru.kodeks.docmanager.network.ssl.TrustStoreFactory
 import ru.kodeks.docmanager.persistence.Database
 import java.io.File
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import javax.inject.Named
 
 /** Модуль для всего, что будет использоваться глобально на уровне приложения: Room, Retrofit  и т.д.*/
 @Module
 class ApplicationModule {
-
-    @Inject
-    lateinit var preferences: SharedPreferences
-
-    @Inject
-    lateinit var user: User
 
     @Provides
     fun provideRetrofit(app: DocManagerApp, preferences: SharedPreferences): Retrofit {
@@ -94,7 +89,7 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideRoom(app: DocManagerApp): Database {
+    fun provideRoom(app: DocManagerApp, user: User): Database {
         return Room.databaseBuilder(app, Database::class.java, user.login)
             .fallbackToDestructiveMigration().build()
     }
@@ -105,7 +100,7 @@ class ApplicationModule {
     }
 
     @Provides
-//    @Named("responseDir")
+    @Named(RESPONSE_DIR)
     fun provideResponseDir(app: DocManagerApp): String {
         return "${app.getExternalFilesDir(RESPONSE_DIRECTORY)}"
     }

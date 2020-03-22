@@ -1,13 +1,12 @@
 package ru.kodeks.docmanager.persistence.parser
 
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.User
-import ru.kodeks.docmanager.constants.PathsAndFileNames.RESPONSE_DIRECTORY
 import ru.kodeks.docmanager.constants.PathsAndFileNames.SYNC_RESPONSE_FILENAME
+import ru.kodeks.docmanager.di.RESPONSE_DIR
 import ru.kodeks.docmanager.model.data.*
 import ru.kodeks.docmanager.model.io.SyncResponse
 import ru.kodeks.docmanager.persistence.Database
@@ -15,6 +14,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileReader
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.system.measureTimeMillis
 
 class Parser {
@@ -22,7 +22,8 @@ class Parser {
     lateinit var app: DocManagerApp
 
     @Inject
-    lateinit var preferences: SharedPreferences
+    @Named(RESPONSE_DIR)
+    lateinit var responseDir: String
 
     @Inject
     lateinit var appUser: User
@@ -52,7 +53,7 @@ class Parser {
         job = CoroutineScope(IO).launch {
             Timber.d("Started parsing response")
             val responseFile =
-                "${app.getExternalFilesDir(RESPONSE_DIRECTORY)}${File.separator}${SYNC_RESPONSE_FILENAME}"
+                "$responseDir${File.separator}${SYNC_RESPONSE_FILENAME}"
             syncResponse = gson.fromJson(FileReader(responseFile), SyncResponse::class.java)
             Timber.d("Response read. Persisting it to the DB...")
             syncResponse?.apply {

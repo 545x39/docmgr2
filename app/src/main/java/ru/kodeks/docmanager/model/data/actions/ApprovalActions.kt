@@ -6,7 +6,7 @@ import ru.kodeks.docmanager.model.data.FileUploadInfo
 
 /** Подписание документа.*/
 
-/** <h3>Ошибки</h3>
+/**Ошибки:
 Помимо кодов ошибок, унаследованных от "SignedStationAction" и "IFileUpload", при выполнении данного действия
 может возникать ряд логических ошибок:
 - 72: API.ErrorType::FileNotFound - Подписываемый файл не найден на сервере.

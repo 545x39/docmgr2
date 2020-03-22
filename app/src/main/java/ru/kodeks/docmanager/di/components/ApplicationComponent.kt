@@ -5,17 +5,19 @@ import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import ru.kodeks.docmanager.DocManagerApp
-import ru.kodeks.docmanager.di.modules.ActivitiesModule
+import ru.kodeks.docmanager.di.modules.ActivitySubcomponentsModule
 import ru.kodeks.docmanager.di.modules.ApplicationModule
 import ru.kodeks.docmanager.di.modules.StubUserModule
+import ru.kodeks.docmanager.di.modules.ViewModelFactoryModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [AndroidSupportInjectionModule::class,
-        ActivitiesModule::class,
+        ActivitySubcomponentsModule::class,
         ApplicationModule::class,
-        StubUserModule::class
+        StubUserModule::class,
+        ViewModelFactoryModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<DocManagerApp> {
