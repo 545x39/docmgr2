@@ -2,9 +2,9 @@ package ru.kodeks.docmanager.di.modules
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import ru.kodeks.docmanager.di.modules.auth.AuthModule
 import ru.kodeks.docmanager.di.modules.auth.AuthViewModelModule
 import ru.kodeks.docmanager.ui.auth.AuthActivity
-import ru.kodeks.docmanager.ui.auth.AuthModule
 
 /** Модуль для всех активностей/фрагментов, которые потребуют внедрения зависимостей.*/
 @Module

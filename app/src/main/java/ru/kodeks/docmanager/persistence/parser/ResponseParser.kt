@@ -17,16 +17,11 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.system.measureTimeMillis
 
-class Parser {
-    @Inject
-    lateinit var app: DocManagerApp
+class Parser @Inject constructor(
+    var app: DocManagerApp, @Named(RESPONSE_DIR)
+    var responseDir: String, private var appUser: User
+) {
 
-    @Inject
-    @Named(RESPONSE_DIR)
-    lateinit var responseDir: String
-
-    @Inject
-    lateinit var appUser: User
 
     @Inject
     lateinit var database: Database

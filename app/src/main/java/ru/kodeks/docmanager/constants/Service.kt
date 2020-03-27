@@ -79,6 +79,11 @@ object DataFilter : Constant() {
     const val SHARED_FOLDERS = 512
 }
 
+object Menthods {
+    const val CHECK_STATE = "/ChkState"
+    const val DO_SYNC = "/DoSync"
+}
+
 object JsonNames{
     const val ERRORS = "errors"
     const val DATA_FILTER = "dataFilter"

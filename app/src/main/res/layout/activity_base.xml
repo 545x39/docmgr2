@@ -1,33 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.AuthActivity">
+    android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.BaseActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/toolbar_height">
+            <!--BACKGROUND IMAGE-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:alpha="0.4"
+                android:src="@drawable/icon_document_flow_logo"
+                android:visibility="invisible" />
+        </RelativeLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/darker_green"
+            android:fitsSystemWindows="true"
+            android:minHeight="0dp"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    <include layout="@layout/content_main" />
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true">
+                <!--app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+                <Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:clipToPadding="true"
+                    android:fitsSystemWindows="true"
+                    android:gravity="bottom"
+                    android:paddingStart="8dp"
+                    android:paddingLeft="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingRight="0dp"
+                    android:visibility="invisible"
+                    app:contentInsetEnd="6dp"
+                    app:contentInsetLeft="6dp"
+                    app:contentInsetStart="6dp"
+                    app:contentScrim="@color/green"
+                    app:layout_collapseMode="none"
+                    app:layout_scrollFlags="exitUntilCollapsed"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:title="" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/document_lists_tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bar_height"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/background_grey_underline"
+                    android:elevation="0dp"
+                    android:visibility="gone"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="1dp"
+                    app:tabMaxWidth="98dp"
+                    app:tabMinWidth="0dp"
+                    app:tabMode="scrollable"
+                    app:tabPaddingEnd="0dp"
+                    app:tabPaddingStart="0dp" />
+
+                <View
+                    android:layout_width="900dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/background_toolbar"
+                    android:fitsSystemWindows="true"
+                    app:layout_scrollFlags="scroll|snap" />
+
+                <RelativeLayout
+                    android:id="@+id/toolbar_buttons_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginBottom="6dp"
+                    android:fitsSystemWindows="true">
+
+                    <ImageButton
+                        android:id="@+id/backButton"
+                        android:layout_width="@dimen/green_button_size"
+                        android:layout_height="@dimen/green_button_size"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/selector_image_button_green"
+                        android:rotation="90"
+                        android:src="@drawable/icon_arrow"
+                        android:tint="#FFF"
+                        android:visibility="gone" />
+
+                    <!--                    -->
+                    <ImageButton
+                        android:id="@+id/menuButton"
+                        android:layout_width="@dimen/green_button_size"
+                        android:layout_height="@dimen/green_button_size"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/backButton"
+                        android:background="@drawable/selector_image_button_green"
+                        android:src="@drawable/icon_three_lines"
+                        android:tint="#FFF"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/titleIcon"
+                        android:layout_width="@dimen/button_size"
+                        android:layout_height="@dimen/button_size"
+                        android:layout_marginEnd="4dp"
+                        android:layout_toEndOf="@+id/menuButton"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/menu_item_button_icon_padding"
+                        android:src="@drawable/icon_two_sheets"
+                        android:tint="#FFF" />
+
+                    <TextView
+                        android:id="@+id/screenTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/syncButton"
+                        android:layout_toEndOf="@+id/titleIcon"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="#FFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <!--///////////////////////////////////////////////////////////-->
+                    <ru.kodeks.docmanager.ui.views.QuickSearchView
+                        android:id="@+id/quick_search_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_toStartOf="@+id/syncButton"
+                        android:layout_toEndOf="@+id/screenTitle"
+                        android:background="@drawable/background_search_view"
+                        android:focusableInTouchMode="true"
+                        android:gravity="end"
+                        android:padding="4dp"
+                        android:searchIcon="@drawable/icon_lens"
+                        android:visibility="gone"
+                        app:closeIcon="@drawable/icon_cross"
+                        app:searchIcon="@drawable/icon_lens" />
+
+                    <ImageButton
+                        android:id="@+id/searchButton"
+                        android:layout_width="@dimen/button_size"
+                        android:layout_height="@dimen/button_size"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="6dp"
+                        android:layout_toStartOf="@+id/syncButton"
+                        android:background="@drawable/background_search_view"
+                        android:cropToPadding="true"
+                        android:elevation="5dp"
+                        android:padding="4dp"
+                        android:src="@drawable/icon_lens"
+                        android:tint="@color/grey_darkest"
+                        android:visibility="gone" />
+                    <!--///////////////////////////////////////////////////////////-->
+                    <ImageButton
+                        android:id="@+id/syncButton"
+                        android:layout_width="@dimen/green_button_size"
+                        android:layout_height="@dimen/green_button_size"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="4dp"
+                        android:layout_toStartOf="@+id/settingsButton"
+                        android:background="@drawable/selector_image_button_green"
+                        android:cropToPadding="true"
+                        android:padding="10dp"
+                        android:src="@drawable/icon_two_round_arrows"
+                        android:tint="#FFF"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/settingsButton"
+                        android:layout_width="@dimen/green_button_size"
+                        android:layout_height="@dimen/green_button_size"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/anchor"
+                        android:background="@drawable/selector_image_button_green"
+                        android:cropToPadding="true"
+                        android:padding="10dp"
+                        android:src="@drawable/icon_gear"
+                        android:tint="#FFF"
+                        android:visibility="gone" />
+
+                    <View
+                        android:id="@+id/anchor"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/contentPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/bar_height"
+            android:gravity="center|top" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/icon_exclaimation_sign"
+            android:visibility="gone" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <include layout="@layout/navigation_drawer" />
+</androidx.drawerlayout.widget.DrawerLayout>

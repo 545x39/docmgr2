@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:color="@color/grey_medium" android:width="1dp" />
+                    <corners android:radius="2dp" />
+                    <!--<padding android:bottom="3dp"-->
+                    <!--android:left="3dp"-->
+                    <!--android:right="5dp"-->
+                    <!--android:top="3dp" />-->
+                </shape>
+            </item>
+            <item android:gravity="center_vertical|right" android:drawable="@drawable/icon_small_triangle" android:start="8dp" android:end="8dp"/>
+            <!--<item>-->
+            <!--<bitmap android:gravity="center_vertical|right"-->
+            <!--android:src="@drawable/small_triangle"/>-->
+            <!--</item>-->
+            <!--// you can use any other image here, instead of default_holo_dark_am-->
+        </layer-list>
+    </item>
+</selector>

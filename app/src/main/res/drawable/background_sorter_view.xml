@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <!--<stroke android:color="@color/new_ui_lighter_grey"-->
+                    <stroke android:color="@color/grey_medium" android:width="1dp" />
+                    <corners android:radius="2dp" />
+                    <solid android:color="@color/white" />
+                </shape>
+            </item>
+            <!--<item android:gravity="center_vertical|right"-->
+            <!--android:drawable="@drawable/small_triangle"-->
+            <!--android:start="8dp"-->
+            <!--android:end="8dp">-->
+            <!--</item>-->
+        </layer-list>
+    </item>
+</selector>

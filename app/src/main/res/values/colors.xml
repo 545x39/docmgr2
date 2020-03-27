@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <!--New UI Colors -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+    <!--    <color name="red">#FFE90E0E</color>-->
+    <color name="green">#FF318987</color>
+    <color name="blue">#4693CF</color>
+    <color name="faded_blue">#E0EAF7</color>
+    <color name="faded_blue_pressed">#D0DAE7</color>
+    <color name="darker_blue">#2572AC</color>
+    <color name="light_green">#FF389B96</color>
+    <color name="darker_green">#FF2B7272</color>
+    <color name="faded_green">#FFDBE8DB</color>
+    <color name="faded_green_pressed">#FFCBD8CB</color>
+    <color name="green_button_text">#FF75AB7C</color>
+    <color name="light_yellow">#FFFFF2C0</color>
+    <!--    <color name="red_button_color">#B11116</color>-->
+    <color name="red">#B11116</color>
+    <color name="red_button_pressed_color">#810005</color>
+    ////
+    <!-- - бледный (разделитель конечного пункта в списке-->
+    <color name="grey_lightest">#FFF1F1F2</color>
+    <!--средний (разделитель корневых пунктов списка в меню, разделитель блоков)-->
+    <color name="grey_medium">#FFE6E7E8</color>
+    <!--яркий (обводка безцветных кнопок) -->
+    <color name="grey_dark">#FFD1D2D4</color>
+    <!--используется в обводке нажатых кнопок-->
+    <color name="grey_darkest">#FF6D6E71</color>
+    <!--    -->
+    <color name="highlight_grey_dark">#271C4644</color>
+    <color name="highlight_yellow">#FFFFCD66</color>
+    <color name="highlight_purple">#FFA54297</color>
+    <color name="highlight_green">#FF399990</color>
+    <color name="orange">#FFD06528</color>
+    <color name="confirm_green">#178e49</color>
+    <!-- Message colors -->
+    <color name="status_message">#DD00879C</color>
+    <color name="status_success">#DD3D7A3A</color>
+    <color name="status_warning">#DDCC6D00</color>
+    <color name="status_error">#DDCC0000</color>
 </resources>

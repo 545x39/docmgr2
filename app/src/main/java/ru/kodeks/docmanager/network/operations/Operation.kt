@@ -4,29 +4,23 @@ import android.content.SharedPreferences
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.kodeks.docmanager.NoInternetException
-import ru.kodeks.docmanager.constants.JsonNames.REQUEST_KEY
 import ru.kodeks.docmanager.constants.Network.DEFAULT_DEFERRED_REQUEST_PERIOD
-import ru.kodeks.docmanager.constants.Network.DEFAULT_URL
 import ru.kodeks.docmanager.constants.Network.MAX_REQUEST_ATTEMPTS
-import ru.kodeks.docmanager.constants.ServiceMethod.GET_DEFERRED_RESPONSE_URL_PATH
-import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
 import ru.kodeks.docmanager.constants.Settings.DEFERRED_REQUEST_TIMEOUT
 import ru.kodeks.docmanager.constants.Settings.ENCRYPT_PASSWORD
-import ru.kodeks.docmanager.constants.Settings.SERVER_ADDRESS
 import ru.kodeks.docmanager.model.io.RequestBase
-import ru.kodeks.docmanager.network.Api
+import ru.kodeks.docmanager.network.api.BaseApi
 import timber.log.Timber
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
 //TODO refactor with coroutines
-abstract class Operation<T>(private var request: T) where T : RequestBase {
+abstract class Operation<A, R>(private var request: R) where A : BaseApi, R : RequestBase {
 
     @Inject
     lateinit var preferences: SharedPreferences
 
-    @Inject
-    lateinit var api: Api
+    abstract var api: A
 
     private val timeout
         get() = preferences.getLong(
@@ -34,15 +28,7 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
             DEFAULT_DEFERRED_REQUEST_PERIOD
         )
 
-    val serverUrl: String
-        get() {
-//            UrlValidator().isValid(DocManagerApp.instance.preferences.getString(SERVER_ADDRESS, "http://172.16.1.61/tek_sm/"))
-            return preferences.getString(SERVER_ADDRESS, DEFAULT_URL) ?: DEFAULT_URL
-        }
-
     private var requestKey: String? = null
-
-    protected abstract fun getUrl(): String
 
     @Throws(java.lang.Exception::class)
     fun execute() {
@@ -54,7 +40,8 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
 
     private fun request() {
         fun getResponseKey() {
-            val response = api.postDeferred(url = getUrl(), body = request).execute()
+//            val response = api.postDeferred(url = getUrl(), body = request).execute()
+            val response = api.postDeferred(body = request).execute()
             if (response.isSuccessful) {
                 requestKey = response.body()?.requestKey
             } else {
@@ -63,7 +50,8 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
         }
 
         fun getResponse() {
-            val response = api.post(url = getUrl(), body = request).execute()
+//            val response = api.post(url = getUrl(), body = request).execute()
+            val response = api.post(body = request).execute()
             if (response.isSuccessful) {
                 parseResponse(response)
             } else {
@@ -80,11 +68,10 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
     private fun getDeferred() {
         if (!request.runDeferred) return
         checkNotNull(requestKey) { "No request key has been obtained from server" }
-        val url = "$serverUrl$GET_DEFERRED_RESPONSE_URL_PATH?$REQUEST_KEY=$requestKey"
         var response: Response<ResponseBody>
         loop@ while (true) {
             Timber.d("Deferred request by key $requestKey")
-            response = api.get(url).execute()
+            response = api.getDeferred(requestKey.orEmpty()).execute()
             if (response.isSuccessful) {
                 when (response.code()) {
                     HttpURLConnection.HTTP_OK, HttpURLConnection.HTTP_PARTIAL -> {
@@ -125,7 +112,8 @@ abstract class Operation<T>(private var request: T) where T : RequestBase {
 
     @Throws(IllegalStateException::class)
     private fun check() {
-        val response = api.checkState("$serverUrl${SYNC_SVC}/ChkState").execute()
+//        val response = api.checkState("$serverUrl${SYNC_SVC}/ChkState").execute()
+        val response = api.checkState().execute()
         if (response.isSuccessful) {
             when (response.code()) {
                 HttpURLConnection.HTTP_OK -> {

@@ -3,8 +3,9 @@ package ru.kodeks.docmanager.network.operations
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.kodeks.docmanager.constants.PathsAndFileNames.SYNC_RESPONSE_FILENAME
-import ru.kodeks.docmanager.constants.ServiceMethod
+import ru.kodeks.docmanager.di.RESPONSE_DIR
 import ru.kodeks.docmanager.model.io.SyncRequest
+import ru.kodeks.docmanager.network.api.SyncApi
 import ru.kodeks.docmanager.persistence.parser.Parser
 import ru.kodeks.docmanager.persistence.parser.write
 import timber.log.Timber
@@ -13,17 +14,20 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import javax.inject.Named
 
-class SyncOperation(request: SyncRequest) : Operation<SyncRequest>(request) {
+class SyncOperation(request: SyncRequest) : Operation<SyncApi, SyncRequest>(request) {
 
     @Inject
-    @field:Named("responseDir")
+    @Named(RESPONSE_DIR)
     lateinit var responseDirectory: String
 
-    override fun getUrl(): String = "$serverUrl${ServiceMethod.SYNC_SVC}/DoSync"
+    @Inject
+    override lateinit var api: SyncApi
+
+    @Inject
+    lateinit var parser: Parser
 
     override fun parseResponse(response: Response<ResponseBody>) {
-        val responseFile =
-            File("$responseDirectory${File.separator}${SYNC_RESPONSE_FILENAME}")
+        val responseFile = File("$responseDirectory${File.separator}${SYNC_RESPONSE_FILENAME}")
         response.body()?.apply {
             val writeResult = write(
                 this,
@@ -36,7 +40,7 @@ class SyncOperation(request: SyncRequest) : Operation<SyncRequest>(request) {
             when (exists()) {
                 true -> {
                     try {
-                        Parser().parse()
+                        parser.parse()
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -45,4 +49,5 @@ class SyncOperation(request: SyncRequest) : Operation<SyncRequest>(request) {
             }
         }
     }
+
 }

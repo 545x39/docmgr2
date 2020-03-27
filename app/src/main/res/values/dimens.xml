@@ -1,3 +1,16 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    ////
+    <dimen name="icon_size">16dp</dimen>
+    <dimen name="toolbar_height">80dp</dimen>
+    <dimen name="button_size">40dp</dimen>
+    <dimen name="green_button_size">44dp</dimen>
+    <dimen name="bar_height">57dp</dimen>
+    <dimen name="menu_item_icon_size">16dp</dimen>
+    <dimen name="menu_item_button_icon_padding">12dp</dimen>
+    <dimen name="document_list_button_margin">9dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="divider_size">1dp</dimen>
+    <dimen name="collapsible_bottom_navigation_height">250dp</dimen>
+    <dimen name="floating_action_button_size">52dp</dimen>
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Lighter one-->
+    <item>
+        <!--android:bottom="4dp"-->
+        <shape android:shape="rectangle">
+            <solid android:color="@color/green" />
+            <!--<corners android:radius="1dp"/>-->
+        </shape>
+    </item>
+    <!--&lt;!&ndash;Darker one&ndash;&gt;-->
+    <!--<item android:bottom="1dp">-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<solid android:color="#BBB"/>-->
+    <!--</shape>-->
+    <!--</item>-->
+    <item android:drawable="@drawable/background_main">
+        <!--android:bottom="4dp"-->
+        <!--<size android:height="24dp"/>-->
+        <!--<inset android:insetBottom="100dp" android:insetLeft="24dp"/>-->
+    </item>
+</layer-list>
