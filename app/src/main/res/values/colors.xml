@@ -25,7 +25,7 @@
     <color name="grey_medium">#FFE6E7E8</color>
     <!--яркий (обводка безцветных кнопок) -->
     <color name="grey_dark">#FFD1D2D4</color>
-    <!--используется в обводке нажатых кнопок-->
+    <!--используется для текста и обводки нажатых кнопок-->
     <color name="grey_darkest">#FF6D6E71</color>
     <!--    -->
     <color name="highlight_grey_dark">#271C4644</color>

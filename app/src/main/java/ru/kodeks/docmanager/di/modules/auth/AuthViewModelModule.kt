@@ -5,14 +5,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.kodeks.docmanager.di.ViewModelKey
-import ru.kodeks.docmanager.ui.auth.AuthActivityViewModel
+import ru.kodeks.docmanager.ui.fragments.auth.AuthViewModel
 
-/** Зависимость для класса AuthActivityViewModel, которая предоставляется
- * посредством ViewModelProviderFactory.*/
 @Module
-abstract class AuthViewModelModule {
+abstract class AuthViewModelModule{
     @Binds
     @IntoMap
-    @ViewModelKey(AuthActivityViewModel::class)
-    abstract fun bindAuthActivityViewModel(viewModel: AuthActivityViewModel): ViewModel
+    @ViewModelKey(AuthViewModel::class)
+    abstract fun bindAuthViewModel(viewModel: AuthViewModel): ViewModel
 }

@@ -37,7 +37,6 @@ import javax.inject.Named
 @Module
 class ApplicationModule {
 
-
     @Provides
     fun providePreferences(app: DocManagerApp): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(app)
