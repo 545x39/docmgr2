@@ -1,4 +1,4 @@
-package ru.kodeks.docmanager.ui.fragments.auth
+package ru.kodeks.docmanager.ui.fragments.auth.progress
 
 import android.os.Bundle
 import android.view.LayoutInflater

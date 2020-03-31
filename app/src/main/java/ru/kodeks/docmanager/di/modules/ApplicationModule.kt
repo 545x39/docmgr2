@@ -13,10 +13,10 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import ru.kodeks.docmanager.DocManagerApp
-import ru.kodeks.docmanager.User
 import ru.kodeks.docmanager.constants.Network
 import ru.kodeks.docmanager.constants.Network.CONNECT_TIMEOUT
 import ru.kodeks.docmanager.constants.Network.READ_TIMEOUT
+import ru.kodeks.docmanager.constants.PathsAndFileNames.DB_DIRECTORY
 import ru.kodeks.docmanager.constants.PathsAndFileNames.RESPONSE_DIRECTORY
 import ru.kodeks.docmanager.constants.Settings
 import ru.kodeks.docmanager.constants.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
@@ -33,7 +33,8 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
-/** Модуль для всего, что будет использоваться глобально на уровне приложения: Room, Retrofit  и т.д.*/
+/** Модуль для всего, что будет использоваться глобально на уровне
+ * приложения: Room, Retrofit  и т.д. */
 @Module
 class ApplicationModule {
 
@@ -134,8 +135,8 @@ class ApplicationModule {
 
 
     @Provides
-    fun provideRoom(app: DocManagerApp, user: User): Database {
-        return Room.databaseBuilder(app, Database::class.java, user.login)
+    fun provideRoom(app: DocManagerApp): Database {
+        return Room.databaseBuilder(app, Database::class.java, "${app.getExternalFilesDir(DB_DIRECTORY)}${File.separator}db")
             .fallbackToDestructiveMigration().build()
     }
 }

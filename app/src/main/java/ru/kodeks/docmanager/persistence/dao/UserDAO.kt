@@ -3,10 +3,15 @@ package ru.kodeks.docmanager.persistence.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import ru.kodeks.docmanager.model.data.InitData
+import androidx.room.Query
+import ru.kodeks.docmanager.model.data.User
 
 @Dao
-interface InitDAO {
+interface UserDAO {
+
+    @Query("SELECT * FROM user")
+    suspend fun getUser(): User
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(initTable: InitData)
+    suspend fun insert(user: User)
 }

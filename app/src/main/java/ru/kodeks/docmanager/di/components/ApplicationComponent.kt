@@ -7,7 +7,6 @@ import dagger.android.support.AndroidSupportInjectionModule
 import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.di.modules.ActivitySubcomponentsModule
 import ru.kodeks.docmanager.di.modules.ApplicationModule
-import ru.kodeks.docmanager.di.modules.StubUserModule
 import ru.kodeks.docmanager.di.modules.ViewModelFactoryModule
 import javax.inject.Singleton
 
@@ -16,8 +15,7 @@ import javax.inject.Singleton
     modules = [AndroidSupportInjectionModule::class,
         ApplicationModule::class,
         ActivitySubcomponentsModule::class,
-        ViewModelFactoryModule::class,
-        StubUserModule::class
+        ViewModelFactoryModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<DocManagerApp> {

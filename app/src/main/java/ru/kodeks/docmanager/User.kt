@@ -4,10 +4,11 @@ import android.content.SharedPreferences
 import ru.kodeks.docmanager.constants.Settings
 import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
 import javax.inject.Inject
+import javax.inject.Singleton
 
-//@Singleton
+@Singleton
 class User
-//@Inject
+@Inject
 constructor() {
     @Inject
     lateinit var preferences: SharedPreferences
@@ -20,11 +21,10 @@ constructor() {
     val encryptedPassword: String
         get() = password.let { password ->
             kotlin.runCatching {
-                when (//DocManagerApp.instance.
-                    preferences.getBoolean(
-                        Settings.ENCRYPT_PASSWORD,
-                        false
-                    )) {
+                when (preferences.getBoolean(
+                    Settings.ENCRYPT_PASSWORD,
+                    false
+                )) {
                     true -> Encrypter().encrypt(password)
                     false -> password
                 }

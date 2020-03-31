@@ -6,7 +6,7 @@ import ru.kodeks.docmanager.persistence.dao.*
 
 
 @androidx.room.Database(
-    entities = [InitData::class,
+    entities = [User::class,
         Setting::class,
         ClassifierItem::class,
         GlobalObject::class,
@@ -34,7 +34,7 @@ abstract class Database : RoomDatabase() {
 
     abstract fun docNoteDao(): DocNoteDAO
     abstract fun settingsDao(): SettingsDAO
-    abstract fun initDao(): InitDAO
+    abstract fun userDAO(): UserDAO
     abstract fun classifiersDao(): ClassifiersDAO
     abstract fun globalObjectDao(): GlobalObjectsDAO
     abstract fun organizationsDao(): OrganizationsDAO

@@ -12,7 +12,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.ui.ViewModelProviderFactory
-import ru.kodeks.docmanager.ui.fragments.auth.AuthFragment
+import ru.kodeks.docmanager.ui.fragments.auth.MainFragment
 import javax.inject.Inject
 
 open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
@@ -39,7 +39,7 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         setTitle("Вход в систему")
         setIcon(R.drawable.icon_chain)
         ////
-        supportFragmentManager.beginTransaction().add(R.id.contentPlaceholder, AuthFragment()).commit()
+        supportFragmentManager.beginTransaction().add(R.id.contentPlaceholder, MainFragment()).commit()
 //        buttonSync.setOnClickListener {
 //            executors.diskIO().execute {
 //                parser.parse()

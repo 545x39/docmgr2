@@ -1,35 +1,69 @@
 package ru.kodeks.docmanager.model.data
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import android.content.SharedPreferences
+import android.os.Build
+import androidx.room.*
+import ru.kodeks.docmanager.BuildConfig
+import ru.kodeks.docmanager.constants.Settings
+import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
+import ru.kodeks.docmanager.persistence.typeconverters.IntListToStringTypeConverter
+import javax.inject.Inject
 
-data class User(
-        @SerializedName("uid")
-        @Expose
-        var uid: String? = null,
-        @SerializedName("rights")
-        @Expose
-        var rights: List<Int>? = null,
-        /////
-        @SerializedName("deviceModel")
-        @Expose
-        var deviceModel: String? = null,
-        @SerializedName("device")
-        @Expose
-        var device: String? = null,
-        @SerializedName("androidVersion")
-        @Expose
-        var androidVersion: String? = null,
-        @SerializedName("login")
-        @Expose
-        var login: String? = null,
-        @SerializedName("password")
-        @Expose
-        var password: String? = null,
-        @SerializedName("deviceUid")
-        @Expose
-        var deviceUid: String? = null,
-        @SerializedName("version")
-        @Expose
-        var version: String? = null
-)
+@Entity(tableName = "user")
+@TypeConverters(IntListToStringTypeConverter::class)
+class User(
+    @ColumnInfo(name = "login")
+    var login: String = "",
+    @ColumnInfo(name = "password")
+    var password: String = "",
+    @PrimaryKey
+    @ColumnInfo(name = "user_uid")
+    var uid: String = "",
+    @ColumnInfo(name = "sequence")
+    var sequence: Int = 0,
+    @ColumnInfo(name = "global_sequence")
+    var globalSequence: Int = 0,
+    @ColumnInfo(name = "settings_sequence")
+    var settingsSequence: Int = 0,
+    @ColumnInfo(name = "user_rights")
+    var rights: List<Int> = listOf(),
+    @ColumnInfo(name = "server_version")
+    var serverVersion: String = "",
+    @ColumnInfo(name = "save_login")
+    var saveLoginData: Boolean = false
+) {
+    @Inject
+    @Ignore
+    lateinit var preferences: SharedPreferences
+    val encryptedPassword: String
+        get() = password.let { password ->
+            runCatching {
+                when (preferences.getBoolean(
+                    Settings.ENCRYPT_PASSWORD,
+                    false
+                )) {
+                    true -> Encrypter().encrypt(password)
+                    false -> password
+                }
+            }.getOrDefault(password)
+        }
+
+    @Ignore
+    val device = "Android"
+
+    @Ignore
+    val deviceModel = "${Build.BRAND} ${Build.DEVICE}"
+
+    @Ignore
+    val androidVersion = Build.VERSION.RELEASE
+
+    @Ignore
+    val version = BuildConfig.VERSION_NAME
+//
+//    @Inject
+//    @Ignore
+//    lateinit var app: DocManagerApp
+
+    @Ignore
+    val deviceUid = ""//DeviceUuidFactory(app).deviceUuid.toString()
+}

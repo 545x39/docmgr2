@@ -314,16 +314,16 @@ class Parser @Inject constructor(
     }
 
     private suspend fun SyncResponse.persistInitData() {
-        database.initDao().insert(
-            InitData(
+        database.userDAO().insert(
+            User(
                 login = appUser.login,
                 password = appUser.password,
-                userUid = user?.uid.orEmpty(),
+                uid = user?.uid.orEmpty(),
                 serverVersion = serverVersion.orEmpty(),
                 sequence = version?.main ?: 0,
                 globalSequence = version?.global ?: 0,
                 settingsSequence = version?.settings ?: 0,
-                userRights = user?.rights.orEmpty()
+                rights = user?.rights.orEmpty()
             )
         )
     }

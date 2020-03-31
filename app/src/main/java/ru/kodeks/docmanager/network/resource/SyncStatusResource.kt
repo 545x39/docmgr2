@@ -5,9 +5,11 @@ package ru.kodeks.docmanager.network.resource
  * this data.*/
 sealed class SyncStatusResource<T>(
     val data: T? = null,
-    val message: String? = null
+//    val message: String? = null
+    val error: Throwable? = null
 ) {
-    class Success<T>(data: T) : SyncStatusResource<T>(data)
-    class Loading<T>(data: T? = null) : SyncStatusResource<T>(data)
-    class Error<T>(message: String, data: T? = null) : SyncStatusResource<T>(data, message)
+    class UNINITIALIZED<T>(data: T) : SyncStatusResource<T>(data)
+    class LOADING<T>(data: T? = null) : SyncStatusResource<T>(data)
+    class SUCCESS<T>(data: T) : SyncStatusResource<T>(data)
+    class ERROR<T>(data: T? = null, error: Throwable) : SyncStatusResource<T>(data, error)
 }

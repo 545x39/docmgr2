@@ -7,6 +7,7 @@ import ru.kodeks.docmanager.network.api.FlowableApi
 
 @Module
 class AuthFragmentModule {
+
     @Provides
     fun provideApi(retrofit: Retrofit): FlowableApi {
         return retrofit.create(FlowableApi::class.java)

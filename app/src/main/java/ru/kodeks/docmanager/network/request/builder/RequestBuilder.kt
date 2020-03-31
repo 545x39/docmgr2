@@ -2,8 +2,6 @@ package ru.kodeks.docmanager.network.request.builder
 
 
 import android.content.SharedPreferences
-import android.os.Build
-import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.constants.DataFilter.CLASSIFIERS
 import ru.kodeks.docmanager.constants.DataFilter.DOCUMENTS
@@ -17,7 +15,6 @@ import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALO
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.model.io.RequestBase
 import ru.kodeks.docmanager.model.io.SyncRequest
-import ru.kodeks.docmanager.util.DeviceUuidFactory
 import java.lang.Boolean.parseBoolean
 import javax.inject.Inject
 
@@ -39,12 +36,12 @@ abstract class RequestBuilder<T : RequestBase> {
         request = initRequest().apply {
             user = User(
                 login = appUser.login,
-                password = appUser.encryptedPassword,
-                device = "Android",
-                deviceModel = "${Build.BRAND} ${Build.DEVICE}",
-                androidVersion = Build.VERSION.RELEASE,
-                version = BuildConfig.VERSION_NAME,
-                deviceUid = DeviceUuidFactory(app).deviceUuid.toString()
+                password = appUser.encryptedPassword
+//                device = "Android",
+//                deviceModel = "${Build.BRAND} ${Build.DEVICE}",
+//                androidVersion = Build.VERSION.RELEASE,
+//                version = BuildConfig.VERSION_NAME,
+//                deviceUid = DeviceUuidFactory(app).deviceUuid.toString()
             )
             preview = parseBoolean(preferences.getString(PREVIEW_MODE_PREFERENCE_KEY, "false"))
         }

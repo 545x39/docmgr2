@@ -1,11 +1,15 @@
 package ru.kodeks.docmanager.ui.fragments.auth
 
 import androidx.lifecycle.ViewModel
-import ru.kodeks.docmanager.network.api.FlowableApi
+import ru.kodeks.docmanager.repository.UserRepository
 import javax.inject.Inject
 
 
-class AuthViewModel @Inject constructor(var api: FlowableApi) : ViewModel() {
+class MainViewModel @Inject constructor() : ViewModel() {
+
+    @Inject
+    lateinit var userRepository: UserRepository
+//    var cachedUser: LiveData<UserStateResource>
 
 //    fun test(){
 //        val request: SyncRequest = InitRequestBuilder().build()
