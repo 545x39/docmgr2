@@ -28,9 +28,7 @@ class User(
     @ColumnInfo(name = "user_rights")
     var rights: List<Int> = listOf(),
     @ColumnInfo(name = "server_version")
-    var serverVersion: String = "",
-    @ColumnInfo(name = "save_login")
-    var saveLoginData: Boolean = false
+    var serverVersion: String = ""
 ) {
     @Inject
     @Ignore
@@ -55,15 +53,11 @@ class User(
     val deviceModel = "${Build.BRAND} ${Build.DEVICE}"
 
     @Ignore
-    val androidVersion = Build.VERSION.RELEASE
+    val androidVersion: String = Build.VERSION.RELEASE
 
     @Ignore
     val version = BuildConfig.VERSION_NAME
-//
-//    @Inject
-//    @Ignore
-//    lateinit var app: DocManagerApp
 
-    @Ignore
-    val deviceUid = ""//DeviceUuidFactory(app).deviceUuid.toString()
+//    @Ignore
+//    val deviceUid = ""//DeviceUuidFactory(app).deviceUuid.toString()
 }

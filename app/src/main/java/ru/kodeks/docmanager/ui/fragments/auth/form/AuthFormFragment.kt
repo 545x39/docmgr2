@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_auth_form.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.repository.UserRepository
 import ru.kodeks.docmanager.ui.ViewModelProviderFactory
 import javax.inject.Inject
 
@@ -16,8 +16,6 @@ class AuthFormFragment : DaggerFragment() {
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
-    @Inject
-    lateinit var userRepository: UserRepository
     private lateinit var viewModel: AuthFormViewModel
 
     override fun onCreateView(
@@ -25,12 +23,24 @@ class AuthFormFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val view = inflater.inflate(R.layout.fragment_auth_form, container, false)
         viewModel = ViewModelProvider(this, providerFactory).get(AuthFormViewModel::class.java)
         subscribeObservers()
-        return inflater.inflate(R.layout.fragment_auth_form, container, false)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loginButton.setOnClickListener {
+            viewModel.userRepository.logIn(loginEditText.text.toString(), passwordEditText.text.toString())
+        }
+        savePasswordCkeckbox.isChecked = viewModel.userRepository.autoLogin
+        savePasswordCkeckbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.autoLogin(isChecked)
+        }
     }
 
     private fun subscribeObservers() {
-        //TODO
+
     }
 }

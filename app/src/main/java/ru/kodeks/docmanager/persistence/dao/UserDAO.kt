@@ -10,7 +10,7 @@ import ru.kodeks.docmanager.model.data.User
 interface UserDAO {
 
     @Query("SELECT * FROM user")
-    suspend fun getUser(): User
+    suspend fun getUser(): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)

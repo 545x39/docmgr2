@@ -1,68 +1,113 @@
 package ru.kodeks.docmanager.repository
 
-import androidx.lifecycle.MediatorLiveData
+import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.kodeks.docmanager.constants.Settings.AUTO_LOGIN
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.network.resource.UserStateResource
 import ru.kodeks.docmanager.persistence.Database
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor(var database: Database) {
+class UserRepository @Inject constructor(
+    var database: Database,
+    var preferences: SharedPreferences
+) {
 
-    constructor(
-        login: String = "meyksin",
-        password: String = "11111",
-        database: Database
-    ) : this(database)
+//login: String = "meyksin", password: String = "11111"
 
-    var cachedUser: MediatorLiveData<UserStateResource> = MediatorLiveData()
-        private set
+    val autoLogin: Boolean get() = preferences.getBoolean(AUTO_LOGIN, false)
 
-    fun logIn() {
-        //TODO Тут будет вся логика авторизации
-        /** 1. Смотрим нужного пользователя в базе*/
-        CoroutineScope(IO).launch {
-            when(database.userDAO().getUser()){
-                null ->{ withContext(Main) {
-                    notInitialized()
-                }}
+    fun setAutoLogin(enable: Boolean) {
+        preferences.edit().putBoolean(AUTO_LOGIN, enable).apply()
+    }
+
+    private var cachedUser: MutableLiveData<UserStateResource> = MutableLiveData()
+
+    /** The point is to let observers subscribe on immutable version of cachedUser only.*/
+    fun getUser(): LiveData<UserStateResource> {
+        return cachedUser
+    }
+
+    /** login: String = "meyksin", password: String = "11111"*/
+    fun logIn(login: String? = null, password: String? = null) {
+
+        suspend fun post(updateUserState: () -> Unit) {
+            withContext(Main) {
+                updateUserState()
             }
-            val usr = database.userDAO().getUser()
-            Timber.e("USER: $usr")
-//            withContext(Main) {
-//                logOut()
-//            }
+        }
+
+        suspend fun onNotInitialized() {
+            if (login == null && password == null) {
+                post { notInitialized() }
+            } else {
+                if (login?.isNotBlank() == true && password?.isNotBlank() == true) {
+                    post { initialize(login, password) }
+                } else {
+                    post { error(IllegalArgumentException("Логин и пароль не могут быть пустыми")) }
+                }
+            }
+        }
+
+        suspend fun onInitialized(user: User) {
+            if (login == null && password == null) {
+                if (autoLogin) {
+                    post { loggedIn(user) }
+                } else {
+                    post { loggedOut() }
+                }
+            } else {
+                if (login.equals(user.login) && password.equals(user.password)) {
+                    post { loggedIn(user) }
+                } else {
+                    post { error(IllegalArgumentException("Неверный логин или пароль!")) }
+                }
+            }
+        }
+
+        CoroutineScope(IO).launch {
+            when (val user = database.userDAO().getUser()) {
+                null -> {
+                    onNotInitialized()
+                }
+                /**There is an initialized user in the database */
+                else -> {
+                    onInitialized(user)
+                }
+            }
         }
     }
 
     private fun notInitialized() {
-        cachedUser.value = UserStateResource.NotInitialized()
+        cachedUser.postValue(UserStateResource.NotInitialized())
     }
 
     fun logOut() {
-        cachedUser.value = UserStateResource.LoggedOut()
+        loggedOut()
     }
 
-    fun isInitialized(): Boolean {
-        return false
+    private fun loggedIn(user: User) {
+        cachedUser.postValue(UserStateResource.LoggedIn(user))
     }
 
-    fun syncError(throwable: Throwable) {
-        cachedUser.value = UserStateResource.Error(cachedUser.value?.user, throwable)
+    private fun loggedOut() {
+        cachedUser.postValue(UserStateResource.LoggedOut(cachedUser.value?.user))
     }
 
-    fun initialize(user: User) {
-        cachedUser.value = UserStateResource.Synchronizing(message = "Ожидание ответа от сервера")
+    private fun error(throwable: Throwable) {
+        cachedUser.postValue(UserStateResource.Error(cachedUser.value?.user, throwable))
     }
 
-    fun isPasswordSaved(): Boolean {
-        return false
+    private fun initialize(login: String, password: String) {
+        cachedUser.postValue(UserStateResource.Synchronizing(message = "Ожидание ответа от сервера"))
+        //TODO Здесь вся логика инициализации: обновление статуса инициализации, сам синк и обновление после завершения.
     }
 }

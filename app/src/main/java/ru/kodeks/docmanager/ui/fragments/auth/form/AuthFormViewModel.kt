@@ -8,4 +8,8 @@ class AuthFormViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var userRepository: UserRepository
+
+    fun autoLogin(enable: Boolean){
+        userRepository.setAutoLogin(enable)
+    }
 }

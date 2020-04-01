@@ -17,7 +17,7 @@
             android:layout_gravity="center">
 
             <EditText
-                android:id="@+id/login_edit_text"
+                android:id="@+id/loginEditText"
                 android:layout_width="260dp"
                 android:layout_height="@dimen/button_size"
                 android:layout_alignParentTop="true"
@@ -35,7 +35,7 @@
                 android:id="@+id/passwordEditText"
                 android:layout_width="260dp"
                 android:layout_height="@dimen/button_size"
-                android:layout_below="@+id/login_edit_text"
+                android:layout_below="@+id/loginEditText"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin"
                 android:background="@drawable/background_edit_text"

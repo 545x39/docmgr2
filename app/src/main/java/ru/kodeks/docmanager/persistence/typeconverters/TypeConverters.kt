@@ -9,11 +9,7 @@ class IntListToStringTypeConverter {
         val split = string.split(",")
         val out: MutableList<Int> = mutableListOf()
         for (i in split.indices) {
-            try {
-                out[i] = split[i].toInt()
-            } catch (e: NumberFormatException) {
-                //
-            }
+            kotlin.runCatching { out[i] = split[i].toInt() }
         }
         return out.toList()
     }

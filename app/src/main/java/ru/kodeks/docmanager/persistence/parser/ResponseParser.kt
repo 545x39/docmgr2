@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.User
 import ru.kodeks.docmanager.constants.PathsAndFileNames.SYNC_RESPONSE_FILENAME
-import ru.kodeks.docmanager.di.RESPONSE_DIR
+import ru.kodeks.docmanager.di.constants.RESPONSE_DIR
 import ru.kodeks.docmanager.model.data.*
 import ru.kodeks.docmanager.model.io.SyncResponse
 import ru.kodeks.docmanager.persistence.Database

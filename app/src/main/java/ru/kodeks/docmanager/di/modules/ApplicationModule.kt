@@ -21,8 +21,8 @@ import ru.kodeks.docmanager.constants.PathsAndFileNames.RESPONSE_DIRECTORY
 import ru.kodeks.docmanager.constants.Settings
 import ru.kodeks.docmanager.constants.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
 import ru.kodeks.docmanager.constants.Settings.SslSettings.USE_SSL_CERT_SETTING
-import ru.kodeks.docmanager.di.BASE_URL
-import ru.kodeks.docmanager.di.RESPONSE_DIR
+import ru.kodeks.docmanager.di.constants.BASE_URL
+import ru.kodeks.docmanager.di.constants.RESPONSE_DIR
 import ru.kodeks.docmanager.network.api.BaseApi
 import ru.kodeks.docmanager.network.ssl.CERT_FILENAME
 import ru.kodeks.docmanager.network.ssl.ClientKeyStoreTrustManager

@@ -35,25 +35,42 @@ class MainFragment : DaggerFragment() {
         return view
     }
 
-    private fun switchFragment(fragment: Fragment, addToBackStack: Boolean = true){
+    private fun switchFragment(fragment: Fragment, addToBackStack: Boolean = true) {
         parentFragmentManager.beginTransaction()
             .replace(
                 R.id.authFragmentsPlaceholder,
                 fragment
             ).apply {
-                if (addToBackStack){
+                if (addToBackStack) {
                     addToBackStack(fragment::class.simpleName)
                 }
             }.commit()
     }
 
     private fun subscribeObservers() {
-        viewModel.userRepository.cachedUser.observe(viewLifecycleOwner, Observer{
-            when(it){
-                is UserStateResource.NotInitialized -> {switchFragment(AuthFormFragment(), false)}
-                is UserStateResource.Synchronizing -> {switchFragment((AuthProgressFragment()), false)}
-                is UserStateResource.LoggedIn -> {switchFragment((ProgressBarFragment()), true)}
-                else -> {Snackbar.make(versionText, "Unknown user state: $it", Snackbar.LENGTH_SHORT).show()}
+        viewModel.userRepository.getUser().observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is UserStateResource.NotInitialized -> {
+                    switchFragment(AuthFormFragment(), false)
+                }
+                is UserStateResource.Synchronizing -> {
+                    switchFragment((AuthProgressFragment()), false)
+                }
+                //TODO переключить на релаьный фрагмент списков документов.
+                is UserStateResource.LoggedIn -> {
+                    switchFragment((ProgressBarFragment()), true)
+                }
+                is UserStateResource.Error -> {
+                    Snackbar.make(
+                        versionText,
+                        "Ошибка: ${it.error?.message ?: "неизвестная ошибка"}",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                else -> {
+                    Snackbar.make(versionText, "Unknown user state: $it", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             }
         })
         viewModel.userRepository.logIn()

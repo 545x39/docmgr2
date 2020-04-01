@@ -14,6 +14,11 @@ object Settings : SettingConstant() {
     const val ENCRYPT_PASSWORD = "encryptPassword"
 
     /**
+     * Автоматический вход (флаг "запомнить" в форме аутентификции)
+     */
+    const val AUTO_LOGIN = "autoLogin"
+
+    /**
      * Период автоматического обновления
      */
     const val PREFERENCE_UPDATE_PERIOD_PREF = "updatePeriodPref"

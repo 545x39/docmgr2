@@ -3,7 +3,7 @@ package ru.kodeks.docmanager.network.operations
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.kodeks.docmanager.constants.PathsAndFileNames.SYNC_RESPONSE_FILENAME
-import ru.kodeks.docmanager.di.RESPONSE_DIR
+import ru.kodeks.docmanager.di.constants.RESPONSE_DIR
 import ru.kodeks.docmanager.model.io.SyncRequest
 import ru.kodeks.docmanager.network.api.SyncApi
 import ru.kodeks.docmanager.persistence.parser.Parser
