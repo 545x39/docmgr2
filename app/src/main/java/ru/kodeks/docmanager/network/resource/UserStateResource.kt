@@ -19,7 +19,7 @@ sealed class UserStateResource(
     /** Пользователь залогинен и может работать.*/
     class LoggedIn(user: User? = null) : UserStateResource(user)
 
-    /** База есть,*/
+    /** База есть, но не поднят флаг "запомнить пароль".*/
     class LoggedOut(user: User? = null) : UserStateResource(user)
 
     /** Ошибки: не удалось проинициализировать пользователя, сменился пароль и т.п.*/

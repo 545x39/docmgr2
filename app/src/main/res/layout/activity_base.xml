@@ -219,12 +219,16 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <RelativeLayout
-            android:id="@+id/contentPlaceholder"
+        <fragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/navigationHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation_graph"
             android:layout_marginTop="@dimen/bar_height"
-            android:gravity="center|top" />
+            android:gravity="center|top"
+            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"

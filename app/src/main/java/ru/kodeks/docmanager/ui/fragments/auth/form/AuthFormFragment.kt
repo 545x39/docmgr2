@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerFragment
+import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.fragment_auth_form.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.ui.ViewModelProviderFactory
-import javax.inject.Inject
+import ru.kodeks.docmanager.network.resource.UserStateResource
+import ru.kodeks.docmanager.ui.fragments.auth.base.BaseAuthFragment
 
-class AuthFormFragment : DaggerFragment() {
-
-    @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
+class AuthFormFragment : BaseAuthFragment() {
 
     private lateinit var viewModel: AuthFormViewModel
 
@@ -23,24 +21,32 @@ class AuthFormFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_auth_form, container, false)
         viewModel = ViewModelProvider(this, providerFactory).get(AuthFormViewModel::class.java)
-        subscribeObservers()
-        return view
+        return inflater.inflate(R.layout.fragment_auth_form, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+        subscribeObservers()
         loginButton.setOnClickListener {
-            viewModel.userRepository.logIn(loginEditText.text.toString(), passwordEditText.text.toString())
+            viewModel.logIn(
+                loginEditText.text.toString(),
+                passwordEditText.text.toString()
+            )
         }
-        savePasswordCkeckbox.isChecked = viewModel.userRepository.autoLogin
+        savePasswordCkeckbox.isChecked = viewModel.getAutoLoginUser()
         savePasswordCkeckbox.setOnCheckedChangeListener { _, isChecked ->
             viewModel.autoLogin(isChecked)
         }
     }
 
     private fun subscribeObservers() {
-
+        viewModel.getUser().removeObservers(viewLifecycleOwner)
+        viewModel.getUser().observe(viewLifecycleOwner, Observer {
+            when(it){
+                is UserStateResource.Synchronizing ->{navController.navigate(R.id.action_authFormFragment_to_authProgressFragment)}
+            }
+        })
     }
 }

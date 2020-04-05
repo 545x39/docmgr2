@@ -1,18 +1,22 @@
 package ru.kodeks.docmanager.ui.main
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.kodeks.docmanager.R
+import ru.kodeks.docmanager.network.resource.UserStateResource
 import ru.kodeks.docmanager.ui.ViewModelProviderFactory
-import ru.kodeks.docmanager.ui.fragments.auth.MainFragment
 import javax.inject.Inject
 
 open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
@@ -20,55 +24,32 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
-    lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
-        /** Параметр owner задаёт "Scope" для ViewModel, т.е. то, к
-         * жмзненному циклу чего будет привязана эта ViewModel.
-         * ViewModelStoreOwner - интерфейс, который наследуют
-         * активности, фрагменты и различные виджеты.*/
         viewModel = ViewModelProvider(this, providerFactory)
             .get(MainActivityViewModel::class.java)
         /** По умолчанию навигация отключена. */
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        enableNavigationDrawer()
-//        enableToolbarScroll()
-        enableButtons(settingsButton)
-        setTitle("Вход в систему")
-        setIcon(R.drawable.icon_chain)
-        ////
-        supportFragmentManager.beginTransaction().add(R.id.contentPlaceholder, MainFragment()).commit()
-//        buttonSync.setOnClickListener {
-//            executors.diskIO().execute {
-//                parser.parse()
-//            }
-
-        //////
-//        CoroutineScope(IO).launch {
-//            runCatching {
-//                Parser().parse()
-//             //   sync()
-//            }.onFailure {
-//                Timber.e(it)
-//                sync()
-//            }
-//        }
+        navigationDrawerEnabled(false)
+        toolbarScrollEnabled(false)
+        enableButtons()
+//        setTitle("Вход в систему")
+//        setIcon(R.drawable.icon_chain)
+        viewModel.getUser().observe(this, Observer {
+            when (it) {
+                is UserStateResource.Error -> showSnackbar(it.error, it.message)
+            }
+        })
     }
-    //private fun sync() {
-//    executors.networkIO().execute {
-//        try {
-//            SyncOperation(InitRequestBuilder().build()).execute()
-//        } catch (e: Exception) {
-//            Timber.e(e)
-//            //TODO Здесь должны быть обработчики соответствующих исключений:
-//            // как реагировать на те или иные проблемы с сетью или инитом.
-//        }
-//    }
-//}
 
-    private fun setIcon(icon: Int) {
+    private fun showSnackbar(error: Throwable? = null, message: String = "") {
+//        error?.let { it.message }
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show()
+    }
+
+    fun setIcon(icon: Int) {
         titleIcon.setImageDrawable(getDrawable(icon))
     }
 
@@ -77,6 +58,12 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
     }
 
     fun enableButtons(vararg buttons: View) {
+        for (button in listOf(
+            backButton, syncButton,
+            menuButton, settingsButton, searchButton, quick_search_view
+        )) {
+            button.visibility = GONE
+        }
         for (button in buttons) {
             /** Кнопка меню активируется аналогично,
              * но только совместно с самим меню.*/
@@ -89,20 +76,34 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         }
     }
 
-    open fun enableToolbarScroll() {
+    fun toolbarScrollEnabled(enabled: Boolean) {
         val layoutParams = collapsingToolbarLayout.layoutParams as AppBarLayout.LayoutParams
-        layoutParams.scrollFlags =
-            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP or AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+        layoutParams.scrollFlags = when (enabled) {
+            true ->
+                AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP or AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+            false -> AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+        }
         collapsingToolbarLayout.layoutParams = layoutParams
         collapsingToolbarLayout.requestLayout()
     }
 
-    open fun enableNavigationDrawer() {
+    fun navigationDrawerEnabled(enable: Boolean) {
         menuButton.apply {
             setOnClickListener(this@MainActivity)
-            visibility = VISIBLE
+            visibility = when (enable) {
+                true -> VISIBLE
+                false -> GONE
+            }
         }
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        if (enable) {
+            menuButton.apply {
+                setOnClickListener(this@MainActivity)
+                visibility = VISIBLE
+            }
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -115,13 +116,22 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
                         false -> drawerLayout.openDrawer(GravityCompat.START, true)
                     }
                 }
-                R.id.settingsButton -> {
-                    /*TODO open settings */
-                }
                 R.id.syncButton -> {
                     /*TODO do sync */
                 }
             }
         }
+    }
+
+    fun hideKeyboard() {
+        val imm: InputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(this)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

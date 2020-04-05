@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ru.kodeks.docmanager.ui.fragments.auth.base.StartFragment"
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_start_to_login_navigation"
+            app:destination="@id/login_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_main_to_login_navigation"
+            app:destination="@id/login_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_log_in_saved_user"
+            app:destination="@id/main_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@id/navigation_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/preferencesFragment"
+        android:name="ru.kodeks.docmanager.ui.fragments.preferences.PreferencesFragment"
+        android:label="PreferencesFragment" />
+    <navigation
+        android:id="@+id/login_navigation"
+        app:startDestination="@id/authFormFragment" >
+        <fragment
+            android:id="@+id/authFormFragment"
+            android:name="ru.kodeks.docmanager.ui.fragments.auth.form.AuthFormFragment"
+            android:label="AuthFormFragment">
+            <action
+                android:id="@+id/action_authFormFragment_to_authProgressFragment"
+                app:destination="@id/authProgressFragment"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out"
+                app:popUpTo="@id/navigation_graph"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/authProgressFragment"
+            android:name="ru.kodeks.docmanager.ui.fragments.auth.progress.AuthProgressFragment"
+            android:label="AuthProgressFragment" >
+            <action
+                android:id="@+id/action_authProgressFragment_to_authFormFragment"
+                app:destination="@id/authFormFragment"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out"
+                app:popUpTo="@id/authProgressFragment" />
+        </fragment>
+        <action
+            android:id="@+id/action_log_in_on_init_sucess"
+            app:destination="@id/main_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_from_login_to_settings"
+            app:destination="@id/preferencesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </navigation>
+    <navigation
+        android:id="@+id/main_navigation"
+        app:startDestination="@id/documentListFragment" >
+        <fragment
+            android:id="@+id/documentListFragment"
+            android:name="ru.kodeks.docmanager.ui.fragments.documentslist.DocumentListFragment"
+            android:label="DocumentListFragment" />
+        <action
+            android:id="@+id/close_app_while__loged_in"
+            app:destination="@id/navigation_graph"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@id/navigation_graph" />
+        <action
+            android:id="@+id/log_out"
+            app:destination="@id/login_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </navigation>
+</navigation>

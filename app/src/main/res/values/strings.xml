@@ -6,4 +6,7 @@
     <string name="login">Логин:</string>
     <string name="password">Пароль:</string>
     <string name="save_login_data">Запомнить</string>
+    <string name="log_in_to_system">Вход в систему</string>
+    <string name="loading">Загрузка…</string>
+    <string name="preferences">Настройки</string>
 </resources>

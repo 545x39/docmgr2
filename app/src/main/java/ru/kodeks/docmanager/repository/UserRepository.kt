@@ -2,12 +2,10 @@ package ru.kodeks.docmanager.repository
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.kodeks.docmanager.constants.Settings.AUTO_LOGIN
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.network.resource.UserStateResource
@@ -21,7 +19,8 @@ class UserRepository @Inject constructor(
     var preferences: SharedPreferences
 ) {
 
-//login: String = "meyksin", password: String = "11111"
+    @Inject
+    lateinit var syncStateRepository: SyncStateRepository
 
     val autoLogin: Boolean get() = preferences.getBoolean(AUTO_LOGIN, false)
 
@@ -29,7 +28,8 @@ class UserRepository @Inject constructor(
         preferences.edit().putBoolean(AUTO_LOGIN, enable).apply()
     }
 
-    private var cachedUser: MutableLiveData<UserStateResource> = MutableLiveData()
+    /** It's going to observe SyncStatus to uplate user as sync finishes.*/
+    private var cachedUser: MediatorLiveData<UserStateResource> = MediatorLiveData()
 
     /** The point is to let observers subscribe on immutable version of cachedUser only.*/
     fun getUser(): LiveData<UserStateResource> {
@@ -39,20 +39,14 @@ class UserRepository @Inject constructor(
     /** login: String = "meyksin", password: String = "11111"*/
     fun logIn(login: String? = null, password: String? = null) {
 
-        suspend fun post(updateUserState: () -> Unit) {
-            withContext(Main) {
-                updateUserState()
-            }
-        }
-
         suspend fun onNotInitialized() {
             if (login == null && password == null) {
-                post { notInitialized() }
+                notInitialized()
             } else {
                 if (login?.isNotBlank() == true && password?.isNotBlank() == true) {
-                    post { initialize(login, password) }
+                    initialize(login, password)
                 } else {
-                    post { error(IllegalArgumentException("Логин и пароль не могут быть пустыми")) }
+                    error(IllegalArgumentException("Логин и пароль не могут быть пустыми"))
                 }
             }
         }
@@ -60,15 +54,15 @@ class UserRepository @Inject constructor(
         suspend fun onInitialized(user: User) {
             if (login == null && password == null) {
                 if (autoLogin) {
-                    post { loggedIn(user) }
+                    loggedIn(user)
                 } else {
-                    post { loggedOut() }
+                    loggedOut()
                 }
             } else {
                 if (login.equals(user.login) && password.equals(user.password)) {
-                    post { loggedIn(user) }
+                    loggedIn(user)
                 } else {
-                    post { error(IllegalArgumentException("Неверный логин или пароль!")) }
+                    error(IllegalArgumentException("Неверный логин или пароль!"))
                 }
             }
         }

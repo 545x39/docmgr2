@@ -6,23 +6,23 @@
     android:layout_marginTop="@dimen/bar_height">
 
     <TextView
-        android:id="@+id/progress_status_text"
+        android:id="@+id/progressStatusText"
         android:layout_width="284dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:maxLines="2"
+        android:text="@string/loading"
         android:layout_centerHorizontal="true"
-        android:text="Загрузка..."
         android:textColor="@color/grey_darkest" />
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="284dp"
         android:layout_height="2dp"
-        android:layout_below="@+id/progress_status_text"
+        android:layout_below="@+id/progressStatusText"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:layout_centerHorizontal="true"
