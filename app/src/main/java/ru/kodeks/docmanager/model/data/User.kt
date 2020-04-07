@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.room.*
 import ru.kodeks.docmanager.BuildConfig
-import ru.kodeks.docmanager.constants.Settings
+import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
 import ru.kodeks.docmanager.persistence.typeconverters.IntListToStringTypeConverter
 import javax.inject.Inject

@@ -2,11 +2,15 @@ package ru.kodeks.docmanager
 
 import android.content.Context
 import androidx.multidex.MultiDex
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import ru.kodeks.docmanager.di.components.DaggerApplicationComponent
+import ru.kodeks.docmanager.di.DaggerApplicationComponent
+import ru.kodeks.docmanager.di.providerfactory.WorkerProviderFactory
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
@@ -16,8 +20,17 @@ class DocManagerApp : DaggerApplication() {
         return DaggerApplicationComponent.builder().application(this).build()
     }
 
+    @Inject
+    lateinit var workerProviderFactory: WorkerProviderFactory
+
     override fun onCreate() {
         super.onCreate()
+        WorkManager.initialize(
+            this,
+            Configuration.Builder()
+                .setWorkerFactory(workerProviderFactory)
+                .build()
+        )
         if (BuildConfig.DEBUG) {
             Timber.plant(object : DebugTree() {
                 override fun createStackElementTag(element: StackTraceElement): String? {

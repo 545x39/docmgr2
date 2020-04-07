@@ -2,10 +2,10 @@ package ru.kodeks.docmanager.model.io
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import ru.kodeks.docmanager.constants.JsonNames.CLASSIFIERS
-import ru.kodeks.docmanager.constants.JsonNames.DATA_FILTER
-import ru.kodeks.docmanager.constants.JsonNames.SETTINGS
-import ru.kodeks.docmanager.constants.JsonNames.VERSION
+import ru.kodeks.docmanager.const.JsonNames.CLASSIFIERS
+import ru.kodeks.docmanager.const.JsonNames.DATA_FILTER
+import ru.kodeks.docmanager.const.JsonNames.SETTINGS
+import ru.kodeks.docmanager.const.JsonNames.VERSION
 import ru.kodeks.docmanager.model.data.*
 
 /** Категория данных для фильтрации ответа, битовая маска. Используется для кастомизации начального слепка данных системы.

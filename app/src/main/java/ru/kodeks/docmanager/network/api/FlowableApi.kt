@@ -3,8 +3,8 @@ package ru.kodeks.docmanager.network.api
 import io.reactivex.rxjava3.core.Flowable
 import okhttp3.ResponseBody
 import retrofit2.http.*
-import ru.kodeks.docmanager.constants.Menthods
-import ru.kodeks.docmanager.constants.ServiceMethod
+import ru.kodeks.docmanager.const.Menthods
+import ru.kodeks.docmanager.const.ServiceMethod
 import ru.kodeks.docmanager.model.io.DefaultResponse
 
 interface FlowableApi {

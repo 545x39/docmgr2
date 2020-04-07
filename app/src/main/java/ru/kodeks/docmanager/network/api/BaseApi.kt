@@ -3,10 +3,10 @@ package ru.kodeks.docmanager.network.api
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
-import ru.kodeks.docmanager.constants.JsonNames.REQUEST_KEY
-import ru.kodeks.docmanager.constants.Menthods.CHECK_STATE
-import ru.kodeks.docmanager.constants.ServiceMethod.GET_DEFERRED_RESPONSE_URL_PATH
-import ru.kodeks.docmanager.constants.ServiceMethod.SYNC_SVC
+import ru.kodeks.docmanager.const.JsonNames.REQUEST_KEY
+import ru.kodeks.docmanager.const.Menthods.CHECK_STATE
+import ru.kodeks.docmanager.const.ServiceMethod.GET_DEFERRED_RESPONSE_URL_PATH
+import ru.kodeks.docmanager.const.ServiceMethod.SYNC_SVC
 import ru.kodeks.docmanager.model.io.ChkStateResponse
 import ru.kodeks.docmanager.model.io.DefaultResponse
 

@@ -1,23 +1,18 @@
 package ru.kodeks.docmanager.repository
 
-import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import ru.kodeks.docmanager.constants.Settings.AUTO_LOGIN
+import ru.kodeks.docmanager.const.Settings.AUTO_LOGIN
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.network.resource.UserStateResource
-import ru.kodeks.docmanager.persistence.Database
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor(
-    var database: Database,
-    var preferences: SharedPreferences
-) {
+class UserRepository @Inject constructor() : BaseRepository() {
 
     @Inject
     lateinit var syncStateRepository: SyncStateRepository
@@ -38,8 +33,7 @@ class UserRepository @Inject constructor(
 
     /** login: String = "meyksin", password: String = "11111"*/
     fun logIn(login: String? = null, password: String? = null) {
-
-        suspend fun onNotInitialized() {
+        fun onNotInitialized() {
             if (login == null && password == null) {
                 notInitialized()
             } else {
@@ -51,7 +45,7 @@ class UserRepository @Inject constructor(
             }
         }
 
-        suspend fun onInitialized(user: User) {
+        fun onInitialized(user: User) {
             if (login == null && password == null) {
                 if (autoLogin) {
                     loggedIn(user)
@@ -102,6 +96,7 @@ class UserRepository @Inject constructor(
 
     private fun initialize(login: String, password: String) {
         cachedUser.postValue(UserStateResource.Synchronizing(message = "Ожидание ответа от сервера"))
+        syncStateRepository.sync(login, password)
         //TODO Здесь вся логика инициализации: обновление статуса инициализации, сам синк и обновление после завершения.
     }
 }

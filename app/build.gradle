@@ -29,6 +29,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    //To avoid "Cannot inline bytecode built with JVM target 1.8 into bytecode that is being built with JVM target 1.6"
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -99,8 +103,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     //TIMBER
     implementation "com.jakewharton.timber:timber:4.7.1"
-    //WORKMANAGER
+    //WORKMANAGER (+ coroutines)
     implementation "androidx.work:work-runtime-ktx:$work_manager_version"
+    //RxJava
+//    implementation "android.arch.work:work-rxjava2:$work_manager_version"
     //RXJAVA
     implementation "io.reactivex.rxjava3:rxjava:$rx_java_version"
     implementation "io.reactivex.rxjava3:rxandroid:$rx_java_version"

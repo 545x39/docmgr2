@@ -2,16 +2,16 @@ package ru.kodeks.docmanager.model.io
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import ru.kodeks.docmanager.constants.JsonNames.APPROVAL_ACTIONS
-import ru.kodeks.docmanager.constants.JsonNames.DOCS
-import ru.kodeks.docmanager.constants.JsonNames.DOCS_COUNT
-import ru.kodeks.docmanager.constants.JsonNames.DOC_NOTE_ACTIONS
-import ru.kodeks.docmanager.constants.JsonNames.GROUPED_STATIONS
-import ru.kodeks.docmanager.constants.JsonNames.ORGANIZATIONS
-import ru.kodeks.docmanager.constants.JsonNames.ORGANIZATIONS_COUNT
-import ru.kodeks.docmanager.constants.JsonNames.REJECTED_DOCS
-import ru.kodeks.docmanager.constants.JsonNames.REPORT_STATIONS
-import ru.kodeks.docmanager.constants.JsonNames.SIGNED_DOCS
+import ru.kodeks.docmanager.const.JsonNames.APPROVAL_ACTIONS
+import ru.kodeks.docmanager.const.JsonNames.DOCS
+import ru.kodeks.docmanager.const.JsonNames.DOCS_COUNT
+import ru.kodeks.docmanager.const.JsonNames.DOC_NOTE_ACTIONS
+import ru.kodeks.docmanager.const.JsonNames.GROUPED_STATIONS
+import ru.kodeks.docmanager.const.JsonNames.ORGANIZATIONS
+import ru.kodeks.docmanager.const.JsonNames.ORGANIZATIONS_COUNT
+import ru.kodeks.docmanager.const.JsonNames.REJECTED_DOCS
+import ru.kodeks.docmanager.const.JsonNames.REPORT_STATIONS
+import ru.kodeks.docmanager.const.JsonNames.SIGNED_DOCS
 import ru.kodeks.docmanager.model.data.Document
 import ru.kodeks.docmanager.model.data.Organization
 import ru.kodeks.docmanager.model.data.StationSignature

@@ -1,8 +1,8 @@
 package ru.kodeks.docmanager.network.request
 
-import ru.kodeks.docmanager.constants.DataFilter
-import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
-import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
+import ru.kodeks.docmanager.const.DataFilter
+import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
+import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
 import ru.kodeks.docmanager.model.data.Widget
 import ru.kodeks.docmanager.model.io.SyncRequest
 import ru.kodeks.docmanager.network.request.builder.DataFilterRequestBuilder

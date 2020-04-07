@@ -16,7 +16,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.network.resource.UserStateResource
-import ru.kodeks.docmanager.ui.ViewModelProviderFactory
+import ru.kodeks.docmanager.di.providerfactory.ViewModelProviderFactory
 import javax.inject.Inject
 
 open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
@@ -45,8 +45,15 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
     }
 
     private fun showSnackbar(error: Throwable? = null, message: String = "") {
-//        error?.let { it.message }
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show()
+        var msg = message
+        error?.let {
+            it.message?.let { errorMessage ->
+                if (!errorMessage.isNullOrEmpty()) {
+                    msg = errorMessage
+                }
+            }
+        }
+        Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).show()
     }
 
     fun setIcon(icon: Int) {

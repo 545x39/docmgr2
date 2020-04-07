@@ -1,7 +1,7 @@
 package ru.kodeks.docmanager.crypto.passwordencrypter
 
 import ru.kodeks.docmanager.PasswordEncryptionException
-import ru.kodeks.docmanager.constants.ENCRYPTED_PASSWORD_PREFIX
+import ru.kodeks.docmanager.const.ENCRYPTED_PASSWORD_PREFIX
 
 private val aes: AES = AES()
 

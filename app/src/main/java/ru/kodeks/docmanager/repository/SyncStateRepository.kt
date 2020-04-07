@@ -1,17 +1,63 @@
 package ru.kodeks.docmanager.repository
 
-import androidx.lifecycle.MutableLiveData
-import retrofit2.Retrofit
-import ru.kodeks.docmanager.network.resource.SyncStateResource
-import ru.kodeks.docmanager.persistence.Database
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.work.*
+import ru.kodeks.docmanager.work.SYNC_REQUEST_CONSTRAINTS
+import ru.kodeks.docmanager.work.SYNC_RESPONSE_PARSER_CONSTRAINTS
+import ru.kodeks.docmanager.work.checkstate.CheckStateWorker
+import ru.kodeks.docmanager.work.sync.ParseResponseWorker
+import ru.kodeks.docmanager.work.sync.SYNC_REQUEST_TAG
+import ru.kodeks.docmanager.work.sync.SYNC_RESPONE_TAG
+import ru.kodeks.docmanager.work.sync.SyncRequestWorker
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class SyncStateRepository @Inject constructor(var database: Database
-//                                                  , var retrofit: Retrofit
-) {
+const val NAME_SYNC = "SYNC_WORK"
 
-    private var syncStater: MutableLiveData<SyncStateResource> = MutableLiveData()
+@Singleton
+class SyncStateRepository @Inject constructor() : BaseRepository() {
 
     @Inject
-    lateinit var retrofit: Retrofit
+    lateinit var workManager: WorkManager
+
+
+    fun getSyncWorkInfo(): LiveData<MutableList<WorkInfo>> {
+        return syncWorkInfo
+    }
+    private val syncWorkInfo: MediatorLiveData<MutableList<WorkInfo>> = MediatorLiveData()
+
+    fun sync(login: String, password: String) {
+        val checkStateWorker = OneTimeWorkRequestBuilder<CheckStateWorker>()
+            .setConstraints(SYNC_REQUEST_CONSTRAINTS)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+        val syncRequestWorker = OneTimeWorkRequestBuilder<SyncRequestWorker>()
+            .setInputData(workDataOf("login" to login, "password" to password))
+            .setConstraints(SYNC_REQUEST_CONSTRAINTS).addTag(SYNC_REQUEST_TAG)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+        val syncResponseParseWorker = OneTimeWorkRequestBuilder<ParseResponseWorker>()
+            .setConstraints(SYNC_RESPONSE_PARSER_CONSTRAINTS).addTag(SYNC_RESPONE_TAG)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+        workManager.beginUniqueWork(NAME_SYNC, ExistingWorkPolicy.KEEP, checkStateWorker)
+            .then(syncRequestWorker)
+//            .then(syncResponseParseWorker)
+            .apply {
+                syncWorkInfo.addSource(workInfosLiveData, Observer { syncWorkInfo.postValue(it) })
+            }.enqueue()
+    }
+
 }

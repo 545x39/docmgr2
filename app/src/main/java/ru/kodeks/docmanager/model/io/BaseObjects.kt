@@ -2,12 +2,12 @@ package ru.kodeks.docmanager.model.io
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import ru.kodeks.docmanager.constants.JsonNames.BLOB_LENGTHS
-import ru.kodeks.docmanager.constants.JsonNames.DELAY
-import ru.kodeks.docmanager.constants.JsonNames.PREVIEW
-import ru.kodeks.docmanager.constants.JsonNames.REQUEST_KEY
-import ru.kodeks.docmanager.constants.JsonNames.SERVER
-import ru.kodeks.docmanager.constants.JsonNames.USER
+import ru.kodeks.docmanager.const.JsonNames.BLOB_LENGTHS
+import ru.kodeks.docmanager.const.JsonNames.DELAY
+import ru.kodeks.docmanager.const.JsonNames.PREVIEW
+import ru.kodeks.docmanager.const.JsonNames.REQUEST_KEY
+import ru.kodeks.docmanager.const.JsonNames.SERVER
+import ru.kodeks.docmanager.const.JsonNames.USER
 import ru.kodeks.docmanager.model.data.IErrors
 import ru.kodeks.docmanager.model.data.User
 

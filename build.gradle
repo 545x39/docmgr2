@@ -1,11 +1,16 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+//    Older versions needed to make Work multibindings work.
+//    Kotlin version: 1.3.21
+//    Gradle version: 4.10.1
+//    Gradle plugin version: 3.3.2
+
     ext.kotlin_version = '1.3.71'
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.2'

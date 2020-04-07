@@ -3,15 +3,15 @@ package ru.kodeks.docmanager.network.request.builder
 
 import android.content.SharedPreferences
 import ru.kodeks.docmanager.DocManagerApp
-import ru.kodeks.docmanager.constants.DataFilter.CLASSIFIERS
-import ru.kodeks.docmanager.constants.DataFilter.DOCUMENTS
-import ru.kodeks.docmanager.constants.DataFilter.GLOBAL_OBJECTS
-import ru.kodeks.docmanager.constants.DataFilter.SETTINGS
-import ru.kodeks.docmanager.constants.DataFilter.WORKBENCH
-import ru.kodeks.docmanager.constants.DataFilter.WORKBENCH_META
-import ru.kodeks.docmanager.constants.Settings.PREVIEW_MODE_PREFERENCE_KEY
-import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
-import ru.kodeks.docmanager.constants.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
+import ru.kodeks.docmanager.const.DataFilter.CLASSIFIERS
+import ru.kodeks.docmanager.const.DataFilter.DOCUMENTS
+import ru.kodeks.docmanager.const.DataFilter.GLOBAL_OBJECTS
+import ru.kodeks.docmanager.const.DataFilter.SETTINGS
+import ru.kodeks.docmanager.const.DataFilter.WORKBENCH
+import ru.kodeks.docmanager.const.DataFilter.WORKBENCH_META
+import ru.kodeks.docmanager.const.Settings.PREVIEW_MODE_PREFERENCE_KEY
+import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
+import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.model.io.RequestBase
 import ru.kodeks.docmanager.model.io.SyncRequest

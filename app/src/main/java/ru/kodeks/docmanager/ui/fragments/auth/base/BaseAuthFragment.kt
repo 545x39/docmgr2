@@ -7,7 +7,7 @@ import androidx.navigation.Navigation
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.ui.ViewModelProviderFactory
+import ru.kodeks.docmanager.di.providerfactory.ViewModelProviderFactory
 import ru.kodeks.docmanager.ui.main.MainActivity
 import javax.inject.Inject
 

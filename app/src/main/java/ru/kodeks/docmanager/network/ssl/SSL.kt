@@ -5,8 +5,8 @@ package ru.kodeks.docmanager.network.ssl
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import ru.kodeks.docmanager.DocManagerApp
-import ru.kodeks.docmanager.constants.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
-import ru.kodeks.docmanager.constants.Settings.SslSettings.USE_SSL_CERT_SETTING
+import ru.kodeks.docmanager.const.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
+import ru.kodeks.docmanager.const.Settings.SslSettings.USE_SSL_CERT_SETTING
 import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.File

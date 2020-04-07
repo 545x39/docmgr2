@@ -4,17 +4,16 @@ import android.content.SharedPreferences
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.kodeks.docmanager.NoInternetException
-import ru.kodeks.docmanager.constants.Network.DEFAULT_DEFERRED_REQUEST_PERIOD
-import ru.kodeks.docmanager.constants.Network.MAX_REQUEST_ATTEMPTS
-import ru.kodeks.docmanager.constants.Settings.DEFERRED_REQUEST_TIMEOUT
-import ru.kodeks.docmanager.constants.Settings.ENCRYPT_PASSWORD
+import ru.kodeks.docmanager.const.Network.DEFAULT_DEFERRED_REQUEST_PERIOD
+import ru.kodeks.docmanager.const.Network.MAX_REQUEST_ATTEMPTS
+import ru.kodeks.docmanager.const.Settings.DEFERRED_REQUEST_TIMEOUT
+import ru.kodeks.docmanager.const.Settings.ENCRYPT_PASSWORD
 import ru.kodeks.docmanager.model.io.RequestBase
 import ru.kodeks.docmanager.network.api.BaseApi
 import timber.log.Timber
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-//TODO refactor with coroutines
 abstract class Operation<A, R>(private var request: R) where A : BaseApi, R : RequestBase {
 
     @Inject
@@ -53,7 +52,7 @@ abstract class Operation<A, R>(private var request: R) where A : BaseApi, R : Re
 //            val response = api.post(url = getUrl(), body = request).execute()
             val response = api.post(body = request).execute()
             if (response.isSuccessful) {
-                parseResponse(response)
+//                parseResponse(response)
             } else {
                 throw NoInternetException()
             }

@@ -1,7 +1,7 @@
 package ru.kodeks.docmanager
 
 import android.content.SharedPreferences
-import ru.kodeks.docmanager.constants.Settings
+import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
 import javax.inject.Inject
 import javax.inject.Singleton
