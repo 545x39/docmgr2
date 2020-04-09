@@ -19,12 +19,15 @@ import ru.kodeks.docmanager.const.Network.CONNECT_TIMEOUT
 import ru.kodeks.docmanager.const.Network.READ_TIMEOUT
 import ru.kodeks.docmanager.const.PathsAndFileNames.DB_DIRECTORY
 import ru.kodeks.docmanager.const.PathsAndFileNames.RESPONSE_DIRECTORY
+import ru.kodeks.docmanager.const.PathsAndFileNames.STAMP_DIRECTORY
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.const.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
 import ru.kodeks.docmanager.const.Settings.SslSettings.USE_SSL_CERT_SETTING
 import ru.kodeks.docmanager.di.const.BASE_URL
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
+import ru.kodeks.docmanager.di.const.STAMP_DIR
 import ru.kodeks.docmanager.network.api.BaseApi
+import ru.kodeks.docmanager.network.api.GetSignatureStampApi
 import ru.kodeks.docmanager.network.ssl.CERT_FILENAME
 import ru.kodeks.docmanager.network.ssl.ClientKeyStoreTrustManager
 import ru.kodeks.docmanager.network.ssl.TrustAllCertsTrustManager
@@ -57,6 +60,12 @@ class ApplicationModule {
     @Named(RESPONSE_DIR)
     fun provideResponseDir(app: DocManagerApp): String {
         return "${app.getExternalFilesDir(RESPONSE_DIRECTORY)}"
+    }
+
+    @Provides
+    @Named(STAMP_DIR)
+    fun provideSignatureStampDir(app: DocManagerApp): String {
+        return "${app.getExternalFilesDir(STAMP_DIRECTORY)}"
     }
 
     @Provides
@@ -132,6 +141,11 @@ class ApplicationModule {
     @Provides
     fun provideBaseApi(retrofit: Retrofit): BaseApi {
         return retrofit.create(BaseApi::class.java)
+    }
+
+    @Provides
+    fun provideGetStampsApi(retrofit: Retrofit): GetSignatureStampApi {
+        return retrofit.create(GetSignatureStampApi::class.java)
     }
 
     @Provides

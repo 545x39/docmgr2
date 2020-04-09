@@ -245,6 +245,7 @@ class ChkStateRequest : RequestBase() {
     var clientName: String? = null //DbVersion Version = new DbVersion();
 }
 
+
 /** <see cref="API.ISync"/>. Ответ на поиск документов. <b>Внимание:</b> заполняются только УИД, тип/вид документа, рег. номер, рег. дата и содержание.*/
 class ChkStateResponse : ResponseBase<ChkStateResponse>() {
 

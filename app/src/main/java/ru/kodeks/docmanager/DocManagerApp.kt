@@ -25,12 +25,11 @@ class DocManagerApp : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        WorkManager.initialize(
-            this,
-            Configuration.Builder()
-                .setWorkerFactory(workerProviderFactory)
-                .build()
-        )
+        initWorkManager()
+        initTimber()
+    }
+
+    private fun initTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(object : DebugTree() {
                 override fun createStackElementTag(element: StackTraceElement): String? {
@@ -39,7 +38,15 @@ class DocManagerApp : DaggerApplication() {
                 }
             })
         }
-        //        SyncJobScheduler.INSTANCE //Запустит периодические обновления.
+    }
+
+    private fun initWorkManager() {
+        WorkManager.initialize(
+            this,
+            Configuration.Builder()
+                .setWorkerFactory(workerProviderFactory)
+                .build()
+        )
     }
 
     /** This is the copy of a MultiDexApplication.class content that actually makes

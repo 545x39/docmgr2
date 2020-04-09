@@ -17,19 +17,8 @@ class CheckStateWorker @Inject constructor(
     var api: BaseApi,
     context: Context,
     workerParameters: WorkerParameters
-) :
-    Worker(context, workerParameters) {
+) : Worker(context, workerParameters) {
 
-    class Factory @Inject constructor(
-        var preferences: SharedPreferences,
-        var api: BaseApi
-    ) : ChildWorkerFactory {
-        override fun create(appContext: Context, params: WorkerParameters): Worker {
-            return CheckStateWorker(preferences, api, appContext, params)
-        }
-    }
-
-    ////////////////////////
     override fun doWork(): Result {
         kotlin.runCatching { run { check() } }.onFailure {
             Timber.e(it)
@@ -69,10 +58,21 @@ class CheckStateWorker @Inject constructor(
     @Throws(Exception::class)
     fun retry(attempt: Int, exception: Throwable, function: () -> Unit) {
         if (attempt < Network.MAX_REQUEST_ATTEMPTS) {
-            Thread.sleep(Network.DEFAULT_DEFERRED_REQUEST_PERIOD)
+            Thread.sleep(Network.DEFERRED_REQUEST_RECONNECT_PERIOD)
             run(attempt) { function() }
         } else {
             throw exception
         }
     }
+
+    //<editor-fold desc="FACTORY" defaultstate="collapsed">
+    class Factory @Inject constructor(
+        var preferences: SharedPreferences,
+        var api: BaseApi
+    ) : ChildWorkerFactory {
+        override fun create(appContext: Context, params: WorkerParameters): Worker {
+            return CheckStateWorker(preferences, api, appContext, params)
+        }
+    }
+    //</editor-fold>
 }

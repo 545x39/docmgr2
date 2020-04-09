@@ -7,6 +7,7 @@ import androidx.work.*
 import ru.kodeks.docmanager.work.SYNC_REQUEST_CONSTRAINTS
 import ru.kodeks.docmanager.work.SYNC_RESPONSE_PARSER_CONSTRAINTS
 import ru.kodeks.docmanager.work.checkstate.CheckStateWorker
+import ru.kodeks.docmanager.work.signaturestamps.GetSimpleSignatureStampWorker
 import ru.kodeks.docmanager.work.sync.ParseResponseWorker
 import ru.kodeks.docmanager.work.sync.SYNC_REQUEST_TAG
 import ru.kodeks.docmanager.work.sync.SYNC_RESPONE_TAG
@@ -37,8 +38,16 @@ class SyncStateRepository @Inject constructor() : BaseRepository() {
                 OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
                 TimeUnit.MILLISECONDS
             ).build()
-        val syncRequestWorker = OneTimeWorkRequestBuilder<SyncRequestWorker>()
+        val getSimpleSignatureStampWorker = OneTimeWorkRequestBuilder<GetSimpleSignatureStampWorker>()
             .setInputData(workDataOf("login" to login, "password" to password))
+            .setConstraints(SYNC_REQUEST_CONSTRAINTS).addTag(SYNC_REQUEST_TAG)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+        val syncRequestWorker = OneTimeWorkRequestBuilder<SyncRequestWorker>()
+//            .setInputData(workDataOf("login" to login, "password" to password))
             .setConstraints(SYNC_REQUEST_CONSTRAINTS).addTag(SYNC_REQUEST_TAG)
             .setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
@@ -52,7 +61,9 @@ class SyncStateRepository @Inject constructor() : BaseRepository() {
                 OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
                 TimeUnit.MILLISECONDS
             ).build()
-        workManager.beginUniqueWork(NAME_SYNC, ExistingWorkPolicy.KEEP, checkStateWorker)
+//        workManager.beginUniqueWork(NAME_SYNC, ExistingWorkPolicy.KEEP, checkStateWorker)
+        workManager.beginWith(checkStateWorker)
+            .then(getSimpleSignatureStampWorker)
             .then(syncRequestWorker)
 //            .then(syncResponseParseWorker)
             .apply {

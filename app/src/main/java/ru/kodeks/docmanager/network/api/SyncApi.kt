@@ -8,7 +8,7 @@ import ru.kodeks.docmanager.const.ServiceMethod.SYNC_SVC
 import ru.kodeks.docmanager.model.io.DefaultResponse
 
 interface SyncApi : BaseApi {
-    /** Запрос синхронизации ланных с сервером, как начальной (init), так и последующей.*/
+    /** Запрос синхронизации, как начальной (init), так и последующей.*/
     @Streaming
     @POST("${SYNC_SVC}${DO_SYNC}")
     @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")

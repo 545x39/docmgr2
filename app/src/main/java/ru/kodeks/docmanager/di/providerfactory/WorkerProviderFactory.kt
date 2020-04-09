@@ -2,9 +2,9 @@ package ru.kodeks.docmanager.di.providerfactory
 
 import android.content.Context
 import androidx.work.ListenableWorker
-import androidx.work.Worker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -24,6 +24,7 @@ private val workerFactories: Map<Class<out ListenableWorker>, @JvmSuppressWildca
             workerFactories.entries.find { Class.forName(workerClassName).isAssignableFrom(it.key) }
         val factoryProvider = foundEntry?.value
             ?: throw IllegalArgumentException("unknown worker class name: $workerClassName")
+        Timber.e("Created class $workerClassName")
         return factoryProvider.get().create(appContext, workerParameters)
     }
 }

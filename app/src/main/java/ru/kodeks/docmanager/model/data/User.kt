@@ -3,6 +3,7 @@ package ru.kodeks.docmanager.model.data
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.room.*
+import com.google.gson.annotations.Expose
 import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
@@ -45,19 +46,19 @@ class User(
                 }
             }.getOrDefault(password)
         }
-
+    @Expose
     @Ignore
     val device = "Android"
-
+    @Expose
     @Ignore
     val deviceModel = "${Build.BRAND} ${Build.DEVICE}"
-
+    @Expose
     @Ignore
     val androidVersion: String = Build.VERSION.RELEASE
-
+    @Expose
     @Ignore
     val version = BuildConfig.VERSION_NAME
-
+//    @Expose
 //    @Ignore
 //    val deviceUid = ""//DeviceUuidFactory(app).deviceUuid.toString()
 }

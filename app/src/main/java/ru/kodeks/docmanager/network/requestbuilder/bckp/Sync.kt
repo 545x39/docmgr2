@@ -1,65 +1,13 @@
-package ru.kodeks.docmanager.network.request.builder
+package ru.kodeks.docmanager.network.requestbuilder.bckp
 
-
-import android.content.SharedPreferences
-import ru.kodeks.docmanager.DocManagerApp
-import ru.kodeks.docmanager.const.DataFilter.CLASSIFIERS
-import ru.kodeks.docmanager.const.DataFilter.DOCUMENTS
-import ru.kodeks.docmanager.const.DataFilter.GLOBAL_OBJECTS
-import ru.kodeks.docmanager.const.DataFilter.SETTINGS
-import ru.kodeks.docmanager.const.DataFilter.WORKBENCH
-import ru.kodeks.docmanager.const.DataFilter.WORKBENCH_META
-import ru.kodeks.docmanager.const.Settings.PREVIEW_MODE_PREFERENCE_KEY
+import ru.kodeks.docmanager.const.DataFilter
 import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
 import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
-import ru.kodeks.docmanager.model.data.User
-import ru.kodeks.docmanager.model.io.RequestBase
+import ru.kodeks.docmanager.model.data.Widget
 import ru.kodeks.docmanager.model.io.SyncRequest
-import java.lang.Boolean.parseBoolean
-import javax.inject.Inject
+import ru.kodeks.docmanager.network.requestbuilder.bckp.DataFilterRequestBuilder
 
-
-abstract class RequestBuilder<T : RequestBase> {
-
-    @Inject
-    lateinit var appUser: ru.kodeks.docmanager.User
-    private var request: T
-
-    @Inject
-    lateinit var app: DocManagerApp
-
-    @Inject
-    lateinit var preferences: SharedPreferences
-
-    init {
-        @Suppress("LeakingThis")
-        request = initRequest().apply {
-            user = User(
-                login = appUser.login,
-                password = appUser.encryptedPassword
-//                device = "Android",
-//                deviceModel = "${Build.BRAND} ${Build.DEVICE}",
-//                androidVersion = Build.VERSION.RELEASE,
-//                version = BuildConfig.VERSION_NAME,
-//                deviceUid = DeviceUuidFactory(app).deviceUuid.toString()
-            )
-            preview = parseBoolean(preferences.getString(PREVIEW_MODE_PREFERENCE_KEY, "false"))
-        }
-    }
-
-    abstract fun initRequest(): T
-
-    fun build(): T {
-        return request
-    }
-}
-
-abstract class DataFilterRequestBuilder<T : RequestBase> : RequestBuilder<T>() {
-    protected open fun dataFilter() =
-        CLASSIFIERS or DOCUMENTS or SETTINGS or WORKBENCH or WORKBENCH_META
-}
-
-class SyncRequestBuilder : DataFilterRequestBuilder<SyncRequest>() {
+open class SyncRequestBuilder : DataFilterRequestBuilder<SyncRequest>() {
 
     override fun initRequest() =
         SyncRequest(
@@ -110,8 +58,48 @@ class SyncRequestBuilder : DataFilterRequestBuilder<SyncRequest>() {
         }
 
         return when (timeToUpdateGlobalCatalog()) {
-            true -> super.dataFilter() or GLOBAL_OBJECTS
+            true -> super.dataFilter() or DataFilter.GLOBAL_OBJECTS
             false -> super.dataFilter()
+        }
+    }
+}
+
+class InitRequestBuilder : SyncRequestBuilder() {
+
+    override fun initRequest() =
+        SyncRequest(
+            dataFilter = dataFilter(),
+//            version = Version(main = "0", global = "0", settings = "0"),
+            widgets = widgets()
+        )
+
+    private fun widgets(): List<Widget> {
+        val widgetList: ArrayList<Widget> = ArrayList()
+        arrayListOf(
+            16,
+            137,
+            139,
+            17,
+            150,
+            160,
+            163,
+            196,
+            1971,
+            208,
+            209,
+            210,
+            164,
+            32,
+            33,
+            188,
+            191,
+            187
+        ).let {
+            for (i in 0 until it.size - 1) {
+                val sequence = 0L
+                widgetList.add(Widget(sequence = sequence).apply { type = it[i] })
+            }
+            return widgetList
         }
     }
 }

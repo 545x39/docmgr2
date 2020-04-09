@@ -21,16 +21,37 @@ import ru.kodeks.docmanager.model.io.DefaultResponse
 /** Базовый API, который может быть нужен в разных компонентах приложения. В основном это всё,
  * что касается синхронизации.*/
 interface BaseApi {
+    @Streaming
+    @POST
+    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
+    fun post(//@Url url: String,
+        @Body body: Any,
+        @Header("Range") range: String = "bytes=0-"
+    ): Call<ResponseBody>
+    /** Отправка POST-запроса при runDeferred = true. Ответ будет содержать DefaultResponse,
+     * в коттором в основном сожержатся данные пользователя, а также requestKey, с которым
+     * и нужно будет запрашивать готовый ответ посредством getDeferred().*/
+    @Streaming
+    @POST
+    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
+    fun postDeferred(//@Url url: String,
+        @Body body: Any,
+        @Header("Range") range: String = "bytes=0-"
+    ): Call<DefaultResponse>
 
-    /** Метод проверки сервиса на предмет наличия настройки шифрования пароля и значения этой настройки.*/
-    @POST("$SYNC_SVC$CHECK_STATE")
-    @Headers(
-        "Content-Type: Application/Raw",
-        "Accept-Encoding: gzip,deflate",
-        "Accept: application/json;charset=utf-8",
-        "Cache-Control: max-age=640000"
-    )
-    fun checkState(): Call<ChkStateResponse>
+    /** Получение отложенного ответа по ключу requestKey.*/
+    @Streaming
+    @GET(GET_DEFERRED_RESPONSE_URL_PATH)
+    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
+    fun getDeferred(@Query(REQUEST_KEY) key: String): Call<ResponseBody>
+
+    @Streaming
+    @GET
+    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
+    fun get(
+        @Url url: String,
+        @Header("Range") range: String = "bytes=0-"
+    ): Call<ResponseBody>
 
     /** "." Means root*/
     @GET(".")
@@ -42,38 +63,14 @@ interface BaseApi {
     )
     fun requestRoot(): Call<ResponseBody>
 
-    @Streaming
-    @POST
-    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
-    fun post(
-//        @Url url: String,
-        @Body body: Any,
-        @Header("Range") range: String = "bytes=0-"
-    ): Call<ResponseBody>
+    /** Метод проверки сервиса на предмет наличия настройки шифрования пароля и значения этой настройки.*/
+    @POST("$SYNC_SVC$CHECK_STATE")
+    @Headers(
+        "Content-Type: Application/Raw",
+        "Accept-Encoding: gzip,deflate",
+        "Accept: application/json;charset=utf-8",
+        "Cache-Control: max-age=640000"
+    )
+    fun checkState(): Call<ChkStateResponse>
 
-
-    @Streaming
-    @GET
-    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
-    fun get(
-        @Url url: String,
-        @Header("Range") range: String = "bytes=0-"
-    ): Call<ResponseBody>
-
-    /** Отправка POST-запроса при runDeferred = true. Ответ будет содержать DefaultResponse,
-     * в коттором в основном сожержатся данные пользователя, а также requestKey, с которым
-     * и нужно будет запрашивать готовый ответ посредством getDeferred().*/
-    @Streaming
-    @POST
-    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
-    fun postDeferred( //@Url url: String,
-        @Body body: Any,
-        @Header("Range") range: String = "bytes=0-"
-    ): Call<DefaultResponse>
-
-    /** Получение отложенного ответа по ключу requestKey.*/
-    @Streaming
-    @GET(GET_DEFERRED_RESPONSE_URL_PATH)
-    @Headers("Content-Type: Application/Raw", "Cache-Control: max-age=640000")
-    fun getDeferred(@Query(REQUEST_KEY) key: String): Call<ResponseBody>
 }

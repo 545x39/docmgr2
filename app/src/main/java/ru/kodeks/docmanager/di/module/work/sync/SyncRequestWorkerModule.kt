@@ -1,4 +1,4 @@
-package ru.kodeks.docmanager.di.module.work
+package ru.kodeks.docmanager.di.module.work.sync
 
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ abstract class SyncRequestWorkerModule {
     @Binds
     @IntoMap
     @WorkerKey(SyncRequestWorker::class)
-    internal abstract fun bindCheckStateWorker(worker: SyncRequestWorker.Factory): ChildWorkerFactory
+    internal abstract fun bindWorker(worker: SyncRequestWorker.Factory): ChildWorkerFactory
 }

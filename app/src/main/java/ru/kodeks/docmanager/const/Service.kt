@@ -82,6 +82,7 @@ object DataFilter : Constant() {
 object Menthods {
     const val CHECK_STATE = "/ChkState"
     const val DO_SYNC = "/DoSync"
+    const val GET_SIGNATURE_STAMP = "/GetSignatureStamp"
 }
 
 object JsonNames{

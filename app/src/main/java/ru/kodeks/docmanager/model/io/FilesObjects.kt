@@ -150,7 +150,7 @@ class CheckUploadStatusRequest : RequestBase() {
     /** Идентификатор загружаемых файлов.*/
     @SerializedName("fileUids")
     @Expose
-    var fileUids: List<String>? = null//Guid[]
+    var fileUids: List<String>? = null
 }
 
 /** <see cref="API.IFiles"/>. Ответ на запрос статуса загрузки файлов на сервер.

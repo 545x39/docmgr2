@@ -118,7 +118,7 @@ class GetSignatureStampRequest : RequestBase() {
     /** Тип ЭП (1 - простая, 2 - квалицифированная).*/
     @SerializedName("signatureType")
     @Expose
-    var signatureType: Int? = null//Byte
+    var signatureType: Int? = null
 }
 
 /** GetSignatures   */

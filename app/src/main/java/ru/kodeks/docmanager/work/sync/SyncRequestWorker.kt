@@ -85,7 +85,7 @@ class SyncRequestWorker @Inject constructor(var preferences: SharedPreferences,
 //        parseResponse(response)
     }
 
-/////////////////////////////////
+    //<editor-fold desc="FACTORY" defaultstate="collapsed">
     class Factory @Inject constructor(
         var preferences: SharedPreferences,
         var api: BaseApi
@@ -94,4 +94,5 @@ class SyncRequestWorker @Inject constructor(var preferences: SharedPreferences,
             return SyncRequestWorker(preferences, api, appContext, params)
         }
     }
+    //</editor-fold>
 }

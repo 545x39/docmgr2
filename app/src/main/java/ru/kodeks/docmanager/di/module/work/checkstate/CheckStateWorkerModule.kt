@@ -1,4 +1,4 @@
-package ru.kodeks.docmanager.di.module.work
+package ru.kodeks.docmanager.di.module.work.checkstate
 
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ abstract class CheckStateWorkerModule {
     @Binds
     @IntoMap
     @WorkerKey(CheckStateWorker::class)
-    internal abstract fun bindCheckStateWorker(worker: CheckStateWorker.Factory): ChildWorkerFactory
+    internal abstract fun bindWorker(worker: CheckStateWorker.Factory): ChildWorkerFactory
 }
