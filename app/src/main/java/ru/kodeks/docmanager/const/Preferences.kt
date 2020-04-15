@@ -18,6 +18,9 @@ object Settings : SettingConstant() {
      */
     const val AUTO_LOGIN = "autoLogin"
 
+    const val LAST_ENTERED_LOGIN = "lastEnteredLogin"
+    const val LAST_ENTERED_PASSWORD = "lastEnteredPassword"
+
     /**
      * Период автоматического обновления
      */
@@ -30,13 +33,6 @@ object Settings : SettingConstant() {
      * Режим предпросмотра
      */
     const val PREVIEW_MODE_PREFERENCE_KEY: String = "previewModePreference"
-
-    /**
-     * СКРЫТЫЕ НАСТРОЙКИ
-     * */
-    const val PREFERENCE_LOGIN = "loginPref"
-    const val PREFERENCE_PASSWORD = "passwordPref"
-    const val PREFERENCE_FLURRY_KEY = "flurryKeyPref"
 
     /**
      * Таймауты

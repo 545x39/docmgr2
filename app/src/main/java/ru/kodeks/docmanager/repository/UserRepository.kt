@@ -1,21 +1,24 @@
 package ru.kodeks.docmanager.repository
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.kodeks.docmanager.const.Settings.AUTO_LOGIN
+import ru.kodeks.docmanager.const.Settings.LAST_ENTERED_LOGIN
+import ru.kodeks.docmanager.const.Settings.LAST_ENTERED_PASSWORD
 import ru.kodeks.docmanager.model.data.User
-import ru.kodeks.docmanager.network.resource.UserStateResource
+import ru.kodeks.docmanager.persistence.Database
+import ru.kodeks.docmanager.repository.resource.UserStateResource
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor() : BaseRepository() {
-
-    @Inject
-    lateinit var syncStateRepository: SyncStateRepository
+class UserRepository @Inject constructor(database: Database, preferences: SharedPreferences) :
+    BaseRepository(database, preferences) {
 
     val autoLogin: Boolean get() = preferences.getBoolean(AUTO_LOGIN, false)
 
@@ -31,44 +34,39 @@ class UserRepository @Inject constructor() : BaseRepository() {
         return cachedUser
     }
 
-    /** login: String = "meyksin", password: String = "11111"*/
-    fun logIn(login: String? = null, password: String? = null) {
-        fun onNotInitialized() {
-            if (login == null && password == null) {
-                notInitialized()
-            } else {
-                if (login?.isNotBlank() == true && password?.isNotBlank() == true) {
-                    initialize(login, password)
-                } else {
-                    error(IllegalArgumentException("Логин и пароль не могут быть пустыми"))
-                }
-            }
-        }
+    fun setState(state: UserStateResource) {
+        cachedUser.postValue(state)
+    }
 
-        fun onInitialized(user: User) {
-            if (login == null && password == null) {
-                if (autoLogin) {
-                    loggedIn(user)
-                } else {
-                    loggedOut()
-                }
-            } else {
-                if (login.equals(user.login) && password.equals(user.password)) {
-                    loggedIn(user)
-                } else {
-                    error(IllegalArgumentException("Неверный логин или пароль!"))
-                }
-            }
-        }
+    private fun setCredenntials(login: String?, password: String) {
+        preferences.edit().putString(LAST_ENTERED_LOGIN, login.orEmpty())
+            .putString(LAST_ENTERED_PASSWORD, password.orEmpty())
+            .apply()
+    }
 
-        CoroutineScope(IO).launch {
+    private fun getLatEnteredCredentials(): Pair<String, String> {
+        return preferences.getString(LAST_ENTERED_LOGIN, "") to
+                preferences.getString(LAST_ENTERED_PASSWORD, "")
+    }
+
+    /** Начальное состояние пользователя. */
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
             when (val user = database.userDAO().getUser()) {
                 null -> {
-                    onNotInitialized()
+                    notInitialized()
                 }
                 /**There is an initialized user in the database */
                 else -> {
-                    onInitialized(user)
+                    with(getLatEnteredCredentials()) {
+                        when (user.login == first
+                                && user.password == second
+                                && autoLogin
+                            ) {
+                            true -> loggedIn(user)
+                            false -> loggedOut(user)
+                        }
+                    }
                 }
             }
         }
@@ -78,25 +76,24 @@ class UserRepository @Inject constructor() : BaseRepository() {
         cachedUser.postValue(UserStateResource.NotInitialized())
     }
 
-    fun logOut() {
-        loggedOut()
+    fun loggedIn(user: User? = null) {
+        Timber.e("loggedIn")
+        val newValue = user ?: cachedUser.value?.user
+        setCredenntials(newValue?.login, newValue?.password.orEmpty())
+        cachedUser.postValue(UserStateResource.LoggedIn(newValue))
     }
 
-    private fun loggedIn(user: User) {
-        cachedUser.postValue(UserStateResource.LoggedIn(user))
+    fun loggedOut(user: User? = null) {
+        setCredenntials("", "")
+        val newValue = user ?: cachedUser.value?.user
+        cachedUser.postValue(UserStateResource.LoggedOut(newValue))
     }
 
-    private fun loggedOut() {
-        cachedUser.postValue(UserStateResource.LoggedOut(cachedUser.value?.user))
-    }
-
-    private fun error(throwable: Throwable) {
-        cachedUser.postValue(UserStateResource.Error(cachedUser.value?.user, throwable))
-    }
-
-    private fun initialize(login: String, password: String) {
-        cachedUser.postValue(UserStateResource.Synchronizing(message = "Ожидание ответа от сервера"))
-        syncStateRepository.sync(login, password)
-        //TODO Здесь вся логика инициализации: обновление статуса инициализации, сам синк и обновление после завершения.
+    fun error(throwable: Throwable) {
+        val newValue = cachedUser.value
+        newValue?.let {
+            it.error = throwable
+            cachedUser.postValue(it)
+        }
     }
 }

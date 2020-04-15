@@ -5,12 +5,13 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.kodeks.docmanager.di.key.WorkerKey
 import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
-import ru.kodeks.docmanager.work.sync.ParseResponseWorker
+import ru.kodeks.docmanager.work.sync.SyncWorker
 
 @Module
-abstract class ParseResponseWorkerModule {
+abstract class SyncWorkerModule {
+
     @Binds
     @IntoMap
-    @WorkerKey(ParseResponseWorker::class)
-    internal  abstract fun bindWorker(worker: ParseResponseWorker.Factory): ChildWorkerFactory
+    @WorkerKey(SyncWorker::class)
+    internal abstract fun bindWorker(worker: SyncWorker.Factory): ChildWorkerFactory
 }

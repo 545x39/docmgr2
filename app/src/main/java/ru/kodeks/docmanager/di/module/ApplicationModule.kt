@@ -23,15 +23,16 @@ import ru.kodeks.docmanager.const.PathsAndFileNames.STAMP_DIRECTORY
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.const.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
 import ru.kodeks.docmanager.const.Settings.SslSettings.USE_SSL_CERT_SETTING
+import ru.kodeks.docmanager.crypto.ssl.CERT_FILENAME
+import ru.kodeks.docmanager.crypto.ssl.ClientKeyStoreTrustManager
+import ru.kodeks.docmanager.crypto.ssl.TrustAllCertsTrustManager
+import ru.kodeks.docmanager.crypto.ssl.TrustStoreFactory
 import ru.kodeks.docmanager.di.const.BASE_URL
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
 import ru.kodeks.docmanager.di.const.STAMP_DIR
 import ru.kodeks.docmanager.network.api.BaseApi
 import ru.kodeks.docmanager.network.api.GetSignatureStampApi
-import ru.kodeks.docmanager.network.ssl.CERT_FILENAME
-import ru.kodeks.docmanager.network.ssl.ClientKeyStoreTrustManager
-import ru.kodeks.docmanager.network.ssl.TrustAllCertsTrustManager
-import ru.kodeks.docmanager.network.ssl.TrustStoreFactory
+import ru.kodeks.docmanager.network.api.SyncApi
 import ru.kodeks.docmanager.persistence.Database
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -149,14 +150,23 @@ class ApplicationModule {
     }
 
     @Provides
+    fun provideSyncApi(retrofit: Retrofit): SyncApi {
+        return retrofit.create(SyncApi::class.java)
+    }
+
+    @Provides
     fun provideRoom(app: DocManagerApp): Database {
-        return Room.databaseBuilder(app, Database::class.java, "${app.getExternalFilesDir(DB_DIRECTORY)}${File.separator}db")
+        return Room.databaseBuilder(
+            app,
+            Database::class.java,
+            "${app.getExternalFilesDir(DB_DIRECTORY)}${File.separator}db"
+        )
             .fallbackToDestructiveMigration().build()
     }
 
 
     @Provides
-    fun provideWorkManager(app: DocManagerApp): WorkManager{
+    fun provideWorkManager(app: DocManagerApp): WorkManager {
         return WorkManager.getInstance(app)
     }
 }

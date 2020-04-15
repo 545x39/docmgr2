@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose
 import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
-import ru.kodeks.docmanager.persistence.typeconverters.IntListToStringTypeConverter
+import ru.kodeks.docmanager.persistence.typeconverter.IntListToStringTypeConverter
 import javax.inject.Inject
 
 @Entity(tableName = "user")

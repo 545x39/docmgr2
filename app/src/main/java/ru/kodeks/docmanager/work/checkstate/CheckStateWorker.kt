@@ -2,7 +2,7 @@ package ru.kodeks.docmanager.work.checkstate
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import ru.kodeks.docmanager.const.Network
 import ru.kodeks.docmanager.const.Settings
@@ -17,9 +17,9 @@ class CheckStateWorker @Inject constructor(
     var api: BaseApi,
     context: Context,
     workerParameters: WorkerParameters
-) : Worker(context, workerParameters) {
+) : CoroutineWorker(context, workerParameters) {
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         kotlin.runCatching { run { check() } }.onFailure {
             Timber.e(it)
             return Result.failure()
@@ -70,7 +70,7 @@ class CheckStateWorker @Inject constructor(
         var preferences: SharedPreferences,
         var api: BaseApi
     ) : ChildWorkerFactory {
-        override fun create(appContext: Context, params: WorkerParameters): Worker {
+        override fun create(appContext: Context, params: WorkerParameters): CoroutineWorker {
             return CheckStateWorker(preferences, api, appContext, params)
         }
     }

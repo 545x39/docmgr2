@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import kotlinx.android.synthetic.main.fragment_auth_progress.*
-import kotlinx.android.synthetic.main.fragment_progress_bar.progressBar
+import kotlinx.android.synthetic.main.fragment_progress_bar.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.network.resource.UserStateResource
+import ru.kodeks.docmanager.repository.resource.SyncStateResource
 import ru.kodeks.docmanager.ui.fragments.auth.base.BaseAuthFragment
 import ru.kodeks.docmanager.ui.main.MainActivity
 
@@ -33,19 +32,13 @@ class AuthProgressFragment : BaseAuthFragment() {
     }
 
     private fun subscribeObservers() {
-        viewModel.getUser().removeObservers(viewLifecycleOwner)
         viewModel.getProgress().observe(viewLifecycleOwner, Observer {
             progressBar.progress = it
         })
-        viewModel.getUser().observe(viewLifecycleOwner, Observer {
+        viewModel.getSyncState().observe(viewLifecycleOwner, Observer {
             when (it) {
-                is UserStateResource.Synchronizing -> {
-                    progressStatusText.text = it.message
-                }
-                is UserStateResource.Error -> {
-                    progressStatusText.text = it.message
-                    navController.navigate(R.id.action_authProgressFragment_to_authFormFragment)
-                }
+                is SyncStateResource.Success -> navController.navigate(R.id.action_log_in_on_init_sucess)
+                is SyncStateResource.Failure -> navController.navigate(R.id.action_authProgressFragment_to_authFormFragment)
             }
         })
     }

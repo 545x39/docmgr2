@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package ru.kodeks.docmanager.network.ssl
+package ru.kodeks.docmanager.crypto.ssl
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences

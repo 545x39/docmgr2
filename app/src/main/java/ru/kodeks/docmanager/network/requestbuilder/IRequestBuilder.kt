@@ -1,5 +1,10 @@
 package ru.kodeks.docmanager.network.requestbuilder
 
+import ru.kodeks.docmanager.const.DataFilter.CLASSIFIERS
+import ru.kodeks.docmanager.const.DataFilter.DOCUMENTS
+import ru.kodeks.docmanager.const.DataFilter.SETTINGS
+import ru.kodeks.docmanager.const.DataFilter.WORKBENCH
+import ru.kodeks.docmanager.const.DataFilter.WORKBENCH_META
 import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.model.io.RequestBase
 
@@ -32,3 +37,5 @@ abstract class RequestBuilder<T : RequestBase> : IRequestBuilder<T> {
         }
     }
 }
+
+const val DEFAULT_DATA_FILTER = CLASSIFIERS or DOCUMENTS or SETTINGS or WORKBENCH or WORKBENCH_META

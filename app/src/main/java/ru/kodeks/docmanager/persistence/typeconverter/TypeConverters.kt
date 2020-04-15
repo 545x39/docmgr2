@@ -1,4 +1,4 @@
-package ru.kodeks.docmanager.persistence.typeconverters
+package ru.kodeks.docmanager.persistence.typeconverter
 
 import androidx.room.TypeConverter
 

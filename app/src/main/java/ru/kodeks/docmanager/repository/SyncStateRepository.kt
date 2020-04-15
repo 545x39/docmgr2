@@ -1,74 +1,64 @@
 package ru.kodeks.docmanager.repository
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.work.*
-import ru.kodeks.docmanager.work.SYNC_REQUEST_CONSTRAINTS
-import ru.kodeks.docmanager.work.SYNC_RESPONSE_PARSER_CONSTRAINTS
-import ru.kodeks.docmanager.work.checkstate.CheckStateWorker
-import ru.kodeks.docmanager.work.signaturestamps.GetSimpleSignatureStampWorker
-import ru.kodeks.docmanager.work.sync.ParseResponseWorker
-import ru.kodeks.docmanager.work.sync.SYNC_REQUEST_TAG
-import ru.kodeks.docmanager.work.sync.SYNC_RESPONE_TAG
-import ru.kodeks.docmanager.work.sync.SyncRequestWorker
-import java.util.concurrent.TimeUnit
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import ru.kodeks.docmanager.persistence.Database
+import ru.kodeks.docmanager.repository.resource.SyncStateResource
+import ru.kodeks.docmanager.work.checkStateWorker
+import ru.kodeks.docmanager.work.getQualifiedSignatureStampWorker
+import ru.kodeks.docmanager.work.getSimpleSignatureStampWorker
+import ru.kodeks.docmanager.work.sync.SyncWorker
+import ru.kodeks.docmanager.work.syncWorker
 import javax.inject.Inject
 import javax.inject.Singleton
 
 const val NAME_SYNC = "SYNC_WORK"
+const val SYNC_PROGRESS = "sync_progress"
 
 @Singleton
-class SyncStateRepository @Inject constructor() : BaseRepository() {
+class SyncStateRepository @Inject constructor(database: Database, preferences: SharedPreferences) :
+    BaseRepository(database, preferences) {
+
+    /** Это вот у него есть Running, Success, SucessWihErrors, Failure и  NotEnqueued.*/
+    private var syncState: MediatorLiveData<SyncStateResource<SyncWorker>> = MediatorLiveData()
+
+    fun getSyncState(): LiveData<SyncStateResource<SyncWorker>> {
+        return syncState
+    }
 
     @Inject
     lateinit var workManager: WorkManager
 
+    private val syncWorkInfo: MediatorLiveData<String> = MediatorLiveData()
 
-    fun getSyncWorkInfo(): LiveData<MutableList<WorkInfo>> {
-        return syncWorkInfo
+
+    private val progressLiveData = MediatorLiveData<WorkInfo>()
+
+    fun getProgress(): LiveData<WorkInfo> {
+        return progressLiveData
     }
-    private val syncWorkInfo: MediatorLiveData<MutableList<WorkInfo>> = MediatorLiveData()
 
     fun sync(login: String, password: String) {
-        val checkStateWorker = OneTimeWorkRequestBuilder<CheckStateWorker>()
-            .setConstraints(SYNC_REQUEST_CONSTRAINTS)
-            .setBackoffCriteria(
-                BackoffPolicy.EXPONENTIAL,
-                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
-                TimeUnit.MILLISECONDS
-            ).build()
-        val getSimpleSignatureStampWorker = OneTimeWorkRequestBuilder<GetSimpleSignatureStampWorker>()
-            .setInputData(workDataOf("login" to login, "password" to password))
-            .setConstraints(SYNC_REQUEST_CONSTRAINTS).addTag(SYNC_REQUEST_TAG)
-            .setBackoffCriteria(
-                BackoffPolicy.EXPONENTIAL,
-                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
-                TimeUnit.MILLISECONDS
-            ).build()
-        val syncRequestWorker = OneTimeWorkRequestBuilder<SyncRequestWorker>()
-//            .setInputData(workDataOf("login" to login, "password" to password))
-            .setConstraints(SYNC_REQUEST_CONSTRAINTS).addTag(SYNC_REQUEST_TAG)
-            .setBackoffCriteria(
-                BackoffPolicy.EXPONENTIAL,
-                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
-                TimeUnit.MILLISECONDS
-            ).build()
-        val syncResponseParseWorker = OneTimeWorkRequestBuilder<ParseResponseWorker>()
-            .setConstraints(SYNC_RESPONSE_PARSER_CONSTRAINTS).addTag(SYNC_RESPONE_TAG)
-            .setBackoffCriteria(
-                BackoffPolicy.EXPONENTIAL,
-                OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
-                TimeUnit.MILLISECONDS
-            ).build()
-//        workManager.beginUniqueWork(NAME_SYNC, ExistingWorkPolicy.KEEP, checkStateWorker)
+        val checkStateWorker = checkStateWorker()
+        val getSimpleSignatureStampWorker = getSimpleSignatureStampWorker(login, password)
+        val getQualifiedSignatureStampWorker = getQualifiedSignatureStampWorker(login, password)
+        val syncWorker = syncWorker(login, password)
         workManager.beginWith(checkStateWorker)
-            .then(getSimpleSignatureStampWorker)
-            .then(syncRequestWorker)
-//            .then(syncResponseParseWorker)
+            .then(listOf(getSimpleSignatureStampWorker, getQualifiedSignatureStampWorker))
+            .then(syncWorker).enqueue()
+//        workManager.cancelAllWork()
+        workManager.beginUniqueWork(NAME_SYNC, ExistingWorkPolicy.KEEP, syncWorker)
             .apply {
-                syncWorkInfo.addSource(workInfosLiveData, Observer { syncWorkInfo.postValue(it) })
+                val workInfoById = workManager.getWorkInfoByIdLiveData(syncWorker.id)
+                progressLiveData.addSource(workInfoById, Observer { workInfo ->
+                    workInfo.progress.getString(SYNC_PROGRESS)
+                        ?.let { progressLiveData.postValue(workInfo) }
+                })
             }.enqueue()
     }
-
 }

@@ -1,13 +1,5 @@
 package ru.kodeks.docmanager.const
 
-
-object LogTag {
-    /**
-     * Дефолтный тэг.
-     */
-    const val TAG = "TAG"
-}
-
 sealed class GlobalConstant
 
 object PathsAndFileNames : GlobalConstant() {

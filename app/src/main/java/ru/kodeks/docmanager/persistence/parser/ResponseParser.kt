@@ -3,8 +3,6 @@ package ru.kodeks.docmanager.persistence.parser
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import ru.kodeks.docmanager.DocManagerApp
-import ru.kodeks.docmanager.User
 import ru.kodeks.docmanager.const.PathsAndFileNames.SYNC_RESPONSE_FILENAME
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
 import ru.kodeks.docmanager.model.data.*
@@ -18,20 +16,20 @@ import javax.inject.Named
 import kotlin.system.measureTimeMillis
 
 class Parser @Inject constructor(
-    var app: DocManagerApp, @Named(RESPONSE_DIR)
-    var responseDir: String, private var appUser: User
+    var database: Database,
+    @Named(RESPONSE_DIR)
+    var responseDir: String
 ) {
 
-
-    @Inject
-    lateinit var database: Database
     private var syncResponse: SyncResponse? = null
     private lateinit var job: Job
+    private var login: String = ""
+    private var password: String = ""
 
     @Suppress("SpellCheckingInspection")
     private val gson = Gson()
 
-    /** Базовый метод для обработыки ошибок как верхнего уровня, так и в дочерних объектах.*/
+    /** Базовый метод для обработки ошибок как верхнего уровня, так и в дочерних объектах.*/
     private fun ObjectBase.checkForErrors() {
         errors?.apply {
             //TODO S.N.A.F.U. Deal with it.
@@ -44,17 +42,21 @@ class Parser @Inject constructor(
         }
     }
 
-    fun parse() {
+    suspend fun parse(
+        responseFile: String = "$responseDir${File.separator}${SYNC_RESPONSE_FILENAME}",
+        login: String = "",
+        password: String = ""
+    ) {
+        this.login = login
+        this.password = password
         job = CoroutineScope(IO).launch {
             Timber.d("Started parsing response")
-            val responseFile =
-                "$responseDir${File.separator}${SYNC_RESPONSE_FILENAME}"
             syncResponse = gson.fromJson(FileReader(responseFile), SyncResponse::class.java)
             Timber.d("Response read. Persisting it to the DB...")
             syncResponse?.apply {
                 val time = measureTimeMillis {
                     listOf(
-                        async(start = CoroutineStart.LAZY) { persistInitData() },
+                        async(start = CoroutineStart.LAZY) { persistUser() },
                         async(start = CoroutineStart.LAZY) { persistSettings() },
                         async(start = CoroutineStart.LAZY) { persistClassifiers() },
                         async(start = CoroutineStart.LAZY) { persistGlobalObjects() },
@@ -72,6 +74,7 @@ class Parser @Inject constructor(
                 Timber.d("PERSISTING RESPONSE TOOK: $time")
             }
         }
+        job.join()
     }
 
     private suspend fun SyncResponse.persistWorkbench() {
@@ -271,9 +274,9 @@ class Parser @Inject constructor(
 
     private suspend fun ConsiderationStation.persistAttachments() {
         files?.parallelMap {
-                it.docUid = this.docUid.orEmpty()
-                it
-            }
+            it.docUid = this.docUid.orEmpty()
+            it
+        }
             ?.let { database.attachmentsDao().insertAll(it) }
     }
 
@@ -313,11 +316,11 @@ class Parser @Inject constructor(
         Timber.d("Persisted classifiers.")
     }
 
-    private suspend fun SyncResponse.persistInitData() {
+    private suspend fun SyncResponse.persistUser() {
         database.userDAO().insert(
             User(
-                login = appUser.login,
-                password = appUser.password,
+                login = this@Parser.login,
+                password = this@Parser.password,
                 uid = user?.uid.orEmpty(),
                 serverVersion = serverVersion.orEmpty(),
                 sequence = version?.main ?: 0,

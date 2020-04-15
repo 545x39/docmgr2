@@ -9,4 +9,5 @@
     <string name="log_in_to_system">Вход в систему</string>
     <string name="loading">Загрузка…</string>
     <string name="preferences">Настройки</string>
+    <string name="server_version">Версия сервера:</string>
 </resources>

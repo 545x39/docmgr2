@@ -15,7 +15,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.network.resource.UserStateResource
 import ru.kodeks.docmanager.di.providerfactory.ViewModelProviderFactory
 import javax.inject.Inject
 
@@ -38,10 +37,9 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
 //        setTitle("Вход в систему")
 //        setIcon(R.drawable.icon_chain)
         viewModel.getUser().observe(this, Observer {
-            when (it) {
-                is UserStateResource.Error -> showSnackbar(it.error, it.message)
-            }
+            showSnackbar(it.error, it.message)
         })
+
     }
 
     private fun showSnackbar(error: Throwable? = null, message: String = "") {
@@ -53,7 +51,9 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
                 }
             }
         }
-        Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).show()
+        if (msg.isNotBlank()) {
+            Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).show()
+        }
     }
 
     fun setIcon(icon: Int) {

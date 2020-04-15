@@ -11,8 +11,7 @@ import ru.kodeks.docmanager.di.module.viewmodel.main.ActivitySubcomponentsModule
 import ru.kodeks.docmanager.di.module.work.checkstate.CheckStateWorkerModule
 import ru.kodeks.docmanager.di.module.work.signaturestamp.GetQualifiedSignatureStampWorkerModule
 import ru.kodeks.docmanager.di.module.work.signaturestamp.GetSimpleSignatureStampWorkerModule
-import ru.kodeks.docmanager.di.module.work.sync.ParseResponseWorkerModule
-import ru.kodeks.docmanager.di.module.work.sync.SyncRequestWorkerModule
+import ru.kodeks.docmanager.di.module.work.sync.SyncWorkerModule
 import ru.kodeks.docmanager.work.checkstate.CheckStateWorker
 import javax.inject.Singleton
 
@@ -23,10 +22,9 @@ import javax.inject.Singleton
         ActivitySubcomponentsModule::class,
         ViewModelFactoryModule::class,
         CheckStateWorkerModule::class,
-        SyncRequestWorkerModule::class,
+        SyncWorkerModule::class,
         GetSimpleSignatureStampWorkerModule::class,
-        GetQualifiedSignatureStampWorkerModule::class,
-        ParseResponseWorkerModule::class
+        GetQualifiedSignatureStampWorkerModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<DocManagerApp> {

@@ -1,5 +1,7 @@
-package ru.kodeks.docmanager.network.operations.base
+package ru.kodeks.docmanager.work.base
 
+import android.content.Context
+import androidx.work.WorkerParameters
 import okhttp3.ResponseBody
 import retrofit2.Response
 import ru.kodeks.docmanager.model.io.RequestBase
@@ -10,18 +12,25 @@ import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
 
-abstract class WriteResponseToFileOperation<A, Q>(
-    override val api: A,
-    override val responseDirectory: String
-) : Operation<A, Q, ResponseBody>(api, responseDirectory) where A : BaseApi, Q : RequestBase {
+abstract class WriteResponseToFileWorker<A, Q>(
+    api: A,
+    responseDirectory: String,
+    context: Context, workerParameters: WorkerParameters
+) : BaseWorker<A, Q, ResponseBody>(
+    api,
+    responseDirectory,
+    context,
+    workerParameters
+) where A : BaseApi, Q : RequestBase {
 
+    /** Менять при необходимости. */
     override fun charset(): Charset? = null
 
     override fun requestByKey(requestKey: String): Response<ResponseBody> {
         return api.getDeferred(requestKey).execute()
     }
 
-    override fun saveResponse() {
+    override suspend fun saveResponse() {
         val responseFile =
             File("${responseDirectory}${File.separator}${outputFileName()}")
         response.body()?.apply {
@@ -35,6 +44,6 @@ abstract class WriteResponseToFileOperation<A, Q>(
                     throw IOException("Couldn't write response to a file.")
                 }
             }
-        } ?: throw IllegalStateException("Response body was NULL.")
+        } ?: throw IllegalArgumentException("Response body was NULL.")
     }
 }
