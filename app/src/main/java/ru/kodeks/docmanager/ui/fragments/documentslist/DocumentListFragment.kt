@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_base.*
+import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.ui.main.MainActivity
 
-class DocumentListFragment : Fragment(){
+class DocumentListFragment : DaggerFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

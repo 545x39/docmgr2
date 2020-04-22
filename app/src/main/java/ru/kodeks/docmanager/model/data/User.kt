@@ -6,8 +6,8 @@ import androidx.room.*
 import com.google.gson.annotations.Expose
 import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.const.Settings
-import ru.kodeks.docmanager.crypto.passwordencrypter.Encrypter
 import ru.kodeks.docmanager.persistence.typeconverter.IntListToStringTypeConverter
+import ru.kodeks.docmanager.util.crypto.passwordencrypter.Encrypter
 import javax.inject.Inject
 
 @Entity(tableName = "user")

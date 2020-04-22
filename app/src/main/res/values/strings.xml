@@ -6,8 +6,19 @@
     <string name="login">Логин:</string>
     <string name="password">Пароль:</string>
     <string name="save_login_data">Запомнить</string>
-    <string name="log_in_to_system">Вход в систему</string>
+    <string name="enter_system">Вход в систему</string>
     <string name="loading">Загрузка…</string>
     <string name="preferences">Настройки</string>
-    <string name="server_version">Версия сервера:</string>
+    <string name="version">Версия: </string>
+    <string name="server_version">Версия сервера: </string>
+    <string name="status_checking_connection">Проверка соединения…</string>
+    <string name="status_loading">Загрузка…</string>
+    <string name="status_loading_stamps">Загрузка штампов подписи…</string>
+    <string name="status_sync_started">Запрос обновления…</string>
+    <string name="status_waiting_for_response">Ожидание ответа сервера…</string>
+    <string name="status_response_ready">Ответ сервера получен. Загрузка…</string>
+    <string name="status_started_persisting_response">"Ответ загружен. Обновление базы данных…"</string>
+    <string name="status_persisted_classifiers">Обновлены классификаторы. Обновляются документы…</string>
+    <string name="status_persisted_global_obects">Глобальный каталог обновлён. Обновляются документы…</string>
+    <string name="status_persisted_documents">Обновлены документы</string>
 </resources>

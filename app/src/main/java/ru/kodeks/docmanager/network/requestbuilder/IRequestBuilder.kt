@@ -9,8 +9,9 @@ import ru.kodeks.docmanager.model.data.User
 import ru.kodeks.docmanager.model.io.RequestBase
 
 interface IRequestBuilder<T : RequestBase> {
+    /** For login and password*/
+    fun credentials(): Pair<String, String>
     fun request(): T
-    fun user(): Pair<String, String>// For login and password
     fun preview(): Boolean?
     fun runDeferred(): Boolean?
     fun delay(): Int?
@@ -28,8 +29,8 @@ abstract class RequestBuilder<T : RequestBase> : IRequestBuilder<T> {
     override fun build(): T {
         return request().apply {
             user = User(
-                login = user().first,
-                password = user().second
+                login = credentials().first,
+                password = credentials().second
             )
             preview = preview()
             delay = delay()

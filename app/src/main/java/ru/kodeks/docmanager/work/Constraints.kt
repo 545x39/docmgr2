@@ -8,7 +8,7 @@ val SYNC_REQUEST_CONSTRAINTS =
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .build()
 
-val SYNC_RESPONSE_PARSER_CONSTRAINTS =
+val PARSER_CONSTRAINTS =
     Constraints.Builder()
         .setRequiresStorageNotLow(true)
         .build()

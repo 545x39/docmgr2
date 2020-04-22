@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.preference.PreferenceFragmentCompat
-import kotlinx.android.synthetic.main.activity_base.*
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.ui.main.MainActivity
 

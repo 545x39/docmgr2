@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(database: Database, preferences: SharedPreferences) :
-    BaseRepository(database, preferences) {
+    AbstractRepository(database, preferences) {
 
     val autoLogin: Boolean get() = preferences.getBoolean(AUTO_LOGIN, false)
 

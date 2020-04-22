@@ -3,12 +3,15 @@ package ru.kodeks.docmanager.work.signaturestamps
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.di.const.STAMP_DIR
 import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
 import ru.kodeks.docmanager.model.io.GetSignatureStampRequest
 import ru.kodeks.docmanager.network.api.GetSignatureStampApi
 import ru.kodeks.docmanager.network.requestbuilder.signaturestamp.GetQualifiedSignatureStampRequestBuilder
-import ru.kodeks.docmanager.work.base.WriteResponseToFileWorker
+import ru.kodeks.docmanager.network.requestbuilder.signaturestamp.GetSimpleSignatureStampRequestBuilder
+import ru.kodeks.docmanager.work.base.FileDownloadWorker
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
@@ -18,7 +21,7 @@ abstract class AGetSignatureStampWorker constructor(
     @Named(STAMP_DIR)
     responseDirectory: String,
     context: Context, workerParameters: WorkerParameters
-) : WriteResponseToFileWorker<GetSignatureStampApi, GetSignatureStampRequest>(
+) : FileDownloadWorker<GetSignatureStampApi, GetSignatureStampRequest>(
     api,
     responseDirectory,
     context,
@@ -27,7 +30,10 @@ abstract class AGetSignatureStampWorker constructor(
 
     override fun outputFileName() = "${request.signatureType}.png"
 
+    override val startStatusMessage: String = context.getString(R.string.status_loading_stamps)
+
     override suspend fun needToRun(): Boolean {
+        Timber.e("FILE ${File("$responseDirectory${File.separator}${outputFileName()}")} EXISTS?: ${File("$responseDirectory${File.separator}${outputFileName()}").exists()}")
         return !File("$responseDirectory${File.separator}${outputFileName()}").exists()
     }
 }
@@ -44,8 +50,8 @@ class GetSimpleSignatureStampWorker @Inject constructor(
     context,
     workerParameters
 ) {
-    override var request = object : GetQualifiedSignatureStampRequestBuilder() {
-        override fun user() = credentials
+    override var request = object : GetSimpleSignatureStampRequestBuilder() {
+        override fun credentials() = credentials
     }.build()
 
     //<editor-fold desc="FACTORY" defaultstate="collapsed">
@@ -79,7 +85,7 @@ class GetQualifiedSignatureStampWorker @Inject constructor(
     workerParameters
 ) {
     override var request = object : GetQualifiedSignatureStampRequestBuilder() {
-        override fun user() = credentials
+        override fun credentials() = credentials
     }.build()
 
     //<editor-fold desc="FACTORY" defaultstate="collapsed">

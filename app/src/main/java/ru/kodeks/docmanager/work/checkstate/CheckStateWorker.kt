@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.const.Network
+import ru.kodeks.docmanager.const.SYNC_PROGRESS
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
 import ru.kodeks.docmanager.network.api.BaseApi
@@ -15,11 +18,12 @@ import javax.inject.Inject
 class CheckStateWorker @Inject constructor(
     var preferences: SharedPreferences,
     var api: BaseApi,
-    context: Context,
+    val context: Context,
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
+        setProgressAsync(workDataOf(SYNC_PROGRESS to context.getString(R.string.status_checking_connection)))
         kotlin.runCatching { run { check() } }.onFailure {
             Timber.e(it)
             return Result.failure()

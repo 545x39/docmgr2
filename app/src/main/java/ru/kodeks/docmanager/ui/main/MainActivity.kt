@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_base.*
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.di.providerfactory.ViewModelProviderFactory
 import javax.inject.Inject
@@ -27,7 +27,7 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
+        setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this, providerFactory)
             .get(MainActivityViewModel::class.java)
         /** По умолчанию навигация отключена. */
@@ -46,7 +46,7 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         var msg = message
         error?.let {
             it.message?.let { errorMessage ->
-                if (!errorMessage.isNullOrEmpty()) {
+                if (errorMessage.isNotEmpty()) {
                     msg = errorMessage
                 }
             }

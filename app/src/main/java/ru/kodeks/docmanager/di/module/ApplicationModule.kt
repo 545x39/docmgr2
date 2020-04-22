@@ -23,10 +23,6 @@ import ru.kodeks.docmanager.const.PathsAndFileNames.STAMP_DIRECTORY
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.const.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
 import ru.kodeks.docmanager.const.Settings.SslSettings.USE_SSL_CERT_SETTING
-import ru.kodeks.docmanager.crypto.ssl.CERT_FILENAME
-import ru.kodeks.docmanager.crypto.ssl.ClientKeyStoreTrustManager
-import ru.kodeks.docmanager.crypto.ssl.TrustAllCertsTrustManager
-import ru.kodeks.docmanager.crypto.ssl.TrustStoreFactory
 import ru.kodeks.docmanager.di.const.BASE_URL
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
 import ru.kodeks.docmanager.di.const.STAMP_DIR
@@ -34,6 +30,10 @@ import ru.kodeks.docmanager.network.api.BaseApi
 import ru.kodeks.docmanager.network.api.GetSignatureStampApi
 import ru.kodeks.docmanager.network.api.SyncApi
 import ru.kodeks.docmanager.persistence.Database
+import ru.kodeks.docmanager.util.crypto.ssl.CERT_FILENAME
+import ru.kodeks.docmanager.util.crypto.ssl.ClientKeyStoreTrustManager
+import ru.kodeks.docmanager.util.crypto.ssl.TrustAllCertsTrustManager
+import ru.kodeks.docmanager.util.crypto.ssl.TrustStoreFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
