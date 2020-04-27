@@ -12,7 +12,7 @@
         app:startDestination="@id/documentListFragment" >
         <fragment
             android:id="@+id/documentListFragment"
-            android:name="ru.kodeks.docmanager.ui.fragments.documentslist.DocumentListFragment"
+            android:name="ru.kodeks.docmanager.ui.fragments.documentslist.pager.DocumentListPagerFragment"
             android:label="DocumentListFragment" />
     </navigation>
     <navigation

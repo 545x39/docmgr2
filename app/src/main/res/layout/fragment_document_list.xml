@@ -1,9 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/filtersBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_height"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/background_grey_underline"
+        android:elevation="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+    </LinearLayout>
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/testTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DOCUMENT LIST FRAGMENT!!!"
-        android:gravity="center"/>
+        android:text="@string/large_text" />
+
+    <!--        <androidx.recyclerview.widget.RecyclerView-->
+    <!--            android:id="@+id/documentListRecyclerView"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent" />-->
+
 </RelativeLayout>
+

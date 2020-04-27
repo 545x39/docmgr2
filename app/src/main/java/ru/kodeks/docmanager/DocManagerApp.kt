@@ -7,7 +7,7 @@ import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import ru.kodeks.docmanager.di.DaggerApplicationComponent
-import ru.kodeks.docmanager.di.providerfactory.WorkerProviderFactory
+import ru.kodeks.docmanager.di.factory.WorkerProviderFactory
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 import javax.inject.Inject

@@ -3,6 +3,7 @@
     <!--New UI Colors -->
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="semitransparent">#DDFFFFFF</color>
     <!--    <color name="red">#FFE90E0E</color>-->
     <color name="green">#FF318987</color>
     <color name="blue">#4693CF</color>

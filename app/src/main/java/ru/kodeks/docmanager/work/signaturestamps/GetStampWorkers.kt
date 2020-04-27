@@ -5,7 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.di.const.STAMP_DIR
-import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
+import ru.kodeks.docmanager.di.factory.ChildWorkerFactory
 import ru.kodeks.docmanager.model.io.GetSignatureStampRequest
 import ru.kodeks.docmanager.network.api.GetSignatureStampApi
 import ru.kodeks.docmanager.network.requestbuilder.signaturestamp.GetQualifiedSignatureStampRequestBuilder

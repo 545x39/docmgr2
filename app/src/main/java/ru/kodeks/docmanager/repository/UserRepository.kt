@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 import ru.kodeks.docmanager.const.Settings.AUTO_LOGIN
 import ru.kodeks.docmanager.const.Settings.LAST_ENTERED_LOGIN
 import ru.kodeks.docmanager.const.Settings.LAST_ENTERED_PASSWORD
+import ru.kodeks.docmanager.db.Database
 import ru.kodeks.docmanager.model.data.User
-import ru.kodeks.docmanager.persistence.Database
 import ru.kodeks.docmanager.repository.resource.UserStateResource
 import timber.log.Timber
 import javax.inject.Inject

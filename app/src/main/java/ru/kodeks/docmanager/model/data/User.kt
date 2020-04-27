@@ -6,7 +6,7 @@ import androidx.room.*
 import com.google.gson.annotations.Expose
 import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.const.Settings
-import ru.kodeks.docmanager.persistence.typeconverter.IntListToStringTypeConverter
+import ru.kodeks.docmanager.db.typeconverter.IntListToStringTypeConverter
 import ru.kodeks.docmanager.util.crypto.passwordencrypter.Encrypter
 import javax.inject.Inject
 

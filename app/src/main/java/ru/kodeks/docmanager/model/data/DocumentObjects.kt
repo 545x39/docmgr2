@@ -3,7 +3,7 @@ package ru.kodeks.docmanager.model.data
 import androidx.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import ru.kodeks.docmanager.persistence.typeconverter.IntListToStringTypeConverter
+import ru.kodeks.docmanager.db.typeconverter.IntListToStringTypeConverter
 
 /** Связь документа с виджетом. Передается на клиент в составе документа, см. <see cref="Document"/>.*/
 @Entity(tableName = "document_widget_links", primaryKeys = ["widget_id", "doc_uid"])

@@ -23,13 +23,13 @@ import ru.kodeks.docmanager.const.PathsAndFileNames.STAMP_DIRECTORY
 import ru.kodeks.docmanager.const.Settings
 import ru.kodeks.docmanager.const.Settings.SslSettings.SSL_CERTIFICATE_PASSWORD
 import ru.kodeks.docmanager.const.Settings.SslSettings.USE_SSL_CERT_SETTING
+import ru.kodeks.docmanager.db.Database
 import ru.kodeks.docmanager.di.const.BASE_URL
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
 import ru.kodeks.docmanager.di.const.STAMP_DIR
 import ru.kodeks.docmanager.network.api.BaseApi
 import ru.kodeks.docmanager.network.api.GetSignatureStampApi
 import ru.kodeks.docmanager.network.api.SyncApi
-import ru.kodeks.docmanager.persistence.Database
 import ru.kodeks.docmanager.util.crypto.ssl.CERT_FILENAME
 import ru.kodeks.docmanager.util.crypto.ssl.ClientKeyStoreTrustManager
 import ru.kodeks.docmanager.util.crypto.ssl.TrustAllCertsTrustManager
@@ -44,18 +44,16 @@ import javax.inject.Named
 class ApplicationModule {
 
     @Provides
-    fun providePreferences(app: DocManagerApp): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(app)
-    }
+    fun providePreferences(app: DocManagerApp): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(app)
 
     @Provides
     @Named(BASE_URL)
-    fun getBaseUrl(preferences: SharedPreferences): String {
-        return preferences.getString(
-            Settings.SERVER_ADDRESS,
-            Network.DEFAULT_URL
-        ) ?: Network.DEFAULT_URL
-    }
+    fun getBaseUrl(preferences: SharedPreferences) = preferences.getString(
+        Settings.SERVER_ADDRESS,
+        Network.DEFAULT_URL
+    ) ?: Network.DEFAULT_URL
+
 
     @Provides
     @Named(RESPONSE_DIR)
@@ -140,33 +138,23 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideBaseApi(retrofit: Retrofit): BaseApi {
-        return retrofit.create(BaseApi::class.java)
-    }
+    fun provideBaseApi(retrofit: Retrofit): BaseApi = retrofit.create(BaseApi::class.java)
 
     @Provides
-    fun provideGetStampsApi(retrofit: Retrofit): GetSignatureStampApi {
-        return retrofit.create(GetSignatureStampApi::class.java)
-    }
+    fun provideGetStampsApi(retrofit: Retrofit): GetSignatureStampApi =
+        retrofit.create(GetSignatureStampApi::class.java)
 
     @Provides
-    fun provideSyncApi(retrofit: Retrofit): SyncApi {
-        return retrofit.create(SyncApi::class.java)
-    }
+    fun provideSyncApi(retrofit: Retrofit): SyncApi =
+        retrofit.create(SyncApi::class.java)
 
     @Provides
-    fun provideRoom(app: DocManagerApp): Database {
-        return Room.databaseBuilder(
-            app,
-            Database::class.java,
-            "${app.getExternalFilesDir(DB_DIRECTORY)}${File.separator}db"
-        )
-            .fallbackToDestructiveMigration().build()
-    }
-
+    fun provideRoom(app: DocManagerApp) = Room.databaseBuilder(
+        app,
+        Database::class.java,
+        "${app.getExternalFilesDir(DB_DIRECTORY)}${File.separator}db"
+    ).fallbackToDestructiveMigration().build()
 
     @Provides
-    fun provideWorkManager(app: DocManagerApp): WorkManager {
-        return WorkManager.getInstance(app)
-    }
+    fun provideWorkManager(app: DocManagerApp) = WorkManager.getInstance(app)
 }

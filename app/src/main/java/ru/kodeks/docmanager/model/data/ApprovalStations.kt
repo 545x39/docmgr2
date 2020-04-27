@@ -4,10 +4,10 @@ import androidx.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import ru.kodeks.docmanager.const.SignatureType.NONE
+import ru.kodeks.docmanager.db.typeconverter.IntListToStringTypeConverter
 import ru.kodeks.docmanager.model.data.ApprovalOperations.NO_OPERATIONS
 import ru.kodeks.docmanager.model.data.ApprovalStageTypes.REGULAR
 import ru.kodeks.docmanager.model.data.ApprovalStagesStates.UNDEFINED
-import ru.kodeks.docmanager.persistence.typeconverter.IntListToStringTypeConverter
 
 /** Статусы маршрута согласования.*/
 object ApprovalRouteStates {

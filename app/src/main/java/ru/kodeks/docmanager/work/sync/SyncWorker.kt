@@ -10,13 +10,12 @@ import retrofit2.Response
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.const.PathsAndFileNames
 import ru.kodeks.docmanager.const.SYNC_PROGRESS
+import ru.kodeks.docmanager.db.Database
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
-import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
+import ru.kodeks.docmanager.di.factory.ChildWorkerFactory
 import ru.kodeks.docmanager.model.io.SyncRequest
 import ru.kodeks.docmanager.network.api.SyncApi
 import ru.kodeks.docmanager.network.requestbuilder.sync.SyncRequestBuilder
-import ru.kodeks.docmanager.persistence.Database
-import ru.kodeks.docmanager.persistence.parser.Parser
 import ru.kodeks.docmanager.work.base.FileDownloadWorker
 import javax.inject.Inject
 import javax.inject.Named
@@ -27,7 +26,6 @@ class SyncWorker @Inject constructor(
     responseDirectory: String,
     database: Database,
     sharedPreferences: SharedPreferences,
-    private val parser: Parser,
     context: Context, workerParameters: WorkerParameters
 ) : FileDownloadWorker<SyncApi, SyncRequest>(
     api,
@@ -54,7 +52,6 @@ class SyncWorker @Inject constructor(
     override suspend fun saveResponse() {
         setProgressAsync(workDataOf(SYNC_PROGRESS to context.getString(R.string.status_response_ready)))
         super.saveResponse()
-//        parser.parse(login = credentials.first, password = credentials.second)
     }
 
     //<editor-fold desc="FACTORY" defaultstate="collapsed">
@@ -63,8 +60,7 @@ class SyncWorker @Inject constructor(
         @Named(RESPONSE_DIR)
         val responseDirectory: String,
         val database: Database,
-        private val sharedPreferences: SharedPreferences,
-        private val parser: Parser
+        private val sharedPreferences: SharedPreferences
     ) : ChildWorkerFactory {
         override fun create(appContext: Context, params: WorkerParameters): CoroutineWorker {
             return SyncWorker(
@@ -72,7 +68,7 @@ class SyncWorker @Inject constructor(
                 responseDirectory,
                 database,
                 sharedPreferences,
-                parser,
+//                parser,
                 appContext,
                 params
             )

@@ -6,7 +6,7 @@ import androidx.room.Ignore
 import androidx.room.TypeConverters
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import ru.kodeks.docmanager.persistence.typeconverter.IntListToStringTypeConverter
+import ru.kodeks.docmanager.db.typeconverter.IntListToStringTypeConverter
 
 /** ИД документа (УИД + тип).*/
 class DocId {

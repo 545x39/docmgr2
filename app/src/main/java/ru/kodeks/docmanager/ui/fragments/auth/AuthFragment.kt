@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_form.authFormLayout
 import kotlinx.android.synthetic.main.fragment_auth_form.loginButton
@@ -19,19 +18,19 @@ import kotlinx.android.synthetic.main.fragment_auth_form.loginEditText
 import kotlinx.android.synthetic.main.fragment_auth_form.passwordEditText
 import kotlinx.android.synthetic.main.fragment_auth_form.savePasswordCkeckbox
 import kotlinx.android.synthetic.main.fragment_auth_form.versionText
+import kotlinx.android.synthetic.main.toolbar_buttons.*
 import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.const.SYNC_PROGRESS
-import ru.kodeks.docmanager.di.providerfactory.ViewModelProviderFactory
+import ru.kodeks.docmanager.di.factory.ViewModelProviderFactory
 import ru.kodeks.docmanager.repository.resource.SyncStateResource
 import ru.kodeks.docmanager.repository.resource.UserStateResource
-import ru.kodeks.docmanager.ui.fragments.auth.base.AuthViewModel
 import ru.kodeks.docmanager.ui.main.MainActivity
 import javax.inject.Inject
 
 class AuthFragment : DaggerFragment() {
 
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var viewModel: AuthFragmentViewModel
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
@@ -43,7 +42,7 @@ class AuthFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this, providerFactory).get(AuthFragmentViewModel::class.java)
         return inflater.inflate(R.layout.fragment_auth, container, false)
     }
 
@@ -116,6 +115,9 @@ class AuthFragment : DaggerFragment() {
             setIcon(R.drawable.icon_chain)
             setTitle(getString(R.string.enter_system))
             enableButtons(settingsButton)
+            toolbarScrollEnabled(false)
+            navigationDrawerEnabled(false)
+            enableTabs(false)
             settingsButton.setOnClickListener {
                 navController.navigate(R.id.action_auth_to_preferences)
             }

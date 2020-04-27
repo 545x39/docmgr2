@@ -7,12 +7,12 @@ import kotlinx.coroutines.launch
 import ru.kodeks.docmanager.const.DataFilter
 import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_LAST_UPDATE_TIME
 import ru.kodeks.docmanager.const.Settings.Timeouts.PREFERENCE_GLOBAL_CATALOG_UPDATE_PERIOD
+import ru.kodeks.docmanager.db.Database
 import ru.kodeks.docmanager.model.data.Version
 import ru.kodeks.docmanager.model.data.Widget
 import ru.kodeks.docmanager.model.io.SyncRequest
 import ru.kodeks.docmanager.network.requestbuilder.DEFAULT_DATA_FILTER
 import ru.kodeks.docmanager.network.requestbuilder.RequestBuilder
-import ru.kodeks.docmanager.persistence.Database
 
 abstract class SyncRequestBuilder constructor(
     val database: Database,

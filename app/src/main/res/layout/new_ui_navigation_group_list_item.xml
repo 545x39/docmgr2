@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginLeft="14dp">
+        <ImageView android:layout_width="@dimen/menu_item_icon_size"
+            android:layout_height="@dimen/menu_item_icon_size"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/navigation_view_list_group_icon"
+            android:src="@drawable/icon_folder"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="14dp"
+            android:id="@+id/navigation_view_list_group_title"
+            android:layout_toRightOf="@+id/navigation_view_list_group_icon"/>
+        <ImageView android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/navigation_view_list_group_indicator"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_small_triangle"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"/>
+    </RelativeLayout>
+</LinearLayout>

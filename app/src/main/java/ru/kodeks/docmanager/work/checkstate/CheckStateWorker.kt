@@ -9,7 +9,7 @@ import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.const.Network
 import ru.kodeks.docmanager.const.SYNC_PROGRESS
 import ru.kodeks.docmanager.const.Settings
-import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
+import ru.kodeks.docmanager.di.factory.ChildWorkerFactory
 import ru.kodeks.docmanager.network.api.BaseApi
 import timber.log.Timber
 import java.net.HttpURLConnection

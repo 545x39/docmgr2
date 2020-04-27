@@ -6,10 +6,8 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import ru.kodeks.docmanager.DocManagerApp
 import ru.kodeks.docmanager.di.module.ApplicationModule
-import ru.kodeks.docmanager.di.module.viewmodel.ViewModelFactoryModule
-import ru.kodeks.docmanager.di.module.viewmodel.main.AuthFragmentSubcomponentsModule
-import ru.kodeks.docmanager.di.module.viewmodel.main.MainActivitySubcomponentModule
-import ru.kodeks.docmanager.di.module.viewmodel.main.MainFragmentsSubcomponentsModule
+import ru.kodeks.docmanager.di.module.ui.MainActivitySubcomponentModule
+import ru.kodeks.docmanager.di.module.ui.ViewModelFactoryModule
 import ru.kodeks.docmanager.di.module.work.signaturestamp.GetQualifiedSignatureStampWorkerModule
 import ru.kodeks.docmanager.di.module.work.signaturestamp.GetSimpleSignatureStampWorkerModule
 import ru.kodeks.docmanager.di.module.work.sync.CheckStateWorkerModule
@@ -25,8 +23,6 @@ import javax.inject.Singleton
         ApplicationModule::class,
         //UI
         MainActivitySubcomponentModule::class,
-        AuthFragmentSubcomponentsModule::class,
-        MainFragmentsSubcomponentsModule::class,
         //ViewModelFactory
         ViewModelFactoryModule::class,
         //Workers

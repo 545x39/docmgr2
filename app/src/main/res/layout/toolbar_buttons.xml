@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_buttons_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!--                    android:layout_marginEnd="3dp"-->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="@dimen/green_button_size"
+        android:layout_height="@dimen/green_button_size"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/selector_image_button_green"
+        android:rotation="90"
+        android:src="@drawable/icon_arrow"
+        android:tint="#FFF"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/menuButton"
+        android:layout_width="@dimen/green_button_size"
+        android:layout_height="@dimen/green_button_size"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/backButton"
+        android:background="@drawable/selector_image_button_green"
+        android:src="@drawable/icon_three_lines"
+        android:tint="#FFF"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/titleIcon"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:layout_marginEnd="4dp"
+        android:layout_toEndOf="@+id/menuButton"
+        android:gravity="center_vertical"
+        android:padding="@dimen/menu_item_button_icon_padding"
+        android:src="@drawable/icon_two_sheets"
+        android:tint="#FFF" />
+
+    <TextView
+        android:id="@+id/screenTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/titleIcon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#FFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    <!--    android:layout_toStartOf="@+id/syncButton"-->
+    <!--///////////////////////////////////////////////////////////-->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_size"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="4dp"
+        android:layout_centerVertical="true"
+        app:queryBackground="@color/semitransparent"
+        android:layout_marginEnd="48dp" />
+
+    <ImageButton
+        android:id="@+id/syncButton"
+        android:layout_width="@dimen/green_button_size"
+        android:layout_height="@dimen/green_button_size"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="4dp"
+        android:layout_toStartOf="@+id/settingsButton"
+        android:background="@drawable/selector_image_button_green"
+        android:cropToPadding="true"
+        android:padding="10dp"
+        android:src="@drawable/icon_two_round_arrows"
+        android:tint="#FFF"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="@dimen/green_button_size"
+        android:layout_height="@dimen/green_button_size"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/anchor"
+        android:background="@drawable/selector_image_button_green"
+        android:cropToPadding="true"
+        android:padding="10dp"
+        android:src="@drawable/icon_gear"
+        android:tint="#FFF"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/anchor"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+</RelativeLayout>

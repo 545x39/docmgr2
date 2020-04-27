@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:layout_weight="0"
+    android:layout_rowWeight="0"
+    android:layout_gravity="center"
+    android:layout_centerInParent="true"
+    android:gravity="center">
+    <View android:layout_height="match_parent"
+        android:layout_width="@dimen/divider_size"
+        android:background="@color/grey_medium"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="13dp"
+        android:background="@drawable/background_tab_counter"
+        android:id="@+id/tab_counter_background"
+        android:gravity="top|center_horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true">
+        <!--android:background="@color/new_ui_darker_grey"-->
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:id="@+id/tab_counter"
+            android:layout_marginTop="-2dp"
+            android:minWidth="18dp"
+            android:gravity="top|center_horizontal"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:textColor="#FFF"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:paddingTop="13dp"
+        android:layout_centerInParent="true">
+        <ImageView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tab_icon"
+            android:tint="@color/grey_darkest"
+            android:src="@drawable/icon_folder"/>
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="0dp"
+            android:paddingLeft="0dp"
+            android:id="@+id/tab_title"/>
+    </LinearLayout>
+</RelativeLayout>

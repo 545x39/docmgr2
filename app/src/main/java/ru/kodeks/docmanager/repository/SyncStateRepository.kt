@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.work.*
 import ru.kodeks.docmanager.const.NAME_SYNC
 import ru.kodeks.docmanager.const.PathsAndFileNames
-import ru.kodeks.docmanager.persistence.Database
+import ru.kodeks.docmanager.db.Database
 import ru.kodeks.docmanager.repository.resource.SyncStateResource
 import ru.kodeks.docmanager.work.*
 import javax.inject.Inject

@@ -15,21 +15,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="128dp"
-            android:orientation="vertical"
-            android:background="@drawable/background_navigation_layout_header" />
+            android:background="@drawable/background_navigation_layout_header"
+            android:orientation="vertical" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ExpandableListView
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--            <ExpandableListView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:id="@+id/drawerExpandableList"-->
+            <!--                android:divider="@drawable/delimiter_navigation_view_list"-->
+            <!--                android:childDivider="@drawable/delimiter_navigation_view_list"-->
+            <!--                android:groupIndicator="@null" />-->
+            <fragment
+                android:name="ru.kodeks.docmanager.ui.fragments.widgetsmenu.WidgetsMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/drawerExpandableList"
-                android:divider="@drawable/delimiter_navigation_view_list_delimiter"
-                android:childDivider="@drawable/delimiter_navigation_view_list_delimiter"
-                android:groupIndicator="@null" />
+                android:id="@+id/widgetsMenuFragment"/>
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.navigation.NavigationView>

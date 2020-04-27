@@ -8,19 +8,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.repository.resource.UserStateResource
-import ru.kodeks.docmanager.ui.fragments.auth.base.AuthViewModel
-import ru.kodeks.docmanager.ui.fragments.auth.base.BaseAuthFragment
+import ru.kodeks.docmanager.ui.fragments.BaseFragment
+import ru.kodeks.docmanager.ui.fragments.auth.AuthFragmentViewModel
 
-class StartFragment : BaseAuthFragment() {
+class StartFragment : BaseFragment() {
 
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var viewModel: AuthFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this, providerFactory).get(AuthFragmentViewModel::class.java)
         return inflater.inflate(R.layout.fragment_progress_bar, container, false)
     }
 

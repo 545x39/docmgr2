@@ -11,6 +11,12 @@ import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor() : ViewModel() {
 
+    @Inject
+    protected lateinit var userRepository: UserRepository
+
+    @Inject
+    protected lateinit var syncRepository: SyncStateRepository
+
     fun getUser(): LiveData<UserStateResource> {
         return userRepository.getUser()
     }
@@ -18,10 +24,4 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     fun getSyncState(): LiveData<SyncStateResource<WorkInfo>> {
         return syncRepository.getSyncState()
     }
-
-    @Inject
-    protected lateinit var userRepository: UserRepository
-
-    @Inject
-    protected lateinit var syncRepository: SyncStateRepository
 }

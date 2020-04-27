@@ -14,8 +14,9 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.toolbar_buttons.*
 import ru.kodeks.docmanager.R
-import ru.kodeks.docmanager.di.providerfactory.ViewModelProviderFactory
+import ru.kodeks.docmanager.di.factory.ViewModelProviderFactory
 import javax.inject.Inject
 
 open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
@@ -33,13 +34,20 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         /** По умолчанию навигация отключена. */
         navigationDrawerEnabled(false)
         toolbarScrollEnabled(false)
+        enableTabs(false)
         enableButtons()
-//        setTitle("Вход в систему")
-//        setIcon(R.drawable.icon_chain)
         viewModel.getUser().observe(this, Observer {
             showSnackbar(it.error, it.message)
         })
 
+    }
+
+    fun enableTabs(enable: Boolean = true) {
+        tabLayout.visibility = when (enable) {
+            true -> VISIBLE
+            false -> GONE
+        }
+//        tabLayout.visibility = GONE
     }
 
     private fun showSnackbar(error: Throwable? = null, message: String = "") {
@@ -65,10 +73,7 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
     }
 
     fun enableButtons(vararg buttons: View) {
-        for (button in listOf(
-            backButton, syncButton,
-            menuButton, settingsButton, searchButton, quick_search_view
-        )) {
+        for (button in listOf(backButton, syncButton, menuButton, settingsButton)) {
             button.visibility = GONE
         }
         for (button in buttons) {
@@ -94,21 +99,16 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         collapsingToolbarLayout.requestLayout()
     }
 
+    /** Необходимо вызывать ПОСЛЕ enableButtons(), потому что он по умолчанию скрывает все кнопки. */
     fun navigationDrawerEnabled(enable: Boolean) {
-        menuButton.apply {
-            setOnClickListener(this@MainActivity)
-            visibility = when (enable) {
-                true -> VISIBLE
-                false -> GONE
-            }
-        }
         if (enable) {
-            menuButton.apply {
-                setOnClickListener(this@MainActivity)
-                visibility = VISIBLE
+            menuButton.let {
+                it.setOnClickListener(this@MainActivity)
+                it.visibility = VISIBLE
             }
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
+            menuButton.visibility = GONE
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }

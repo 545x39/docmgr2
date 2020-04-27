@@ -9,12 +9,11 @@ import kotlinx.coroutines.*
 import ru.kodeks.docmanager.R
 import ru.kodeks.docmanager.const.PathsAndFileNames
 import ru.kodeks.docmanager.const.SYNC_PROGRESS
+import ru.kodeks.docmanager.db.Database
 import ru.kodeks.docmanager.di.const.RESPONSE_DIR
-import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
+import ru.kodeks.docmanager.di.factory.ChildWorkerFactory
 import ru.kodeks.docmanager.model.data.*
 import ru.kodeks.docmanager.model.io.SyncResponse
-import ru.kodeks.docmanager.persistence.Database
-import ru.kodeks.docmanager.persistence.parser.parallelMap
 import timber.log.Timber
 import java.io.File
 import java.io.FileReader

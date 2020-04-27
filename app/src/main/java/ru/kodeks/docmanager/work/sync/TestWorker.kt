@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.delay
 import ru.kodeks.docmanager.const.SYNC_PROGRESS
-import ru.kodeks.docmanager.di.providerfactory.ChildWorkerFactory
+import ru.kodeks.docmanager.di.factory.ChildWorkerFactory
 import javax.inject.Inject
 
 class TestWorker @Inject constructor(
