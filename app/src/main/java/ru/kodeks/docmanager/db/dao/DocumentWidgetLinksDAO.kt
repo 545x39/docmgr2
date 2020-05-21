@@ -14,9 +14,6 @@ interface DocumentWidgetLinksDAO {
     @Insert(onConflict = REPLACE)
     suspend fun insertAll(links: List<DocumentWidgetLink>)
 
-    @Query("SELECT COUNT(1) FROM document_widget_links")
-    suspend fun count(): Int
-
     /** Удалить связи документов с виджетами. UID'ы приходят в ответе синка в коллекции unboundDocUids.*/
     @Query("DELETE FROM document_widget_links WHERE doc_uid IN (:links)")
     suspend fun deleteAll(links: List<String>)

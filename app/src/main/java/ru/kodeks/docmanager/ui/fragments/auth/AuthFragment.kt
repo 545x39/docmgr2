@@ -12,12 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
-import kotlinx.android.synthetic.main.fragment_auth_form.authFormLayout
-import kotlinx.android.synthetic.main.fragment_auth_form.loginButton
-import kotlinx.android.synthetic.main.fragment_auth_form.loginEditText
-import kotlinx.android.synthetic.main.fragment_auth_form.passwordEditText
-import kotlinx.android.synthetic.main.fragment_auth_form.savePasswordCkeckbox
-import kotlinx.android.synthetic.main.fragment_auth_form.versionText
 import kotlinx.android.synthetic.main.toolbar_buttons.*
 import ru.kodeks.docmanager.BuildConfig
 import ru.kodeks.docmanager.R
@@ -113,7 +107,7 @@ class AuthFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         with(activity as MainActivity) {
             setIcon(R.drawable.icon_chain)
-            setTitle(getString(R.string.enter_system))
+            setScreenTitle(getString(R.string.enter_system))
             enableButtons(settingsButton)
             toolbarScrollEnabled(false)
             navigationDrawerEnabled(false)

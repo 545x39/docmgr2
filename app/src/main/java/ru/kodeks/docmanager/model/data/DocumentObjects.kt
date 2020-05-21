@@ -6,7 +6,11 @@ import com.google.gson.annotations.SerializedName
 import ru.kodeks.docmanager.db.typeconverter.IntListToStringTypeConverter
 
 /** Связь документа с виджетом. Передается на клиент в составе документа, см. <see cref="Document"/>.*/
-@Entity(tableName = "document_widget_links", primaryKeys = ["widget_id", "doc_uid"])
+@Entity(
+    tableName = "document_widget_links",
+    primaryKeys = ["widget_id", "doc_uid"],
+    indices = [Index(value = ["doc_uid"])]
+)
 @TypeConverters(IntListToStringTypeConverter::class)
 class DocumentWidgetLink(
     /** ИД виджета. Привязка выполняется по коду из-за потенциальной необходимости внедрять замещения.*/

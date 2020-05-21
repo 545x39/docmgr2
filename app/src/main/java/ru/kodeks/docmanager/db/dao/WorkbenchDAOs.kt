@@ -1,8 +1,8 @@
 package ru.kodeks.docmanager.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
+import androidx.room.*
+import io.reactivex.Flowable
+import ru.kodeks.docmanager.db.relation.DesktopWithWidgets
 import ru.kodeks.docmanager.model.data.*
 
 @Dao
@@ -30,6 +30,14 @@ interface DesktopsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(desktopa: List<Desktop>)
+
+    @Transaction
+    @Query("SELECT * FROM desktops WHERE deleted=0 ORDER BY `order`")
+    suspend fun getDesktops(): List<DesktopWithWidgets>
+
+    @Transaction
+    @Query("SELECT * FROM desktops WHERE deleted=0 ORDER BY `order`")
+    fun getDesktopsFlowable(): Flowable<List<DesktopWithWidgets>>
 }
 
 @Dao

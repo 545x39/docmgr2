@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/pairedTextKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="bottom"
+        android:textColor="@color/grey_dark" />
+
+    <TextView
+        android:id="@+id/pairedTextValue"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/pairedTextKey"
+        android:layout_alignTop="@+id/pairedTextKey"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@id/pairedTextKey"
+        android:ellipsize="end"
+        android:gravity="bottom"
+        android:maxLines="3"
+        android:textColor="#000" />
+</RelativeLayout>

@@ -61,7 +61,7 @@ class Document(
     @SerializedName("regDate")
     @Expose
     @ColumnInfo(name = "reg_date")
-    var regiDate: String? = null,
+    var regDate: String? = null,
     /** Примечание документа*/
     @SerializedName("remark")
     @Expose
@@ -361,7 +361,16 @@ class Document(
     @ColumnInfo(name = "main_executive_info")
     var sainExecutiveInfo: String? = null
 //</editor-fold>
-) : ObjectBase()
+) : ObjectBase() {
+    override fun equals(other: Any?): Boolean {
+        return when (other is Document) {
+            false -> false
+            true -> uid == other.uid && isControlled == other.isControlled
+                    && isInformational == other.isInformational
+//                    && deleted == other.deleted
+        }
+    }
+}
 
 //<editor-fold desc="Found document" defaultstate="collapsed">
 /** Контейнер для информации по найденным документам.*/

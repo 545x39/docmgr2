@@ -2,16 +2,16 @@ package ru.kodeks.docmanager.di.module.ui
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import ru.kodeks.docmanager.di.module.ui.auth.AuthFragmentModule
 import ru.kodeks.docmanager.di.module.ui.auth.AuthFragmentViewModelModule
 import ru.kodeks.docmanager.di.module.ui.documentlist.DocumentListFragmentViewModelModule
 import ru.kodeks.docmanager.di.module.ui.documentlist.DocumentListPagerFragmentViewModelModule
-import ru.kodeks.docmanager.di.module.ui.documentlist.MainScopeModule
 import ru.kodeks.docmanager.di.module.ui.mainactivity.MainActivityViewModelModule
+import ru.kodeks.docmanager.di.module.ui.mainactivity.WidgetsMenuFragmentViewModelModule
 import ru.kodeks.docmanager.ui.fragments.auth.AuthFragment
 import ru.kodeks.docmanager.ui.fragments.documentslist.list.DocumentListFragment
 import ru.kodeks.docmanager.ui.fragments.documentslist.pager.DocumentListPagerFragment
 import ru.kodeks.docmanager.ui.fragments.start.StartFragment
+import ru.kodeks.docmanager.ui.fragments.widgetsmenu.WidgetsMenuFragment
 import ru.kodeks.docmanager.ui.main.MainActivity
 
 /** Модуль для всех активностей/фрагментов, которые потребуют внедрения зависимостей.*/
@@ -36,7 +36,8 @@ interface AuthFragmentsModule {
     fun contributeStartFragment(): StartFragment
 
     @AuthScope
-    @ContributesAndroidInjector(modules = [AuthFragmentViewModelModule::class, AuthFragmentModule::class])
+    @ContributesAndroidInjector(modules = [//AuthFragmentModule::class,
+        AuthFragmentViewModelModule::class])
     fun contributeAuthFragment(): AuthFragment
 }
 
@@ -45,15 +46,22 @@ interface MainFragmentsModule {
 
     @MainScope
     @ContributesAndroidInjector(
-        modules = [MainScopeModule::class,
+        modules = [//MainScopeModule::class,
             DocumentListPagerFragmentViewModelModule::class]
     )
     fun contributeDocumentListPagerFragment(): DocumentListPagerFragment
 
     @MainScope
     @ContributesAndroidInjector(
-        //        DocumentListFragmentModule::class,
-        modules = [MainScopeModule::class, DocumentListFragmentViewModelModule::class]
+        modules = [//MainScopeModule::class,
+            DocumentListFragmentViewModelModule::class]
     )
     fun contributeDocumentListFragment(): DocumentListFragment
+
+    @MainScope
+    @ContributesAndroidInjector(
+        modules = [//MainScopeModule::class,
+            WidgetsMenuFragmentViewModelModule::class]
+    )
+    fun contributeWidgetsMenuFragment(): WidgetsMenuFragment
 }

@@ -26,7 +26,7 @@ class CheckStateWorker @Inject constructor(
         setProgressAsync(workDataOf(SYNC_PROGRESS to context.getString(R.string.status_checking_connection)))
         kotlin.runCatching { run { check() } }.onFailure {
             Timber.e(it)
-            return Result.failure()
+            return Result.retry()
         }
         return Result.success()
     }

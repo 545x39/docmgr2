@@ -57,31 +57,15 @@
                 app:tabIndicatorColor="@color/green" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nested_scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".ui.main.MainActivity"
-            tools:showIn="@layout/activity_main">
-
-            <LinearLayout
+            <fragment
+                android:id="@+id/navigationHostFragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <fragment
-                    android:id="@+id/navigationHostFragment"
-                    android:name="androidx.navigation.fragment.NavHostFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center|top"
-                    app:defaultNavHost="true"
-                    app:navGraph="@navigation/navigation_graph" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
+                app:defaultNavHost="true"
+                android:fillViewport="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:navGraph="@navigation/navigation_graph" />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"

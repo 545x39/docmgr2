@@ -27,7 +27,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         super.onActivityCreated(savedInstanceState)
         with(activity as MainActivity) {
             setIcon(R.drawable.icon_gear)
-            setTitle(getString(R.string.preferences))
+            setScreenTitle(getString(R.string.preferences))
             enableButtons(backButton)
         }
     }

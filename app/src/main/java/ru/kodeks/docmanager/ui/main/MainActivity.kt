@@ -36,10 +36,13 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         toolbarScrollEnabled(false)
         enableTabs(false)
         enableButtons()
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
         viewModel.getUser().observe(this, Observer {
             showSnackbar(it.error, it.message)
         })
-
     }
 
     fun enableTabs(enable: Boolean = true) {
@@ -47,7 +50,6 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
             true -> VISIBLE
             false -> GONE
         }
-//        tabLayout.visibility = GONE
     }
 
     private fun showSnackbar(error: Throwable? = null, message: String = "") {
@@ -68,7 +70,7 @@ open class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         titleIcon.setImageDrawable(getDrawable(icon))
     }
 
-    fun setTitle(title: String) {
+    fun setScreenTitle(title: String) {
         screenTitle.text = title
     }
 

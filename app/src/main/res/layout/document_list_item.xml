@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/documentListCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="0dp"
+    android:layout_marginBottom="10dp"
+    android:layout_margin="10dp"
+    tools:ignore="ResAuto">
+<!--    android:layout_margin="4dp"-->
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res/"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/documentListRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="fill"
+        android:padding="4dp">
+<!--        android:background="@drawable/background_grey_outline"-->
+        <!-- ================================================== -->
+        <LinearLayout
+            android:id="@+id/left_icons_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="4dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <include layout="@layout/document_list_item_icons" />
+        </LinearLayout>
+        <!-- ================================================== -->
+
+        <LinearLayout
+            android:id="@+id/mainTextFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/document_list_button_margin"
+            android:layout_toEndOf="@+id/left_icons_layout"
+            android:orientation="vertical">
+            <!--HEADER-->
+            <TextView
+                android:id="@+id/documentRowTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/document_list_button_margin"
+                android:layout_marginBottom="@dimen/document_list_button_margin"
+                android:textColor="@color/blue"
+                android:textStyle="bold" />
+
+            <ru.kodeks.docmanager.ui.views.PairedTextView
+                android:id="@+id/documentNumberPairedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:keytext="@string/reg_number" />
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/projectNumberPairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:keytext="@string/project_number" />-->
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/correspondentPairedTextFrom"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:ellipse="true"-->
+<!--                app:keytext="@string/who_signed" />-->
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/correspondentPairedTextTo"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:ellipse="true"-->
+<!--                app:keytext="@string/to" />-->
+
+            <ru.kodeks.docmanager.ui.views.PairedTextView
+                android:id="@+id/subjectPairedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:ellipse="true"
+                app:keytext="@string/document_subject" />
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/considerationTextPairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:ellipse="true"-->
+<!--                app:keytext="@string/resolutionText" />-->
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/outgoingResolutionPairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:ellipse="true"-->
+<!--                app:keytext="@string/outgoing_resolution_text" />-->
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/incomingResolutionTermPairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:keytext="@string/resolution_term" />-->
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/outgoingResolutionTermPairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:keytext="@string/outgoing_resolution_term" />-->
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/subjectNamePairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:ellipse="true"-->
+<!--                app:keytext="@string/document_name" />-->
+<!---->
+            <!--<ru.kodeks.docmanager.ui.views.PairedTextView-->
+            <!--android:id="@+id/approvalTermPairedText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--app:keytext="@string/approval_term" />-->
+<!---->
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/resolutionAuthorPairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:ellipse="true"-->
+<!--                app:keytext="@string/resolution_project_author" />-->
+            <!-- ///////////////////CONCRETE ROW DATA INSERT POINT ////////////-->
+<!--            <LinearLayout-->
+<!--                android:id="@+id/rowDataInsertPoint"-->
+<!--                android:layout_width="fill_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="0dp"-->
+<!--                android:visibility="gone" />-->
+            <!--///////////////////////////////////////////////////////////////-->
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/importance"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:keytext="@string/importance" />-->
+
+            <ru.kodeks.docmanager.ui.views.PairedTextView
+                android:id="@+id/documentTypePairedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:keytext="@string/document_type" />
+
+<!--            <ru.kodeks.docmanager.ui.views.PairedTextView-->
+<!--                android:id="@+id/documentDatePairedText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                app:keytext="@string/docDate" />-->
+        </LinearLayout>
+        <!-- ======================BUTTONS ============================ -->
+
+        <LinearLayout
+            android:id="@+id/expandButtonsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mainTextFields"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/document_list_button_margin"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonCreateResolution"
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_size"
+                android:layout_marginBottom="@dimen/margin"
+                android:background="@drawable/selector_image_button_faded_blue"
+                android:drawableStart="@drawable/icon_sheet_with_arrow_in"
+                android:drawableTint="@color/blue"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="9dp"
+                android:stateListAnimator="@null"
+                android:text=" Создать резолюцию "
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <ImageButton
+                android:id="@+id/iconMore"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_marginLeft="@dimen/document_list_button_margin"
+                android:layout_marginRight="@dimen/document_list_button_margin"
+                android:layout_marginBottom="@dimen/document_list_button_margin"
+                android:background="@drawable/selector_image_button_white"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:src="@drawable/icon_simple_arrow"
+                android:tint="@color/blue" />
+
+            <ImageButton
+                android:id="@+id/iconLess"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_marginLeft="@dimen/document_list_button_margin"
+                android:layout_marginRight="@dimen/document_list_button_margin"
+                android:layout_marginBottom="@dimen/document_list_button_margin"
+                android:background="@drawable/selector_image_button_white"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:rotation="180"
+                android:src="@drawable/icon_simple_arrow"
+                android:tint="@color/blue"
+                android:visibility="gone" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

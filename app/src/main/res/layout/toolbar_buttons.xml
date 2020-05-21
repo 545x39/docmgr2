@@ -4,7 +4,7 @@
     android:id="@+id/toolbar_buttons_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <!--                    android:layout_marginEnd="3dp"-->
+
     <ImageButton
         android:id="@+id/backButton"
         android:layout_width="@dimen/green_button_size"
@@ -36,8 +36,8 @@
         android:layout_marginEnd="4dp"
         android:layout_toEndOf="@+id/menuButton"
         android:gravity="center_vertical"
-        android:padding="@dimen/menu_item_button_icon_padding"
-        android:src="@drawable/icon_two_sheets"
+        android:layout_marginTop="2dp"
+        android:padding="11dp"
         android:tint="#FFF" />
 
     <TextView
@@ -51,7 +51,6 @@
         android:textColor="#FFF"
         android:textSize="18sp"
         android:textStyle="bold" />
-    <!--    android:layout_toStartOf="@+id/syncButton"-->
     <!--///////////////////////////////////////////////////////////-->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
@@ -62,6 +61,7 @@
         android:layout_centerVertical="true"
         app:queryBackground="@color/semitransparent"
         android:layout_marginEnd="48dp" />
+<!--    android:visibility="gone"-->
 
     <ImageButton
         android:id="@+id/syncButton"

@@ -178,7 +178,7 @@ class Widget(
     @Expose
     @ColumnInfo(name = "absent_executive_uid")
     var absentExecutiveUid: String? = null,
-    /** <i>Устаревшее поле, следует использовать <see cref="absentExecutiveUid"/></i>. Идентификатор замещаемого сотрудника (для виджетов замещений).*/
+    /** Устаревшее поле, следует использовать "absentExecutiveUid". Идентификатор замещаемого сотрудника (для виджетов замещений).*/
     @SerializedName("absentExecutiveUID")
     @Expose
     @Ignore
@@ -193,7 +193,6 @@ class Widget(
     @Ignore
     var docsCount: Int? = null,
     /** Нужно ли заполнять в виджете коллекцию \b oldDocUids. \b Внимание: Поле используется только в \b запросе на синхронизацию!*/
-
     @Suppress("SpellCheckingInspection") @SerializedName("fillOldDocUids")
     @Expose
     @Ignore
